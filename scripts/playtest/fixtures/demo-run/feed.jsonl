@@ -1,0 +1,17 @@
+{"at":"2026-08-01T07:00:12.000Z","personaId":"newbie","label":"新手小白","stepId":"onb.open","text":"開場對白…睇吓師傅講咩","sentiment":"neutral"}
+{"at":"2026-08-01T07:00:42.000Z","personaId":"newbie","label":"新手小白","stepId":"onb.dialogue","text":"對白有啲長，不過跟得上","sentiment":"neutral"}
+{"at":"2026-08-01T07:01:12.000Z","personaId":"newbie","label":"新手小白","stepId":"onb.aim","text":"金圈貼住先撳——呢步要集中","sentiment":"neutral"}
+{"at":"2026-08-01T07:01:55.000Z","personaId":"newbie","label":"新手小白","stepId":"onb.mash","text":"狂撳好攰，險啲搓唔切","sentiment":"negative"}
+{"at":"2026-08-01T07:02:12.000Z","personaId":"newbie","label":"新手小白","stepId":"onb.finish","text":"導覽完可以出發！","sentiment":"positive"}
+{"at":"2026-08-01T07:02:25.000Z","personaId":"clumsy","label":"手殘玩家","stepId":"map.open","text":"地圖開咗，睇吓邊度有精靈","sentiment":"neutral"}
+{"at":"2026-08-01T07:02:55.000Z","personaId":"clumsy","label":"手殘玩家","stepId":"capture.open","text":"入咗捕捉——希望唔會走甩","sentiment":"neutral"}
+{"at":"2026-08-01T07:03:45.000Z","personaId":"clumsy","label":"手殘玩家","stepId":"dex.open","text":"卡住咗：dex.open（Timeout waiting for dex grid）","sentiment":"negative"}
+{"at":"2026-08-01T07:03:05.000Z","personaId":"speedrun","label":"速通黨","stepId":"map.open","text":"地圖開咗，睇吓邊度有精靈","sentiment":"neutral"}
+{"at":"2026-08-01T07:03:25.000Z","personaId":"speedrun","label":"速通黨","stepId":"capture.open","text":"入咗捕捉——希望唔會走甩","sentiment":"neutral"}
+{"at":"2026-08-01T07:04:15.000Z","personaId":"speedrun","label":"速通黨","stepId":"battle.open","text":"切磋場——對住敵位睇吓站位正唔正","sentiment":"neutral"}
+{"at":"2026-08-01T07:05:35.000Z","personaId":"completionist","label":"完成主義","stepId":"battle.open","text":"切磋場——對住敵位睇吓站位正唔正","sentiment":"neutral"}
+{"at":"2026-08-01T07:06:45.000Z","personaId":"battler","label":"切磋優先","stepId":"battle.open","text":"能量夠未？想快啲放大招","sentiment":"neutral"}
+{"at":"2026-08-01T07:07:00.000Z","personaId":"battler","label":"切磋優先","stepId":"battle.open","text":"敵位面向要再核對（建議跑 facing golden）","sentiment":"negative"}
+
+{"at":"2026-08-01T07:07:31.000Z","personaId":"facing-static","label":"面向閘 A","stepId":"facing.static","text":"facing:static 失敗（示範）。詳見 session log。硬閘獨立，playtest 只係匯報。","sentiment":"negative"}
+{"at":"2026-08-01T07:08:00.000Z","personaId":"load-swarm","label":"千人湧入","stepId":"load.1k","text":"千人潮完成：979/1000，峰值 in-flight 120（demo）","sentiment":"positive"}

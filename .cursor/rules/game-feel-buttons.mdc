@@ -1,0 +1,36 @@
+---
+description: 所有互動元素必須有遊戲感按壓回饋（視覺＋音效＋震動）
+globs: src/**/*.tsx
+alwaysApply: false
+---
+
+# 按鈕回饋（Game Feel）
+
+呢個項目係手遊，所有互動元素撳落去必須即時有回饋，唔可以係靜態。
+
+## 已有嘅全局機制（自動生效）
+
+1. **視覺**：`globals.css` 對 `button` / `a` / `[role="button"]` 定義咗撳落深縮提亮（`:active { scale: 0.9 }`）；鬆手由 `GlobalPressFx` 加 `.btn-bounce` class 播彈簧過衝回彈
+2. **粒子**：`GlobalPressFx` 喺撳落點爆出金色粒子圈（`.press-burst`，跟羊皮紙金色主題）
+3. **音效＋震動**：`GlobalPressFx` 監聽全局 `pointerdown` 自動播 `sfxTap()`——圓潤泡泡 pop 聲（內置 90ms 防抖）＋微震
+
+## 規則
+
+- 互動元素**必須**用原生 `<button>`、`<a>`／`<Link>`，或者加 `role="button"`——咁先食到全局回饋。**禁止**用光 `onClick` 嘅 `<div>` 做可撳目標
+- 元素有自己嘅專屬音效（例如捕捉頁狂撳掣、夾掣）就加 `data-no-press-sfx` 退出全局音效，避免疊聲；視覺縮放照樣生效
+- 重要動作要有**更強回饋**：用 `src/lib/sfx.ts` 嘅專屬音效（`sfxReward`、`sfxCapture`、`sfxEvolve` 等）＋ `buzz(pattern)` 震動＋視覺動效（彩帶 `<Confetti />`、CSS keyframe 動畫）
+- 新增音效一律喺 `sfx.ts` 用 Web Audio 程序化合成（`tone`/`noise` 原語），唔用音頻檔案
+- 自訂縮放用 Tailwind `active:scale-*`（用 `scale` 屬性，會蓋過全局預設，唔會同 `transform` 定位打交）
+
+## 例子
+
+```tsx
+// ❌ 靜態 div，冇任何回饋
+<div onClick={doThing}>撳我</div>
+
+// ✅ 原生 button：自動有縮放＋音效＋震動
+<button onClick={doThing}>撳我</button>
+
+// ✅ 有專屬音效嘅掣：退出全局 tap 聲
+<button onPointerDown={tapStruggle} data-no-press-sfx>狂撳！</button>
+```

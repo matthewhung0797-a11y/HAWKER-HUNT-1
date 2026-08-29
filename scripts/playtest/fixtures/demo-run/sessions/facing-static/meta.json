@@ -1,0 +1,10 @@
+{
+  "label": "面向閘 A（static）",
+  "status": "failed",
+  "durationMs": 800,
+  "path": "facing-gate",
+  "notes": [
+    "Demo：示範 facing 失敗點會入總結 P0",
+    "真跑：npm run playtest:facing"
+  ]
+}

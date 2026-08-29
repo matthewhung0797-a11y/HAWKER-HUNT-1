@@ -1,0 +1,670 @@
+{
+  "id": "styletest-1",
+  "createdAt": "2026-07-20T08:08:07.910Z",
+  "updatedAt": "2026-07-20T17:54:13.314Z",
+  "status": "approved",
+  "artifacts": {
+    "artByStage": {
+      "chwee-hamlet": "public/spirits/full/chwee-hamlet.webp",
+      "chwee-sentry": "public/spirits/full/chwee-sentry.webp",
+      "chwee-shogun": "public/spirits/full/chwee-shogun.webp"
+    },
+    "art": "public/spirits/full/chwee-hamlet.webp",
+    "model3dByStage": {
+      "chwee-hamlet": "content\\pending-pets\\artifacts\\styletest-1\\model3d.chwee-hamlet.json",
+      "chwee-sentry": "content\\pending-pets\\artifacts\\styletest-1\\model3d.chwee-sentry.json",
+      "chwee-shogun": "content\\pending-pets\\artifacts\\styletest-1\\model3d.chwee-shogun.json"
+    },
+    "model3d": "content\\pending-pets\\artifacts\\styletest-1\\model3d.chwee-hamlet.json",
+    "riggedByStage": {
+      "chwee-hamlet": "model-pipeline/gen/anim/chwee-hamlet",
+      "chwee-sentry": "model-pipeline/gen/anim/chwee-sentry",
+      "chwee-shogun": "model-pipeline/gen/anim/chwee-shogun"
+    },
+    "rigModeByStage": {
+      "chwee-hamlet": "tripo",
+      "chwee-sentry": "meshy",
+      "chwee-shogun": "meshy"
+    },
+    "rigged": "content\\pending-pets\\artifacts\\styletest-1\\rig.chwee-hamlet.json",
+    "finalByStage": {
+      "chwee-hamlet": "public/models/chwee-hamlet.glb",
+      "chwee-sentry": "public/models/chwee-sentry.glb",
+      "chwee-shogun": "public/models/chwee-shogun.glb"
+    },
+    "final": "public/models/chwee-hamlet.glb"
+  },
+  "manifest": {
+    "concept": {
+      "status": "done",
+      "mode": "gemini",
+      "detail": "LLM family=chwee-kueh-hamster",
+      "at": "2026-07-20T08:08:26.567Z"
+    },
+    "art": {
+      "status": "done",
+      "mode": "gemini",
+      "detail": "3/3 階真圖",
+      "at": "2026-07-20T08:09:46.765Z"
+    },
+    "model3d": {
+      "status": "done",
+      "mode": "real",
+      "detail": "3/3 階真生成（Tripo）",
+      "at": "2026-07-20T17:20:00.000Z"
+    },
+    "rig": {
+      "status": "done",
+      "mode": "real",
+      "detail": "3/3 階真 rig（Meshy 2／Tripo 1）",
+      "at": "2026-07-20T17:20:00.000Z"
+    },
+    "finalize": {
+      "status": "done",
+      "mode": "real",
+      "detail": "3/3 階真 finalize",
+      "at": "2026-07-20T17:20:00.000Z"
+    },
+    "skills": {
+      "status": "done",
+      "mode": "gemini",
+      "detail": "7 skills / 3 階",
+      "at": "2026-07-20T17:53:42.379Z"
+    },
+    "draft": {
+      "status": "done",
+      "detail": "三階 species 已組裝（chwee-hamlet → chwee-sentry → chwee-shogun）",
+      "at": "2026-07-20T17:53:42.380Z"
+    }
+  },
+  "bodyPlanOverride": "beast-kin",
+  "conceptPrompt": "Invent ONE brand-new Singapore/Malaysian hawker-food spirit FAMILY for the game Hawker Hunt.\nIt must be a real or highly plausible hawker dish, turned into a cute collectible monster family of 3 evolution stages.\nDesign goals: every dish must be UNIQUE (no collision with existing pets); may resemble the style but never be identical.\nSPECIES FORM for this whole family (all 3 stages share it, but grow up): an upright bipedal BEAST-person: an animal head (e.g. tiger / lion / bear / fox / cat) on a humanoid body, standing on two legs with human-like arms. Stage 1 may be a rounder baby version, but stages 2–3 MUST be describable as an upright bipedal figure with arms/legs/claws clearly separate from the body (this is required so the 2D art can be auto-rigged into an animated 3D model). Write each stage's theme so an artist would naturally draw that upright, limbs-apart pose.\nNo specific direction — free creative choice.\n\nReturn JSON with: seriesId (ascii kebab-case, unique), foodOrigin {en,zh}, element (one of metal/wood/water/fire/earth), flavor (one of bitter/sour/salty/sweet/spicy per 五行五味), and stages: an array of EXACTLY 3 objects each { id (ascii kebab-case, unique per stage), stage (1|2|3), name{en,zh}, description{en,zh}, theme, skillIdeas[] }.\nKeep every stage consistent with this art DNA: Chibi anthropomorphic Singapore hawker-food creature mascot, big expressive cartoon eyes, rounded soft chunky body, thick painterly cartoon shading with rich layered brushwork, soft rim light and glossy specular highlights (NOT flat vector, NOT realistic photo), appetising food-material rendering — crispy / juicy / glossy / caramelised surfaces with visible tactile texture and depth, high detail density and ornate finishing (armour trim, gems, sauce drips), scaling UP with evolution stage, strong three-dimensional volume and form, dramatic studio lighting, subtle ambient occlusion on the character, warm friendly collectible-monster design, full body head-to-toe, standing, slight 3/4 front view facing camera, cohesive with a unified premium collectible set of food spirits.\n\n\nDO NOT duplicate any of these already-used dishes or names (you MAY be stylistically similar, but the dish, the name and the id MUST be distinct and unique):\nDishes: Hainanese Chicken Rice, 海南雞飯, Laksa, 叻沙, Bak Kut Teh, 肉骨茶, Kueh Lapis, 九層糕, Kaya Toast, 咖椰吐司, Chilli Crab, 辣椒蟹, Satay, 沙嗲, Kopi O, 咖啡烏, Chai Tow Kway, 菜頭粿, Rojak, 囉喏, Oyster Omelette, 蠔煎, Char Kway Teow, 炒粿條, Curry Puff, 咖喱卜, Roti Prata, 印度煎餅, Chendol, 煎蕊, Chilli Padi, 辣椒, Garlic, 蒜頭, Lemongrass, 香茅, Rice Ball, 飯團, Rice Vermicelli, 米粉, Egg, 雞蛋, Fresh Shrimp, 鮮蝦, Coconut Milk, 椰漿, Kueh Tutu, 嘟嘟糕, Nasi Lemak, 椰漿飯, Otak-Otak, 烏達\nNames: Chicken Rice Alliance, 雞飯聯盟, Noodle Clan, 麵食家族, Bak Kut Teh Order, 肉骨茶系, Kueh Dynasty, 糕點系, Kaya Legion, 咖椰系, Chilli Crab Gang, 辣蟹幫, Satay Legion, 沙嗲軍團, Kopi Society, 咖啡烏會, Carrot Cake Clan, 菜頭粿門, Rojak Union, 囉喏聯盟, Orh Luak Tribe, 蠔煎眾, Wok Hei Sect, 鑊氣幫, Curry Puff Order, 咖喱卜團, Prata Tribe, 煎餅族, Chendol School, 煎蕊派, Chilli Baby, 辣椒仔, Garlic Guard, 蒜頭衛兵, Lemongrass Swordsman, 香茅劍客, Riceball Baby, 飯團寶寶, Vermicelli Sprite, 米粉精靈, Egg Guard, 蛋蛋守衛, Shrimp Hopper, 蝦仔跳跳, Coconut Jelly, 椰漿啫喱, Oily Rice Chick, 油飯雞仔, Rice Peck, 米粒啄擊, Oily Rice Heal, 油飯治癒, Silky Chicken Warrior, 滑雞武者, Poached Blade, 白斬刀法, Ginger Splash, 薑蓉飛濺, Hainan Chicken God, 海南雞神, Golden Rice Storm, 黃金飯暴, Chilli Sauce Cannon, 辣椒醬炮, Little Laksa, 叻沙仔, Broth Splash, 湯底潑濺, Coconut Shield, 椰漿護盾, Laksa Warrior, 叻沙武士, Shell Claw, 蝦殼鉗擊, Spicy Surge, 辣浪翻騰, Laksa Dragon Xinyan, 叻沙龍·辛焱, Spice Inferno, 香料烈焰, Dragon Noodle Whip, 龍鬚麵鞭, Bak Kut Cub, 肉骨仔, Rib Bonk, 排骨敲擊, Herbal Sip, 藥膳補湯, Bak Kut Warrior, 骨茶武士, Youtiao Strike, 油條重擊, Pepper Guard, 胡椒鐵壁, Bak Kut Grandmaster, 骨茶宗師, Garlic Meteor, 蒜頭流星, Claypot Slam, 砂鍋猛擊, Tutu Sprite, 嘟嘟糕精, Coconut Puff, 椰絲噴發, Steam Veil, 蒸氣面紗, Lapis Queen, 九層糕后, Layer Slice, 分層切擊, Sticky Trap, 黏糕陷阱, Pastry Sovereign, 糕點女王, Gula Melaka Burst, 椰糖爆漿, Royal Decree, 女王詔令, Kaya Blob, 咖央仔, Jam Splat, 醬汁飛濺, Pandan Breeze, 斑蘭清風, Kaya Samurai, 咖央武士, Toast Hammer, 吐司重錘, Butter Slick, 牛油滑步, Kaya Dragon Phantom, 咖央聖龍·幻火, Phantom Flame, 翡翠幻火, Soft Egg Orb, 半熟蛋彈, Chilli Crablet, 辣蟹仔, Bubble Spit, 泡泡醬沫, Mantou Recovery, 饅頭回氣, Crab Claw Warrior, 辣蟹武士, Claw Crush, 巨鉗粉碎, Sauce Whirl, 醬濤翻滾, Chilli Crab King Jiangtao, 辣椒蟹王·醬濤, Chilli Tsunami, 辣醬海嘯, Golden Mantou Barrage, 金饅頭連炮, Satay Skewerling, 沙嗲仔, Skewer Jab, 竹籤突刺, Ketupat Rest, 馬來米糕休整, Satay Warrior, 沙嗲武士, Charcoal Grill, 炭火串燒, Triple Skewer, 三串連擊, Satay Flame Emperor Tanhun, 沙嗲炎帝·炭魂, Hundred Skewer Storm, 百串燎原, Peanut Sauce Flood, 花生醬洪流, Kopi Bean, 咖啡仔, Bean Toss, 咖啡豆投擲, Kopi Sip, 提神一啖, Kopi Sock Warrior, 咖啡武士, Sock Swing, 咖啡袋重甩, Steam Scald, 滾水燙擊, Kopi O Emperor Yenong, 咖啡烏皇·夜濃, Black Gold Waterfall, 黑金瀑布, Caffeine Rush, 咖啡因狂熱, Radish Cubie, 菜頭仔, Cube Tumble, 粿粒翻滾, Radish Juice, 菜頭甜汁, Carrot Cake Warrior, 菜頭粿武士, Griddle Press, 鐵板煎壓, Egg Crust Slam, 蛋香脆擊, Black & White Cake King Shuangjian, 黑白粿王·雙煎, Black & White Duet, 黑白雙煎, Sweet Sauce Quake, 甜醬地震, Rojak Tot, 囉喏仔, Pineapple Jab, 菠蘿刺擊, Peanut Dust, 花生碎療癒, Rojak Warrior, 囉喏武士, Haeko Whip, 蝦膏黑鞭, Jicama Shield Bash, 沙葛盾擊, Rojak King Baiwei, 囉喏王·百味, Hundred Flavour Vortex, 百味漩渦, Black Sauce Deluge, 黑醬傾盆, Little Orh Luak, 蠔煎仔, Starch Flick, 粉漿彈射, Egg Blanket, 蛋被治癒, Omelette Warrior, 蠔煎武者, Sizzle Flip, 鑊氣翻面, Oyster Pearl Shot, 珍珠蠔彈, Oyster Immortal Yinwu, 蠔煎仙·銀霧, Tidal Omelette, 蛋海狂潮, Vinegar Mist, 酸醋銀霧, Kway Teow Kid, 粿條仔, Flat Noodle Lash, 粿條抽擊, Lard Crisp Boost, 豬油渣滋補, Kway Teow Warrior, 粿條武士, Wok Toss, 拋鑊翻炒, Cockle Bomb, 血蚶炸彈, Wok Hei God Jiaoxiang, 鑊氣神·焦香, Wok Hei Blast, 鑊氣爆發, Dark Soy Tide, 黑甜醬浪, Curry Puffling, 咖喱卜仔, Crust Flick, 酥皮碎擊, Potato Cushion, 薯仔軟墊, Curry Puff Warrior, 咖喱卜武士, Spiral Crust Cutter, 螺旋酥皮刃, Curry Burst, 咖喱噴發, Golden Puff Sovereign Sujin, 咖喱卜尊·酥金, Thousand Layer Blades, 千層酥刃, Molten Curry Cannon, 熔岩咖喱炮, Prata Pup, 煎餅仔, Dough Slap, 麵團拍打, Ghee Shine, 酥油滋潤, Prata Warrior, 煎餅武士, Flip Spin Throw, 拋餅迴旋, Crispy Fold Strike, 摺疊脆擊, Prata Sky Elephant Yunceng, 飛餅神象·雲層, Sky Prata Cyclone, 飛天餅旋風, Curry Dip Flood, 咖喱蘸海, Chendol Jelly, 煎蕊仔, Jelly Wiggle, 綠蕊蠕彈, Coconut Milk Bath, 椰奶浴, Chendol Warrior, 煎蕊武士, Shaved Ice Flurry, 刨冰亂舞, Jelly Whip, 綠蕊長鞭, Chendol Snow Queen Cuibing, 煎蕊雪后·翠冰, Emerald Blizzard, 翡翠暴雪, Red Bean Meteor, 紅豆流星雨, Fiery Temper, 火爆脾氣, Antibacterial Shield, 抗菌護盾, Lemongrass Sword Dance, 香茅劍舞, Sticky Rice Bind, 糯米黏著, Vermicelli Wrap, 米粉纏繞, Yolk Guard, 蛋黃守護, Bubble Shot, 水泡射擊, Coconut Heal, 椰香治癒, Nasi Lemak Tot, 椰漿飯仔, Pandan Whiff, 斑蘭飄香, Bilis Bonk, 脆炸江魚撞, Nasi Lemak Scout, 椰漿飯小兵, Cucumber Shield Bash, 青瓜爽脆盾, Sambal Splash, 參巴辣醬擊, Nasi Lemak General, 椰漿飯大將軍, Golden Wing Slasher, 酥脆炸雞斬, Volcanic Sambal Eruption, 參巴火山爆, Otah Tot, 烏達小龍, Lemongrass Smoke Puff, 香茅蕉葉煙, Chili Paste Nibble, 辣味魚蓉咬, Otah Swashbuckler, 烏達劍客, Bamboo Skewer Thrust, 竹籤連環刺, Charcoal Grill Wave, 炭香燒烤熱浪, Otah Pyrolord Chong, 烏達炎領·炙香, Sambal Otah Torrent, 烈焰參巴魚漿潮, Charcoal Ember Storm, 椰殼炭火烈焰風暴",
+  "family": {
+    "seriesId": "chwee-kueh-hamster",
+    "element": "earth",
+    "flavor": "salty",
+    "foodOrigin": {
+      "en": "Chwee Kueh",
+      "zh": "水粿"
+    },
+    "evolutionItemId": "chwee-kueh-hamster-essence",
+    "evolutionItem": {
+      "id": "chwee-kueh-hamster-essence",
+      "name": {
+        "en": "Chwee Kueh Essence",
+        "zh": "水粿精華"
+      },
+      "description": {
+        "en": "Concentrated essence of Chwee Kueh, fuel for evolution.",
+        "zh": "濃縮嘅水粿精華，進化嘅燃料。"
+      },
+      "icon": "star"
+    },
+    "stages": [
+      {
+        "id": "chwee-hamlet",
+        "stage": 1,
+        "name": {
+          "en": "Chwee Hamlet",
+          "zh": "水粿鼠仔"
+        },
+        "element": "earth",
+        "flavor": "salty",
+        "rarity": "common",
+        "foodOrigin": {
+          "en": "Chwee Kueh",
+          "zh": "水粿"
+        },
+        "description": {
+          "en": "A chubby little hamster spirit that lives in bamboo steamers. It has a soft, bouncy white body made of steamed rice flour and loves to nestle in warm, savory chai poh.",
+          "zh": "一隻圓滾滾的倉鼠精靈，生活在竹蒸籠裡。牠擁有蒸米粉製成的柔軟彈性白色身體，最喜歡窩在溫熱香鹹的菜脯裡。"
+        },
+        "theme": "A chibi bipedal hamster pup standing upright. Its body is smooth, white, and bouncy like freshly steamed rice cake. It wears a small bamboo steamer lid as a hat and has a tiny dab of glossy brown preserved radish (chai poh) on its head. Its arms and legs are small but clearly defined and separate from its body, spread out in a cute, balanced pose. It has large, glossy black eyes and shiny pink cheeks.",
+        "skillIdeas": [
+          "Steamer Bounce",
+          "Chai Poh Splash"
+        ],
+        "bodyPlan": "beast-kin"
+      },
+      {
+        "id": "chwee-sentry",
+        "stage": 2,
+        "name": {
+          "en": "Chwee Sentry",
+          "zh": "水粿精兵"
+        },
+        "element": "earth",
+        "flavor": "salty",
+        "rarity": "rare",
+        "foodOrigin": {
+          "en": "Chwee Kueh",
+          "zh": "水粿"
+        },
+        "description": {
+          "en": "With a body hardened by perfect steaming, this bipedal hamster warrior proudly guards the hawker stall. It wears armor made of glazed ceramic saucers and carries a wooden paddle slick with chili oil.",
+          "zh": "經過完美蒸製淬鍊的雙足倉鼠戰士，自豪地守護著小販攤位。牠身穿釉面陶碗製成的鎧甲，手持沾滿辣椒油的木鏟。"
+        },
+        "theme": "An upright bipedal hamster soldier. Its white skin has a silky, matte-steamed texture. It wears a chest plate crafted from a classic shallow Chwee Kueh aluminum saucer, decorated with a thick layer of glistening, caramelized dark brown chai poh. It stands firmly on two legs with its arms spread, holding a wooden spatula weapon. Red chili oil drips artistically from its armor, catching the light with rich glossy specular highlights.",
+        "skillIdeas": [
+          "Salty Radish Shield",
+          "Spatula Sweep"
+        ],
+        "bodyPlan": "beast-kin"
+      },
+      {
+        "id": "chwee-shogun",
+        "stage": 3,
+        "name": {
+          "en": "Chwee Shogun",
+          "zh": "水粿大將"
+        },
+        "element": "earth",
+        "flavor": "salty",
+        "rarity": "epic",
+        "foodOrigin": {
+          "en": "Chwee Kueh",
+          "zh": "水粿"
+        },
+        "description": {
+          "en": "The ultimate guardian of the savory breakfast. This grand hamster shogun commands the earthen steam, clad in interlocking ceramic-plate armor dripping with sweet-savory chili oil and topped with an elite mound of fragrant caramelized radish.",
+          "zh": "美味早餐的終極守護者。這位雄偉的倉鼠大將掌控著大地的蒸氣，身披由多層陶碟連綴而成的重甲，甲冑上流淌著甜辣的紅油，並覆蓋著芬芳四溢的焦糖色炒菜脯。"
+        },
+        "theme": "The chwee kueh warrior REBORN as a majestic STEAM DEITY: a hamster-faced celestial god-general with a pure-white rice-cake body, two grand wings of swirling hot steam rising from its back, a tall tiered bamboo-steamer crown, a glowing halo, and a flowing regal cape of molten golden chili oil studded with caramelized chai poh. It wields a long ceremonial golden trident-fork held upright out to one side — a DIFFERENT weapon from the previous stage's spatula. Upright bipedal, arms and legs clearly visible and separate from the body.",
+        "skillIdeas": [
+          "Grand Steamer Eruption",
+          "Caramelized Radish Storm",
+          "Salty Sambal Strike"
+        ],
+        "bodyPlan": "beast-kin"
+      }
+    ],
+    "bodyPlan": "beast-kin"
+  },
+  "concept": {
+    "name": {
+      "en": "Chwee Hamlet",
+      "zh": "水粿鼠仔"
+    },
+    "seriesId": "chwee-kueh-hamster",
+    "stage": 1,
+    "element": "earth",
+    "flavor": "salty",
+    "rarity": "common",
+    "foodOrigin": {
+      "en": "Chwee Kueh",
+      "zh": "水粿"
+    },
+    "description": {
+      "en": "A chubby little hamster spirit that lives in bamboo steamers. It has a soft, bouncy white body made of steamed rice flour and loves to nestle in warm, savory chai poh.",
+      "zh": "一隻圓滾滾的倉鼠精靈，生活在竹蒸籠裡。牠擁有蒸米粉製成的柔軟彈性白色身體，最喜歡窩在溫熱香鹹的菜脯裡。"
+    },
+    "theme": "A chibi bipedal hamster pup standing upright. Its body is smooth, white, and bouncy like freshly steamed rice cake. It wears a small bamboo steamer lid as a hat and has a tiny dab of glossy brown preserved radish (chai poh) on its head. Its arms and legs are small but clearly defined and separate from its body, spread out in a cute, balanced pose. It has large, glossy black eyes and shiny pink cheeks.",
+    "skillIdeas": [
+      "Steamer Bounce",
+      "Chai Poh Splash"
+    ]
+  },
+  "poolStatus": {
+    "total": 4,
+    "usable": 3,
+    "low": false,
+    "exhausted": false,
+    "note": null
+  },
+  "telegram": {
+    "messageId": 9,
+    "awaitingReason": false
+  },
+  "finalizeByStage": {
+    "chwee-hamlet": {
+      "modelUrl": "/models/chwee-hamlet.glb",
+      "animated": true,
+      "rigLite": true,
+      "modelYaw": -1.5707963267948966,
+      "modelHeightM": 0.3,
+      "needsYawVerification": false
+    },
+    "chwee-sentry": {
+      "modelUrl": "/models/chwee-sentry.glb",
+      "animated": true,
+      "modelYaw": 1.5707963267948966,
+      "modelHeightM": 0.5,
+      "needsYawVerification": false
+    },
+    "chwee-shogun": {
+      "modelUrl": "/models/chwee-shogun.glb",
+      "animated": true,
+      "modelYaw": 1.5707963267948966,
+      "modelHeightM": 0.65,
+      "needsYawVerification": false
+    }
+  },
+  "finalize": {
+    "modelUrl": "/models/chwee-hamlet.glb",
+    "animated": true,
+    "rigLite": true,
+    "modelYaw": -1.5707963267948966,
+    "modelHeightM": 0.3,
+    "needsYawVerification": true
+  },
+  "skillsByStage": {
+    "chwee-hamlet": [
+      {
+        "id": "chwee-hamlet-skill-1",
+        "name": {
+          "en": "Cup-Mold Steamer Leap",
+          "zh": "砵仔蒸騰躍"
+        },
+        "description": {
+          "en": "Bounces forcefully out of its metal cup mold, crushing enemies beneath its heavy rice-cake body.",
+          "zh": "從金屬蒸杯中強力彈起，以厚實的水粿糕體重壓對手。"
+        },
+        "power": 1,
+        "cooldown": 0
+      },
+      {
+        "id": "chwee-hamlet-skill-2",
+        "name": {
+          "en": "Savory Chai Poh Splatter",
+          "zh": "鹹香菜脯潑"
+        },
+        "description": {
+          "en": "Flings a scatter of glistening, salty preserved radish to blind and sting enemies.",
+          "zh": "甩出一手油亮鹹香的碎菜脯，以濃郁的鹹氣刺痛並干擾敵方視線。"
+        },
+        "power": 1.4,
+        "cooldown": 2
+      }
+    ],
+    "chwee-sentry": [
+      {
+        "id": "chwee-sentry-skill-1",
+        "name": {
+          "en": "Chai Poh Bastion Bash",
+          "zh": "菜脯重盾擊"
+        },
+        "description": {
+          "en": "Summons a solid wall of compressed preserved radish to block attacks before shattering it forward as shrapnel.",
+          "zh": "召喚由緊實菜脯築成的堅固重盾，阻擋攻擊後將其震碎為飛石碎片痛擊前方。"
+        },
+        "power": 1.1,
+        "cooldown": 0
+      },
+      {
+        "id": "chwee-sentry-skill-2",
+        "name": {
+          "en": "Bamboo Spatula Sweep",
+          "zh": "竹製糕鏟掃"
+        },
+        "description": {
+          "en": "Sweeps a giant flat bamboo spatula across the ground, tripping foes and launching them into the air.",
+          "zh": "揮舞巨型竹製水粿鏟橫掃地面，絆倒對手並將其鏟飛至半空。"
+        },
+        "power": 1.7,
+        "cooldown": 2
+      },
+      {
+        "id": "chwee-sentry-heal",
+        "name": {
+          "en": "Garlic Oil Rejuvenation",
+          "zh": "熟油蒜香療"
+        },
+        "description": {
+          "en": "Disperses a warm, aromatic cloud of garlic-infused oil to soothe wounds and boost ally defenses.",
+          "zh": "散發溫熱香濃的熟油與蒜香，為隊友療癒傷口並提升防禦力。"
+        },
+        "power": 0,
+        "cooldown": 3,
+        "healPercent": 0.3
+      }
+    ],
+    "chwee-shogun": [
+      {
+        "id": "chwee-shogun-skill-1",
+        "name": {
+          "en": "Grand Steamer Pressure Eruption",
+          "zh": "巨神蒸籠大爆發"
+        },
+        "description": {
+          "en": "Unleashes a massive burst of scalding rice-scented steam from giant bamboo steamers to burn all opponents.",
+          "zh": "瞬間掀開巨型竹蒸籠，釋放高壓灼熱的米香蒸氣灼傷全體敵方。"
+        },
+        "power": 1.2,
+        "cooldown": 0
+      },
+      {
+        "id": "chwee-shogun-skill-2",
+        "name": {
+          "en": "Caramelized Chai Poh Tempest",
+          "zh": "焦香菜脯狂風暴"
+        },
+        "description": {
+          "en": "Conjures a raging whirlwind of dark, sweet-and-salty caramelized radish that pummels the battlefield.",
+          "zh": "召喚狂暴的深色焦香醬油菜脯風暴，以排山倒海之勢無情痛擊整個戰場。"
+        },
+        "power": 2,
+        "cooldown": 3
+      }
+    ]
+  },
+  "skills": [
+    {
+      "id": "chwee-hamlet-skill-1",
+      "name": {
+        "en": "Cup-Mold Steamer Leap",
+        "zh": "砵仔蒸騰躍"
+      },
+      "description": {
+        "en": "Bounces forcefully out of its metal cup mold, crushing enemies beneath its heavy rice-cake body.",
+        "zh": "從金屬蒸杯中強力彈起，以厚實的水粿糕體重壓對手。"
+      },
+      "power": 1,
+      "cooldown": 0
+    },
+    {
+      "id": "chwee-hamlet-skill-2",
+      "name": {
+        "en": "Savory Chai Poh Splatter",
+        "zh": "鹹香菜脯潑"
+      },
+      "description": {
+        "en": "Flings a scatter of glistening, salty preserved radish to blind and sting enemies.",
+        "zh": "甩出一手油亮鹹香的碎菜脯，以濃郁的鹹氣刺痛並干擾敵方視線。"
+      },
+      "power": 1.4,
+      "cooldown": 2
+    }
+  ],
+  "speciesList": [
+    {
+      "id": "chwee-hamlet",
+      "seriesId": "chwee-kueh-hamster",
+      "stage": 1,
+      "name": {
+        "en": "Chwee Hamlet",
+        "zh": "水粿鼠仔"
+      },
+      "element": "earth",
+      "flavor": "salty",
+      "rarity": "common",
+      "foodOrigin": {
+        "en": "Chwee Kueh",
+        "zh": "水粿"
+      },
+      "description": {
+        "en": "A chubby little hamster spirit that lives in bamboo steamers. It has a soft, bouncy white body made of steamed rice flour and loves to nestle in warm, savory chai poh.",
+        "zh": "一隻圓滾滾的倉鼠精靈，生活在竹蒸籠裡。牠擁有蒸米粉製成的柔軟彈性白色身體，最喜歡窩在溫熱香鹹的菜脯裡。"
+      },
+      "baseStats": {
+        "hp": 45,
+        "attack": 13,
+        "defense": 10,
+        "speed": 14
+      },
+      "skills": [
+        {
+          "id": "chwee-hamlet-skill-1",
+          "name": {
+            "en": "Cup-Mold Steamer Leap",
+            "zh": "砵仔蒸騰躍"
+          },
+          "description": {
+            "en": "Bounces forcefully out of its metal cup mold, crushing enemies beneath its heavy rice-cake body.",
+            "zh": "從金屬蒸杯中強力彈起，以厚實的水粿糕體重壓對手。"
+          },
+          "power": 1,
+          "cooldown": 0
+        },
+        {
+          "id": "chwee-hamlet-skill-2",
+          "name": {
+            "en": "Savory Chai Poh Splatter",
+            "zh": "鹹香菜脯潑"
+          },
+          "description": {
+            "en": "Flings a scatter of glistening, salty preserved radish to blind and sting enemies.",
+            "zh": "甩出一手油亮鹹香的碎菜脯，以濃郁的鹹氣刺痛並干擾敵方視線。"
+          },
+          "power": 1.4,
+          "cooldown": 2
+        }
+      ],
+      "evolvesTo": "chwee-sentry",
+      "evolutionRequirement": {
+        "items": {
+          "chwee-kueh-hamster-essence": 5
+        },
+        "checkinCentres": 2
+      },
+      "modelUrl": "/models/chwee-hamlet.glb",
+      "modelHeightM": 0.3,
+      "animated": true,
+      "rigLite": true,
+      "modelYaw": -1.5707963267948966
+    },
+    {
+      "id": "chwee-sentry",
+      "seriesId": "chwee-kueh-hamster",
+      "stage": 2,
+      "name": {
+        "en": "Chwee Sentry",
+        "zh": "水粿精兵"
+      },
+      "element": "earth",
+      "flavor": "salty",
+      "rarity": "rare",
+      "foodOrigin": {
+        "en": "Chwee Kueh",
+        "zh": "水粿"
+      },
+      "description": {
+        "en": "With a body hardened by perfect steaming, this bipedal hamster warrior proudly guards the hawker stall. It wears armor made of glazed ceramic saucers and carries a wooden paddle slick with chili oil.",
+        "zh": "經過完美蒸製淬鍊的雙足倉鼠戰士，自豪地守護著小販攤位。牠身穿釉面陶碗製成的鎧甲，手持沾滿辣椒油的木鏟。"
+      },
+      "baseStats": {
+        "hp": 72,
+        "attack": 22,
+        "defense": 18,
+        "speed": 20
+      },
+      "skills": [
+        {
+          "id": "chwee-sentry-skill-1",
+          "name": {
+            "en": "Chai Poh Bastion Bash",
+            "zh": "菜脯重盾擊"
+          },
+          "description": {
+            "en": "Summons a solid wall of compressed preserved radish to block attacks before shattering it forward as shrapnel.",
+            "zh": "召喚由緊實菜脯築成的堅固重盾，阻擋攻擊後將其震碎為飛石碎片痛擊前方。"
+          },
+          "power": 1.1,
+          "cooldown": 0
+        },
+        {
+          "id": "chwee-sentry-skill-2",
+          "name": {
+            "en": "Bamboo Spatula Sweep",
+            "zh": "竹製糕鏟掃"
+          },
+          "description": {
+            "en": "Sweeps a giant flat bamboo spatula across the ground, tripping foes and launching them into the air.",
+            "zh": "揮舞巨型竹製水粿鏟橫掃地面，絆倒對手並將其鏟飛至半空。"
+          },
+          "power": 1.7,
+          "cooldown": 2
+        },
+        {
+          "id": "chwee-sentry-heal",
+          "name": {
+            "en": "Garlic Oil Rejuvenation",
+            "zh": "熟油蒜香療"
+          },
+          "description": {
+            "en": "Disperses a warm, aromatic cloud of garlic-infused oil to soothe wounds and boost ally defenses.",
+            "zh": "散發溫熱香濃的熟油與蒜香，為隊友療癒傷口並提升防禦力。"
+          },
+          "power": 0,
+          "cooldown": 3,
+          "healPercent": 0.3
+        }
+      ],
+      "evolvesTo": "chwee-shogun",
+      "evolutionRequirement": {
+        "items": {
+          "chwee-kueh-hamster-essence": 10
+        },
+        "checkinCentres": 5
+      },
+      "modelUrl": "/models/chwee-sentry.glb",
+      "modelHeightM": 0.5,
+      "animated": true,
+      "modelYaw": 1.5707963267948966
+    },
+    {
+      "id": "chwee-shogun",
+      "seriesId": "chwee-kueh-hamster",
+      "stage": 3,
+      "name": {
+        "en": "Chwee Shogun",
+        "zh": "水粿大將"
+      },
+      "element": "earth",
+      "flavor": "salty",
+      "rarity": "epic",
+      "foodOrigin": {
+        "en": "Chwee Kueh",
+        "zh": "水粿"
+      },
+      "description": {
+        "en": "The ultimate guardian of the savory breakfast. This grand hamster shogun commands the earthen steam, clad in interlocking ceramic-plate armor dripping with sweet-savory chili oil and topped with an elite mound of fragrant caramelized radish.",
+        "zh": "美味早餐的終極守護者。這位雄偉的倉鼠大將掌控著大地的蒸氣，身披由多層陶碟連綴而成的重甲，甲冑上流淌著甜辣的紅油，並覆蓋著芬芳四溢的焦糖色炒菜脯。"
+      },
+      "baseStats": {
+        "hp": 102,
+        "attack": 34,
+        "defense": 28,
+        "speed": 26
+      },
+      "skills": [
+        {
+          "id": "chwee-shogun-skill-1",
+          "name": {
+            "en": "Grand Steamer Pressure Eruption",
+            "zh": "巨神蒸籠大爆發"
+          },
+          "description": {
+            "en": "Unleashes a massive burst of scalding rice-scented steam from giant bamboo steamers to burn all opponents.",
+            "zh": "瞬間掀開巨型竹蒸籠，釋放高壓灼熱的米香蒸氣灼傷全體敵方。"
+          },
+          "power": 1.2,
+          "cooldown": 0
+        },
+        {
+          "id": "chwee-shogun-skill-2",
+          "name": {
+            "en": "Caramelized Chai Poh Tempest",
+            "zh": "焦香菜脯狂風暴"
+          },
+          "description": {
+            "en": "Conjures a raging whirlwind of dark, sweet-and-salty caramelized radish that pummels the battlefield.",
+            "zh": "召喚狂暴的深色焦香醬油菜脯風暴，以排山倒海之勢無情痛擊整個戰場。"
+          },
+          "power": 2,
+          "cooldown": 3
+        }
+      ],
+      "evolvesTo": null,
+      "evolutionRequirement": null,
+      "modelUrl": "/models/chwee-shogun.glb",
+      "modelHeightM": 0.65,
+      "animated": true,
+      "modelYaw": 1.5707963267948966
+    }
+  ],
+  "species": {
+    "id": "chwee-hamlet",
+    "seriesId": "chwee-kueh-hamster",
+    "stage": 1,
+    "name": {
+      "en": "Chwee Hamlet",
+      "zh": "水粿鼠仔"
+    },
+    "element": "earth",
+    "flavor": "salty",
+    "rarity": "common",
+    "foodOrigin": {
+      "en": "Chwee Kueh",
+      "zh": "水粿"
+    },
+    "description": {
+      "en": "A chubby little hamster spirit that lives in bamboo steamers. It has a soft, bouncy white body made of steamed rice flour and loves to nestle in warm, savory chai poh.",
+      "zh": "一隻圓滾滾的倉鼠精靈，生活在竹蒸籠裡。牠擁有蒸米粉製成的柔軟彈性白色身體，最喜歡窩在溫熱香鹹的菜脯裡。"
+    },
+    "baseStats": {
+      "hp": 45,
+      "attack": 13,
+      "defense": 10,
+      "speed": 14
+    },
+    "skills": [
+      {
+        "id": "chwee-hamlet-skill-1",
+        "name": {
+          "en": "Cup-Mold Steamer Leap",
+          "zh": "砵仔蒸騰躍"
+        },
+        "description": {
+          "en": "Bounces forcefully out of its metal cup mold, crushing enemies beneath its heavy rice-cake body.",
+          "zh": "從金屬蒸杯中強力彈起，以厚實的水粿糕體重壓對手。"
+        },
+        "power": 1,
+        "cooldown": 0
+      },
+      {
+        "id": "chwee-hamlet-skill-2",
+        "name": {
+          "en": "Savory Chai Poh Splatter",
+          "zh": "鹹香菜脯潑"
+        },
+        "description": {
+          "en": "Flings a scatter of glistening, salty preserved radish to blind and sting enemies.",
+          "zh": "甩出一手油亮鹹香的碎菜脯，以濃郁的鹹氣刺痛並干擾敵方視線。"
+        },
+        "power": 1.4,
+        "cooldown": 2
+      }
+    ],
+    "evolvesTo": "chwee-sentry",
+    "evolutionRequirement": {
+      "items": {
+        "chwee-kueh-hamster-essence": 5
+      },
+      "checkinCentres": 2
+    },
+    "modelUrl": "/models/chwee-hamlet.glb",
+    "modelHeightM": 0.3,
+    "animated": true,
+    "rigLite": true,
+    "modelYaw": -1.5707963267948966
+  },
+  "evolutionItemId": "chwee-kueh-hamster-essence",
+  "evolutionItem": {
+    "id": "chwee-kueh-hamster-essence",
+    "name": {
+      "en": "Chwee Kueh Essence",
+      "zh": "水粿精華"
+    },
+    "description": {
+      "en": "Concentrated essence of Chwee Kueh, fuel for evolution.",
+      "zh": "濃縮嘅水粿精華，進化嘅燃料。"
+    },
+    "icon": "star"
+  },
+  "decision": {
+    "verdict": "approve",
+    "reason": "pilot 3D 整合上線",
+    "by": "manual",
+    "at": "2026-07-20T17:54:13.311Z"
+  }
+}

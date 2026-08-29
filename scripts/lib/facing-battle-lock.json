@@ -1,0 +1,9 @@
+{
+  "_comment": "切磋面向幾何鎖定。改呢啲數值＝要同步改 battle/page.tsx 並重產 facing golden（FACING_ALLOW_BATTLE_UNLOCK=1 先過靜態閘）。",
+  "PLAYER_POS": [-0.35, 0, 0.05],
+  "ENEMY_POS": [0.3, 0, -0.9],
+  "cameraPositionBase": [-0.46, 0.45, 1.38],
+  "cameraLookAt": [0.06, 0.26, -0.5],
+  "stripRootMustUseRigLite": true,
+  "forbiddenIdentifiers": ["enemyYawFlip"]
+}

@@ -1,0 +1,46 @@
+# 系統一 — 自動 rollback（瞓覺保命網）
+# 由 uptime-monitor 偵測到 down 時觸發，或手動 run。回滾到 Vercel 上一個健康 production 部署。
+# 未設 VERCEL_TOKEN 時 graceful skip。呢個係「先止血、後查根因」嘅一步，唔靠 AI。
+name: auto-rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "回滾原因（會出喺 Telegram 通知）"
+        required: false
+        default: "manual rollback"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: auto-rollback
+  cancel-in-progress: false
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Report reason
+        run: |
+          node scripts/ops/notify-telegram.mjs "🟠 *開始 rollback*
+          原因：${{ github.event.inputs.reason }}" || true
+
+      - name: Link Vercel project
+        if: env.VERCEL_TOKEN != ''
+        run: npx --yes vercel@latest pull --yes --environment=production --token="$VERCEL_TOKEN"
+
+      - name: Rollback to last healthy deploy
+        run: node scripts/ops/rollback.mjs

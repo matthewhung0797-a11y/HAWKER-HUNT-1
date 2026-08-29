@@ -1,0 +1,983 @@
+{
+  "id": "auto-20260729-319b",
+  "createdAt": "2026-07-29T06:29:26.853Z",
+  "updatedAt": "2026-07-29T07:44:00.239Z",
+  "status": "approved",
+  "kind": "catalogue",
+  "allowTextOnly": false,
+  "instructions": "復活節的精靈",
+  "artifacts": {
+    "artByStage": {
+      "wanton-pup": "public/spirits/full/wanton-pup.webp",
+      "charsiu-blade": "public/spirits/full/charsiu-blade.webp",
+      "wanton-mee-shogun": "public/spirits/full/wanton-mee-shogun.webp"
+    },
+    "art": "public/spirits/full/wanton-pup.webp",
+    "previewUrl": "https://iinbjhpybbdxclyzohtv.supabase.co/storage/v1/object/sign/pet-job-refs/previews/auto-20260729-319b.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9mZTdlOGRmZS0wMTc1LTRmMDAtYmVkMy1jOTExZDRlYWI3NTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwZXQtam9iLXJlZnMvcHJldmlld3MvYXV0by0yMDI2MDcyOS0zMTliLndlYnAiLCJzY29wZSI6ImRvd25sb2FkIiwiaWF0IjoxNzg1MzA4NjQ1LCJleHAiOjE3ODU5MTM0NDV9.mpqou7pDQPtwZgZUVQ_-HXhc5GSmsd5k1E6QFyf8-v4",
+    "model3dByStage": {
+      "wanton-pup": "model-pipeline/gen/tripo/wanton-pup.glb",
+      "charsiu-blade": "model-pipeline/gen/tripo/charsiu-blade.glb",
+      "wanton-mee-shogun": "model-pipeline/gen/tripo/wanton-mee-shogun.glb"
+    },
+    "model3d": "model-pipeline/gen/tripo/wanton-pup.glb",
+    "riggedByStage": {
+      "wanton-pup": "content/pending-pets/artifacts/auto-20260729-319b/rig.wanton-pup.json",
+      "charsiu-blade": "content/pending-pets/artifacts/auto-20260729-319b/rig.charsiu-blade.json",
+      "wanton-mee-shogun": "content/pending-pets/artifacts/auto-20260729-319b/rig.wanton-mee-shogun.json"
+    },
+    "rigModeByStage": {},
+    "rigged": "content/pending-pets/artifacts/auto-20260729-319b/rig.wanton-pup.json",
+    "finalByStage": {
+      "wanton-pup": "public/models/wanton-pup.glb",
+      "charsiu-blade": "public/models/charsiu-blade.glb",
+      "wanton-mee-shogun": "public/models/wanton-mee-shogun.glb"
+    },
+    "final": "public/models/wanton-pup.glb",
+    "facingCalByStage": {
+      "wanton-pup": {
+        "shots": {
+          "0": {
+            "playerPath": "facing-cal/auto-20260729-319b/wanton-pup-player-0.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/wanton-pup-enemy-0.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-pup-player-0.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-pup-enemy-0.png"
+          },
+          "180": {
+            "playerPath": "facing-cal/auto-20260729-319b/wanton-pup-player-180.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/wanton-pup-enemy-180.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-pup-player-180.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-pup-enemy-180.png"
+          },
+          "+90": {
+            "playerPath": "facing-cal/auto-20260729-319b/wanton-pup-player-_90.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/wanton-pup-enemy-_90.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-pup-player-+90.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-pup-enemy-+90.png"
+          },
+          "-90": {
+            "playerPath": "facing-cal/auto-20260729-319b/wanton-pup-player--90.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/wanton-pup-enemy--90.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-pup-player--90.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-pup-enemy--90.png"
+          }
+        },
+        "at": "2026-07-29T07:06:08.714Z"
+      },
+      "charsiu-blade": {
+        "shots": {
+          "0": {
+            "playerPath": "facing-cal/auto-20260729-319b/charsiu-blade-player-0.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/charsiu-blade-enemy-0.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/charsiu-blade-player-0.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/charsiu-blade-enemy-0.png"
+          },
+          "180": {
+            "playerPath": "facing-cal/auto-20260729-319b/charsiu-blade-player-180.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/charsiu-blade-enemy-180.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/charsiu-blade-player-180.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/charsiu-blade-enemy-180.png"
+          },
+          "+90": {
+            "playerPath": "facing-cal/auto-20260729-319b/charsiu-blade-player-_90.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/charsiu-blade-enemy-_90.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/charsiu-blade-player-+90.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/charsiu-blade-enemy-+90.png"
+          },
+          "-90": {
+            "playerPath": "facing-cal/auto-20260729-319b/charsiu-blade-player--90.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/charsiu-blade-enemy--90.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/charsiu-blade-player--90.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/charsiu-blade-enemy--90.png"
+          }
+        },
+        "at": "2026-07-29T07:07:43.814Z"
+      },
+      "wanton-mee-shogun": {
+        "shots": {
+          "0": {
+            "playerPath": null,
+            "enemyPath": "facing-cal/auto-20260729-319b/wanton-mee-shogun-enemy-0.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-mee-shogun-player-0.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-mee-shogun-enemy-0.png"
+          },
+          "180": {
+            "playerPath": "facing-cal/auto-20260729-319b/wanton-mee-shogun-player-180.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/wanton-mee-shogun-enemy-180.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-mee-shogun-player-180.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-mee-shogun-enemy-180.png"
+          },
+          "+90": {
+            "playerPath": "facing-cal/auto-20260729-319b/wanton-mee-shogun-player-_90.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/wanton-mee-shogun-enemy-_90.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-mee-shogun-player-+90.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-mee-shogun-enemy-+90.png"
+          },
+          "-90": {
+            "playerPath": "facing-cal/auto-20260729-319b/wanton-mee-shogun-player--90.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/wanton-mee-shogun-enemy--90.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-mee-shogun-player--90.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-mee-shogun-enemy--90.png"
+          }
+        },
+        "at": "2026-07-29T07:09:46.990Z"
+      }
+    },
+    "facingLockByStage": {
+      "wanton-pup": {
+        "at": "2026-07-29T07:22:16.742Z",
+        "modelYaw": 0,
+        "verified": true,
+        "yawLabel": "0"
+      },
+      "charsiu-blade": {
+        "at": "2026-07-29T07:22:16.742Z",
+        "modelYaw": 0,
+        "verified": true,
+        "yawLabel": "0"
+      },
+      "wanton-mee-shogun": {
+        "at": "2026-07-29T07:22:16.742Z",
+        "modelYaw": 0,
+        "verified": true,
+        "yawLabel": "0"
+      }
+    }
+  },
+  "manifest": {
+    "concept": {
+      "status": "mock",
+      "mode": "mock",
+      "detail": "family=wanton-mee 3階；池 3/4",
+      "at": "2026-07-29T06:29:47.563Z"
+    },
+    "art": {
+      "status": "done",
+      "mode": "gemini",
+      "detail": "3/3 階真圖",
+      "at": "2026-07-29T06:31:26.560Z"
+    },
+    "draft": {
+      "status": "done",
+      "detail": "三階 species 已組裝（wanton-pup → charsiu-blade → wanton-mee-shogun）；phase=from-3d；status=awaiting-approval",
+      "at": "2026-07-29T07:04:03.708Z"
+    },
+    "model3d": {
+      "status": "done",
+      "mode": "real",
+      "detail": "3/3 階真生成",
+      "at": "2026-07-29T07:03:29.683Z"
+    },
+    "rig": {
+      "status": "mock",
+      "mode": "mock",
+      "detail": "0/3 階真 rig（Meshy 0／Tripo 0）",
+      "at": "2026-07-29T07:03:46.465Z"
+    },
+    "finalize": {
+      "status": "done",
+      "mode": "real",
+      "detail": "3/3 階真 finalize",
+      "at": "2026-07-29T07:03:50.680Z"
+    },
+    "skills": {
+      "status": "done",
+      "mode": "gemini",
+      "detail": "7 skills / 3 階",
+      "at": "2026-07-29T07:04:03.706Z"
+    },
+    "facingCalByStage": {
+      "wanton-pup": {
+        "shots": {
+          "0": {
+            "playerPath": "facing-cal/auto-20260729-319b/wanton-pup-player-0.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/wanton-pup-enemy-0.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-pup-player-0.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-pup-enemy-0.png"
+          },
+          "180": {
+            "playerPath": "facing-cal/auto-20260729-319b/wanton-pup-player-180.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/wanton-pup-enemy-180.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-pup-player-180.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-pup-enemy-180.png"
+          },
+          "+90": {
+            "playerPath": "facing-cal/auto-20260729-319b/wanton-pup-player-_90.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/wanton-pup-enemy-_90.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-pup-player-+90.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-pup-enemy-+90.png"
+          },
+          "-90": {
+            "playerPath": "facing-cal/auto-20260729-319b/wanton-pup-player--90.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/wanton-pup-enemy--90.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-pup-player--90.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-pup-enemy--90.png"
+          }
+        },
+        "at": "2026-07-29T07:06:08.714Z"
+      },
+      "charsiu-blade": {
+        "shots": {
+          "0": {
+            "playerPath": "facing-cal/auto-20260729-319b/charsiu-blade-player-0.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/charsiu-blade-enemy-0.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/charsiu-blade-player-0.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/charsiu-blade-enemy-0.png"
+          },
+          "180": {
+            "playerPath": "facing-cal/auto-20260729-319b/charsiu-blade-player-180.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/charsiu-blade-enemy-180.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/charsiu-blade-player-180.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/charsiu-blade-enemy-180.png"
+          },
+          "+90": {
+            "playerPath": "facing-cal/auto-20260729-319b/charsiu-blade-player-_90.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/charsiu-blade-enemy-_90.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/charsiu-blade-player-+90.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/charsiu-blade-enemy-+90.png"
+          },
+          "-90": {
+            "playerPath": "facing-cal/auto-20260729-319b/charsiu-blade-player--90.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/charsiu-blade-enemy--90.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/charsiu-blade-player--90.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/charsiu-blade-enemy--90.png"
+          }
+        },
+        "at": "2026-07-29T07:07:43.814Z"
+      },
+      "wanton-mee-shogun": {
+        "shots": {
+          "0": {
+            "playerPath": null,
+            "enemyPath": "facing-cal/auto-20260729-319b/wanton-mee-shogun-enemy-0.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-mee-shogun-player-0.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-mee-shogun-enemy-0.png"
+          },
+          "180": {
+            "playerPath": "facing-cal/auto-20260729-319b/wanton-mee-shogun-player-180.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/wanton-mee-shogun-enemy-180.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-mee-shogun-player-180.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-mee-shogun-enemy-180.png"
+          },
+          "+90": {
+            "playerPath": "facing-cal/auto-20260729-319b/wanton-mee-shogun-player-_90.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/wanton-mee-shogun-enemy-_90.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-mee-shogun-player-+90.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-mee-shogun-enemy-+90.png"
+          },
+          "-90": {
+            "playerPath": "facing-cal/auto-20260729-319b/wanton-mee-shogun-player--90.png",
+            "enemyPath": "facing-cal/auto-20260729-319b/wanton-mee-shogun-enemy--90.png",
+            "localPlayer": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-mee-shogun-player--90.png",
+            "localEnemy": "/home/runner/work/hawker-hunt/hawker-hunt/test-shots/facing-cal-pipeline/auto-20260729-319b/wanton-mee-shogun-enemy--90.png"
+          }
+        },
+        "at": "2026-07-29T07:09:46.990Z"
+      }
+    },
+    "facingLockByStage": {
+      "wanton-pup": {
+        "at": "2026-07-29T07:22:16.742Z",
+        "modelYaw": 0,
+        "verified": true,
+        "yawLabel": "0"
+      },
+      "charsiu-blade": {
+        "at": "2026-07-29T07:22:16.742Z",
+        "modelYaw": 0,
+        "verified": true,
+        "yawLabel": "0"
+      },
+      "wanton-mee-shogun": {
+        "at": "2026-07-29T07:22:16.742Z",
+        "modelYaw": 0,
+        "verified": true,
+        "yawLabel": "0"
+      }
+    }
+  },
+  "conceptPrompt": "Invent ONE brand-new Singapore/Malaysian hawker-food spirit FAMILY for the game Hawker Hunt.\nIt must be a real or highly plausible hawker dish, turned into a cute collectible monster family of 3 evolution stages.\nDesign goals: every dish must be UNIQUE (no collision with existing pets); may resemble the style but never be identical.\nSPECIES FORM for stages 1–2 (baby and warrior forms share it): an upright bipedal BIRD-person: a beaked bird head on a humanoid body, wings that read as ARMS spread out to the SIDES clear of the torso, standing on two bird legs. Stage 1 may be a rounder baby version. STAGE 3 MUST be an ARCHETYPE JUMP — a DRAMATIC rebirth whose SILHOUETTE CLASS is clearly different from stage 2. For THIS family, shape the final form as: a grand BEAST-KING — a huge ceremonial mane or ruff, royal guardian armour, twin blades or a great glaive; noble and leonine (NO wings). Commit fully to that ONE archetype; do NOT fall back on a generic winged-angel-with-halo look unless that is the chosen archetype. Keep the species' face and palette recognisable, but stage 3 is a transformation, NOT a bigger warrior. Every stage MUST carry a DIFFERENT weapon or armament (never the same tool twice). ALL stages (including stage 3's mythic form) MUST be describable as an upright bipedal figure with arms/legs/claws clearly separate from the body (this is required so the 2D art can be auto-rigged into an animated 3D model). Write each stage's theme so an artist would naturally draw that upright, limbs-apart pose.\nCreator direction for this one: 復活節的精靈\n\nReturn JSON with: seriesId (ascii kebab-case, unique), foodOrigin {en,zh}, element (one of metal/wood/water/fire/earth), flavor (one of bitter/sour/salty/sweet/spicy per 五行五味), and stages: an array of EXACTLY 3 objects each { id (ascii kebab-case, unique per stage), stage (1|2|3), name{en,zh}, description{en,zh}, theme, skillIdeas[] }.\nNAMING RULES (strict):\n- Each name{zh} MUST be ONE single title only. Never append a second personal/epithet name after a separator.\n- FORBIDDEN in names: the interpunct 「·」, 「‧」, 「•」, 「・」, and any of : ： - — / ( ) 「」.\n  Write 叻沙龍, NOT 叻沙龍·辛焱. Write 咖啡烏皇, NOT 咖啡烏皇·夜濃.\n- name{zh} should be 2–5 Han characters; name{en} 1–4 words, no transliterated epithet tacked on the end\n  (write \"Laksa Dragon\", NOT \"Laksa Dragon Xinyan\").\n- Save any poetic epithet for the skill names in skillIdeas instead.\nKeep every stage consistent with this art DNA: Chibi anthropomorphic Singapore hawker-food creature mascot, big expressive cartoon eyes, rounded soft chunky body, MEDIUM: rich digital oil painting — every surface hand-painted with thick layered opaque brushstrokes, soft blended painted edges, like premium collectible-figurine box art, TECHNIQUE: forms modelled purely with light and colour (painted edges, never inked contour lines; smooth colour gradations, never flat cel fills), TEXTURE: appetising food materials — crispy, juicy, glossy, caramelised surfaces with wet specular highlights and visible tactile depth, high detail density and ornate finishing (armour trim, gems, sauce drips), scaling UP with evolution stage, strong three-dimensional volume and form, dramatic warm studio lighting, soft rim light, subtle ambient occlusion on the character, warm friendly collectible-monster design, full body head-to-toe, standing, slight 3/4 front view facing camera, cohesive with a unified premium collectible set of food spirits.\n\n\nDO NOT duplicate any of these already-used dishes or names (you MAY be stylistically similar, but the dish, the name and the id MUST be distinct and unique).\nThis list is ONLY for collision avoidance — do NOT copy its naming FORMAT; follow the NAMING RULES above.\nDishes: Hainanese Chicken Rice, 海南雞飯, Laksa, 叻沙, Bak Kut Teh, 肉骨茶, Kueh Lapis, 九層糕, Kaya Toast, 咖椰吐司, Chilli Crab, 辣椒蟹, Satay, 沙嗲, Kopi O, 咖啡烏, Chai Tow Kway, 菜頭粿, Rojak, 囉喏, Oyster Omelette, 蠔煎, Char Kway Teow, 炒粿條, Curry Puff, 咖喱卜, Roti Prata, 印度煎餅, Chendol, 煎蕊, Chilli Padi, 辣椒, Garlic, 蒜頭, Lemongrass, 香茅, Rice Ball, 飯團, Rice Vermicelli, 米粉, Egg, 雞蛋, Fresh Shrimp, 鮮蝦, Coconut Milk, 椰漿, Ice Kachang, 紅豆冰, Kueh Tutu, 嘟嘟糕, Nasi Lemak, 椰漿飯, Otak-Otak, 烏達, Chwee Kueh, 水粿\nNames: Chicken Rice Alliance, 雞飯聯盟, Noodle Clan, 麵食家族, Bak Kut Teh Order, 肉骨茶系, Kueh Dynasty, 糕點系, Kaya Legion, 咖椰系, Chilli Crab Gang, 辣蟹幫, Satay Legion, 沙嗲軍團, Kopi Society, 咖啡烏會, Carrot Cake Clan, 菜頭粿門, Rojak Union, 囉喏聯盟, Orh Luak Tribe, 蠔煎眾, Wok Hei Sect, 鑊氣幫, Curry Puff Order, 咖喱卜團, Prata Tribe, 煎餅族, Chendol School, 煎蕊派, Chilli Baby, 辣椒仔, Garlic Guard, 蒜頭衛兵, Lemongrass Swordsman, 香茅劍客, Riceball Baby, 飯團寶寶, Vermicelli Sprite, 米粉精靈, Egg Guard, 蛋蛋守衛, Shrimp Hopper, 蝦仔跳跳, Coconut Jelly, 椰漿啫喱, Ice Kachang Dragons, 冰豆龍系, Oily Rice Chick, 油飯雞仔, Rice Peck, 米粒啄擊, Oily Rice Heal, 油飯治癒, Silky Chicken Warrior, 滑雞武者, Poached Blade, 白斬刀法, Ginger Splash, 薑蓉飛濺, Hainan Chicken God, 海南雞神, Golden Rice Storm, 黃金飯暴, Chilli Sauce Cannon, 辣椒醬炮, Little Laksa, 叻沙仔, Broth Splash, 湯底潑濺, Coconut Shield, 椰漿護盾, Laksa Warrior, 叻沙武士, Shell Claw, 蝦殼鉗擊, Spicy Surge, 辣浪翻騰, Laksa Dragon, 叻沙龍, Spice Inferno, 香料烈焰, Dragon Noodle Whip, 龍鬚麵鞭, Bak Kut Cub, 肉骨仔, Rib Bonk, 排骨敲擊, Herbal Sip, 藥膳補湯, Bak Kut Warrior, 骨茶武士, Youtiao Strike, 油條重擊, Pepper Guard, 胡椒鐵壁, Bak Kut Grandmaster, 骨茶宗師, Garlic Meteor, 蒜頭流星, Claypot Slam, 砂鍋猛擊, Tutu Sprite, 嘟嘟糕精, Coconut Puff, 椰絲噴發, Steam Veil, 蒸氣面紗, Lapis Queen, 九層糕后, Layer Slice, 分層切擊, Sticky Trap, 黏糕陷阱, Pastry Sovereign, 糕點女王, Gula Melaka Burst, 椰糖爆漿, Royal Decree, 女王詔令, Kaya Blob, 咖央仔, Jam Splat, 醬汁飛濺, Pandan Breeze, 斑蘭清風, Kaya Samurai, 咖央武士, Toast Hammer, 吐司重錘, Butter Slick, 牛油滑步, Kaya Dragon, 咖央聖龍, Phantom Flame, 翡翠幻火, Soft Egg Orb, 半熟蛋彈, Chilli Crablet, 辣蟹仔, Bubble Spit, 泡泡醬沫, Mantou Recovery, 饅頭回氣, Crab Claw Warrior, 辣蟹武士, Claw Crush, 巨鉗粉碎, Sauce Whirl, 醬濤翻滾, Chilli Crab King, 辣椒蟹王, Chilli Tsunami, 辣醬海嘯, Golden Mantou Barrage, 金饅頭連炮, Satay Skewerling, 沙嗲仔, Skewer Jab, 竹籤突刺, Ketupat Rest, 馬來米糕休整, Satay Warrior, 沙嗲武士, Charcoal Grill, 炭火串燒, Triple Skewer, 三串連擊, Satay Flame Emperor, 沙嗲炎帝, Hundred Skewer Storm, 百串燎原, Peanut Sauce Flood, 花生醬洪流, Kopi Bean, 咖啡仔, Bean Toss, 咖啡豆投擲, Kopi Sip, 提神一啖, Kopi Sock Warrior, 咖啡武士, Sock Swing, 咖啡袋重甩, Steam Scald, 滾水燙擊, Kopi O Emperor, 咖啡烏皇, Black Gold Waterfall, 黑金瀑布, Caffeine Rush, 咖啡因狂熱, Radish Cubie, 菜頭仔, Cube Tumble, 粿粒翻滾, Radish Juice, 菜頭甜汁, Carrot Cake Warrior, 菜頭粿武士, Griddle Press, 鐵板煎壓, Egg Crust Slam, 蛋香脆擊, Black & White Cake King, 黑白粿王, Black & White Duet, 黑白雙煎, Sweet Sauce Quake, 甜醬地震, Rojak Tot, 囉喏仔, Pineapple Jab, 菠蘿刺擊, Peanut Dust, 花生碎療癒, Rojak Warrior, 囉喏武士, Haeko Whip, 蝦膏黑鞭, Jicama Shield Bash, 沙葛盾擊, Rojak King, 囉喏王, Hundred Flavour Vortex, 百味漩渦, Black Sauce Deluge, 黑醬傾盆, Little Orh Luak, 蠔煎仔, Starch Flick, 粉漿彈射, Egg Blanket, 蛋被治癒, Omelette Warrior, 蠔煎武者, Sizzle Flip, 鑊氣翻面, Oyster Pearl Shot, 珍珠蠔彈, Oyster Immortal, 蠔煎仙, Tidal Omelette, 蛋海狂潮, Vinegar Mist, 酸醋銀霧, Kway Teow Kid, 粿條仔, Flat Noodle Lash, 粿條抽擊, Lard Crisp Boost, 豬油渣滋補, Kway Teow Warrior, 粿條武士, Wok Toss, 拋鑊翻炒, Cockle Bomb, 血蚶炸彈, Wok Hei God, 鑊氣神, Wok Hei Blast, 鑊氣爆發, Dark Soy Tide, 黑甜醬浪, Curry Puffling, 咖喱卜仔, Crust Flick, 酥皮碎擊, Potato Cushion, 薯仔軟墊, Curry Puff Warrior, 咖喱卜武士, Spiral Crust Cutter, 螺旋酥皮刃, Curry Burst, 咖喱噴發, Golden Puff Sovereign, 咖喱卜尊, Thousand Layer Blades, 千層酥刃, Molten Curry Cannon, 熔岩咖喱炮, Prata Pup, 煎餅仔, Dough Slap, 麵團拍打, Ghee Shine, 酥油滋潤, Prata Warrior, 煎餅武士, Flip Spin Throw, 拋餅迴旋, Crispy Fold Strike, 摺疊脆擊, Prata Sky Elephant, 飛餅神象, Sky Prata Cyclone, 飛天餅旋風, Curry Dip Flood, 咖喱蘸海, Chendol Jelly, 煎蕊仔, Jelly Wiggle, 綠蕊蠕彈, Coconut Milk Bath, 椰奶浴, Chendol Warrior, 煎蕊武士, Shaved Ice Flurry, 刨冰亂舞, Jelly Whip, 綠蕊長鞭, Chendol Snow Queen, 煎蕊雪后, Emerald Blizzard, 翡翠暴雪, Red Bean Meteor, 紅豆流星雨, Fiery Temper, 火爆脾氣, Antibacterial Shield, 抗菌護盾, Lemongrass Sword Dance, 香茅劍舞, Sticky Rice Bind, 糯米黏著, Vermicelli Wrap, 米粉纏繞, Yolk Guard, 蛋黃守護, Bubble Shot, 水泡射擊, Coconut Heal, 椰香治癒, Nasi Lemak Tot, 椰漿飯仔, Pandan Whiff, 斑蘭飄香, Bilis Bonk, 脆炸江魚撞, Nasi Lemak Scout, 椰漿飯小兵, Cucumber Shield Bash, 青瓜爽脆盾, Sambal Splash, 參巴辣醬擊, Nasi Lemak General, 椰漿飯大將軍, Golden Wing Slasher, 酥脆炸雞斬, Volcanic Sambal Eruption, 參巴火山爆, Otah Tot, 烏達小龍, Lemongrass Smoke Puff, 香茅蕉葉煙, Chili Paste Nibble, 辣味魚蓉咬, Otah Swashbuckler, 烏達劍客, Bamboo Skewer Thrust, 竹籤連環刺, Charcoal Grill Wave, 炭香燒烤熱浪, Otah Pyrolord, 烏達炎領, Sambal Otah Torrent, 烈焰參巴魚漿潮, Charcoal Ember Storm, 椰殼炭火烈焰風暴, Chwee Hamlet, 水粿鼠仔, Cup-Mold Steamer Leap, 砵仔蒸騰躍, Savory Chai Poh Splatter, 鹹香菜脯潑, Chwee Sentry, 水粿精兵, Chai Poh Bastion Bash, 菜脯重盾擊, Bamboo Spatula Sweep, 竹製糕鏟掃, Chwee Shogun, 水粿大將, Grand Steamer Pressure Eruption, 巨神蒸籠大爆發, Caramelized Chai Poh Tempest, 焦香菜脯狂風暴, Kachang Snowling, 冰豆龍仔, Sugar Snow Flurry, 甜糖細雪風暴, Minty Scoop Slam, 薄荷冰球重擊, Kachang Frost Drake, 紅豆雪山龍, Rose Syrup Torrent, 玫瑰糖漿怒濤, Razor Scraper Strike, 刨冰飛刃斬, Kachang Feast Guardian, 彩冰聖誕神, Sweet Ice Mandala, 七寶冰雪曼陀羅, Six-Armed Mountain Avalanche, 六臂冰山雪崩衝",
+  "family": {
+    "seriesId": "wanton-mee",
+    "element": "metal",
+    "flavor": "salty",
+    "foodOrigin": {
+      "en": "Wanton Mee",
+      "zh": "雲吞麵"
+    },
+    "evolutionItemId": "wanton-mee-essence",
+    "evolutionItem": {
+      "id": "wanton-mee-essence",
+      "name": {
+        "en": "Wanton Mee Essence",
+        "zh": "雲吞麵精華"
+      },
+      "description": {
+        "en": "Concentrated essence of Wanton Mee, fuel for evolution.",
+        "zh": "濃縮嘅雲吞麵精華，進化嘅燃料。"
+      },
+      "icon": "star"
+    },
+    "stages": [
+      {
+        "id": "wanton-pup",
+        "stage": 1,
+        "name": {
+          "en": "Wanton Pup",
+          "zh": "雲吞仔"
+        },
+        "element": "metal",
+        "flavor": "salty",
+        "rarity": "common",
+        "foodOrigin": {
+          "en": "Wanton Mee",
+          "zh": "雲吞麵"
+        },
+        "description": {
+          "en": "Stage 1 of the Wanton Mee line. (guided)",
+          "zh": "雲吞麵系列第 1 階。（依指示調整）"
+        },
+        "theme": "細雲吞頭、麵條圍巾、圓潤大眼，卡通厚塗；額外指示：復活節的精靈",
+        "skillIdeas": [
+          "雲吞投擲",
+          "麵條彈鞭"
+        ],
+        "bodyPlan": "bird-kin"
+      },
+      {
+        "id": "charsiu-blade",
+        "stage": 2,
+        "name": {
+          "en": "Char Siu Blade",
+          "zh": "叉燒刀客"
+        },
+        "element": "metal",
+        "flavor": "salty",
+        "rarity": "rare",
+        "foodOrigin": {
+          "en": "Wanton Mee",
+          "zh": "雲吞麵"
+        },
+        "description": {
+          "en": "Stage 2 of the Wanton Mee line. (guided)",
+          "zh": "雲吞麵系列第 2 階。（依指示調整）"
+        },
+        "theme": "雲吞頭盔、麵條披肩、手持叉燒刀，威風武士造型，開揚企姿；額外指示：復活節的精靈",
+        "skillIdeas": [
+          "叉燒斬",
+          "黑醋封喉"
+        ],
+        "bodyPlan": "bird-kin"
+      },
+      {
+        "id": "wanton-mee-shogun",
+        "stage": 3,
+        "name": {
+          "en": "Wanton Mee Shogun",
+          "zh": "雲吞麵將軍"
+        },
+        "element": "metal",
+        "flavor": "salty",
+        "rarity": "epic",
+        "foodOrigin": {
+          "en": "Wanton Mee",
+          "zh": "雲吞麵"
+        },
+        "description": {
+          "en": "Stage 3 of the Wanton Mee line. (guided)",
+          "zh": "雲吞麵系列第 3 階。（依指示調整）"
+        },
+        "theme": "雲吞戰盔、雙叉燒刀、麵條戰旗披風，將軍氣勢；額外指示：復活節的精靈",
+        "skillIdeas": [
+          "千麵斬",
+          "叉燒護體"
+        ],
+        "bodyPlan": "bird-kin"
+      }
+    ],
+    "bodyPlan": "bird-kin",
+    "mythicArchetype": "beast-king"
+  },
+  "concept": {
+    "name": {
+      "en": "Wanton Pup",
+      "zh": "雲吞仔"
+    },
+    "seriesId": "wanton-mee",
+    "stage": 1,
+    "element": "metal",
+    "flavor": "salty",
+    "rarity": "common",
+    "foodOrigin": {
+      "en": "Wanton Mee",
+      "zh": "雲吞麵"
+    },
+    "description": {
+      "en": "Stage 1 of the Wanton Mee line. (guided)",
+      "zh": "雲吞麵系列第 1 階。（依指示調整）"
+    },
+    "theme": "細雲吞頭、麵條圍巾、圓潤大眼，卡通厚塗；額外指示：復活節的精靈",
+    "skillIdeas": [
+      "雲吞投擲",
+      "麵條彈鞭"
+    ]
+  },
+  "poolStatus": {
+    "total": 4,
+    "usable": 3,
+    "low": false,
+    "exhausted": false,
+    "note": null
+  },
+  "speciesList": [
+    {
+      "id": "wanton-pup",
+      "seriesId": "wanton-mee",
+      "stage": 1,
+      "name": {
+        "en": "Wanton Pup",
+        "zh": "雲吞仔"
+      },
+      "element": "metal",
+      "flavor": "salty",
+      "rarity": "common",
+      "foodOrigin": {
+        "en": "Wanton Mee",
+        "zh": "雲吞麵"
+      },
+      "description": {
+        "en": "Stage 1 of the Wanton Mee line. (guided)",
+        "zh": "雲吞麵系列第 1 階。（依指示調整）"
+      },
+      "baseStats": {
+        "hp": 45,
+        "attack": 13,
+        "defense": 10,
+        "speed": 14
+      },
+      "skills": [
+        {
+          "id": "wanton-pup-skill-1",
+          "name": {
+            "en": "Plump Wanton Bomb",
+            "zh": "炸雲吞飛彈"
+          },
+          "description": {
+            "en": "Hurls a piping-hot wanton to deal salty metal-element damage to a single foe.",
+            "zh": "投擲熱騰騰的金黃雲吞，對單體敵人造成鹹香的金屬傷害。"
+          },
+          "power": 1,
+          "cooldown": 0
+        },
+        {
+          "id": "wanton-pup-skill-2",
+          "name": {
+            "en": "Springy Noodle Whip",
+            "zh": "竹升麵彈鞭"
+          },
+          "description": {
+            "en": "Lashes target enemies with flexible, springy egg noodles.",
+            "zh": "揮舞爽口彈牙的竹升麵，鞭打前方的敵人。"
+          },
+          "power": 1.4,
+          "cooldown": 2
+        }
+      ],
+      "evolvesTo": "charsiu-blade",
+      "evolutionRequirement": {
+        "items": {
+          "wanton-mee-essence": 5
+        },
+        "checkinCentres": 2
+      },
+      "modelUrl": "/models/wanton-pup.glb",
+      "modelHeightM": 0.3,
+      "modelYaw": 0
+    },
+    {
+      "id": "charsiu-blade",
+      "seriesId": "wanton-mee",
+      "stage": 2,
+      "name": {
+        "en": "Char Siu Blade",
+        "zh": "叉燒刀客"
+      },
+      "element": "metal",
+      "flavor": "salty",
+      "rarity": "rare",
+      "foodOrigin": {
+        "en": "Wanton Mee",
+        "zh": "雲吞麵"
+      },
+      "description": {
+        "en": "Stage 2 of the Wanton Mee line. (guided)",
+        "zh": "雲吞麵系列第 2 階。（依指示調整）"
+      },
+      "baseStats": {
+        "hp": 72,
+        "attack": 22,
+        "defense": 18,
+        "speed": 20
+      },
+      "skills": [
+        {
+          "id": "charsiu-blade-skill-1",
+          "name": {
+            "en": "Honey-Glazed Cleave",
+            "zh": "蜜汁叉燒斬"
+          },
+          "description": {
+            "en": "Slashes an enemy with a caramelized blade to rend their armor.",
+            "zh": "揮舞焦香蜜汁叉燒刃，斬斷對手的防禦。"
+          },
+          "power": 1.1,
+          "cooldown": 0
+        },
+        {
+          "id": "charsiu-blade-skill-2",
+          "name": {
+            "en": "Dark Vinegar Silence",
+            "zh": "黑醋封喉刺"
+          },
+          "description": {
+            "en": "Splashes pungent dark vinegar onto the target, dealing damage and suppressing their skills.",
+            "zh": "潑灑濃郁酸香的黑醋，造成傷害並封印敵人的技能。"
+          },
+          "power": 1.7,
+          "cooldown": 2
+        }
+      ],
+      "evolvesTo": "wanton-mee-shogun",
+      "evolutionRequirement": {
+        "items": {
+          "wanton-mee-essence": 10
+        },
+        "checkinCentres": 5
+      },
+      "modelUrl": "/models/charsiu-blade.glb",
+      "modelHeightM": 0.5,
+      "modelYaw": 0
+    },
+    {
+      "id": "wanton-mee-shogun",
+      "seriesId": "wanton-mee",
+      "stage": 3,
+      "name": {
+        "en": "Wanton Mee Shogun",
+        "zh": "雲吞麵將軍"
+      },
+      "element": "metal",
+      "flavor": "salty",
+      "rarity": "epic",
+      "foodOrigin": {
+        "en": "Wanton Mee",
+        "zh": "雲吞麵"
+      },
+      "description": {
+        "en": "Stage 3 of the Wanton Mee line. (guided)",
+        "zh": "雲吞麵系列第 3 階。（依指示調整）"
+      },
+      "baseStats": {
+        "hp": 102,
+        "attack": 34,
+        "defense": 28,
+        "speed": 26
+      },
+      "skills": [
+        {
+          "id": "wanton-mee-shogun-skill-1",
+          "name": {
+            "en": "Thousand Strand Slash",
+            "zh": "千麵萬縷斬"
+          },
+          "description": {
+            "en": "Unleashes a whirlwind of razor-sharp noodle blades that shreds all foes.",
+            "zh": "揮斬出如鋼絲般鋒利的千縷麵條，撕裂全體敵人。"
+          },
+          "power": 1.2,
+          "cooldown": 0
+        },
+        {
+          "id": "wanton-mee-shogun-skill-2",
+          "name": {
+            "en": "Caramelized Barricade",
+            "zh": "蜜汁叉燒鐵壁"
+          },
+          "description": {
+            "en": "Summons a thick layer of glazed char siu armor that retaliates against striking attackers.",
+            "zh": "凝聚厚重的焦香叉燒鎧甲，並向攻擊者反彈傷害。"
+          },
+          "power": 2,
+          "cooldown": 3
+        },
+        {
+          "id": "wanton-mee-shogun-heal",
+          "name": {
+            "en": "Salty Broth Aegis",
+            "zh": "蜜汁叉燒護體"
+          },
+          "description": {
+            "en": "Envelops the team in a rich savory broth to restore health and reinforce defense.",
+            "zh": "以濃郁鹹香的叉燒與高湯精華庇護全隊，恢復生命並提升防禦。"
+          },
+          "power": 0,
+          "cooldown": 3,
+          "healPercent": 0.3
+        }
+      ],
+      "evolvesTo": null,
+      "evolutionRequirement": null,
+      "modelUrl": "/models/wanton-mee-shogun.glb",
+      "modelHeightM": 0.65,
+      "modelYaw": 0
+    }
+  ],
+  "species": {
+    "id": "wanton-pup",
+    "seriesId": "wanton-mee",
+    "stage": 1,
+    "name": {
+      "en": "Wanton Pup",
+      "zh": "雲吞仔"
+    },
+    "element": "metal",
+    "flavor": "salty",
+    "rarity": "common",
+    "foodOrigin": {
+      "en": "Wanton Mee",
+      "zh": "雲吞麵"
+    },
+    "description": {
+      "en": "Stage 1 of the Wanton Mee line. (guided)",
+      "zh": "雲吞麵系列第 1 階。（依指示調整）"
+    },
+    "baseStats": {
+      "hp": 45,
+      "attack": 13,
+      "defense": 10,
+      "speed": 14
+    },
+    "skills": [
+      {
+        "id": "wanton-pup-skill-1",
+        "name": {
+          "en": "Plump Wanton Bomb",
+          "zh": "炸雲吞飛彈"
+        },
+        "description": {
+          "en": "Hurls a piping-hot wanton to deal salty metal-element damage to a single foe.",
+          "zh": "投擲熱騰騰的金黃雲吞，對單體敵人造成鹹香的金屬傷害。"
+        },
+        "power": 1,
+        "cooldown": 0
+      },
+      {
+        "id": "wanton-pup-skill-2",
+        "name": {
+          "en": "Springy Noodle Whip",
+          "zh": "竹升麵彈鞭"
+        },
+        "description": {
+          "en": "Lashes target enemies with flexible, springy egg noodles.",
+          "zh": "揮舞爽口彈牙的竹升麵，鞭打前方的敵人。"
+        },
+        "power": 1.4,
+        "cooldown": 2
+      }
+    ],
+    "evolvesTo": "charsiu-blade",
+    "evolutionRequirement": {
+      "items": {
+        "wanton-mee-essence": 5
+      },
+      "checkinCentres": 2
+    },
+    "modelUrl": "/models/wanton-pup.glb",
+    "modelHeightM": 0.3,
+    "modelYaw": 0
+  },
+  "evolutionItemId": "wanton-mee-essence",
+  "evolutionItem": {
+    "id": "wanton-mee-essence",
+    "name": {
+      "en": "Wanton Mee Essence",
+      "zh": "雲吞麵精華"
+    },
+    "description": {
+      "en": "Concentrated essence of Wanton Mee, fuel for evolution.",
+      "zh": "濃縮嘅雲吞麵精華，進化嘅燃料。"
+    },
+    "icon": "star"
+  },
+  "pipelinePhase": "from-3d",
+  "finalizeByStage": {
+    "wanton-pup": {
+      "modelUrl": "/models/wanton-pup.glb",
+      "animated": false,
+      "rigLite": false,
+      "modelYaw": -1.5707963267948966,
+      "modelHeightM": 0.3,
+      "needsYawVerification": true,
+      "static": true
+    },
+    "charsiu-blade": {
+      "modelUrl": "/models/charsiu-blade.glb",
+      "animated": false,
+      "rigLite": false,
+      "modelYaw": -1.5707963267948966,
+      "modelHeightM": 0.5,
+      "needsYawVerification": true,
+      "static": true
+    },
+    "wanton-mee-shogun": {
+      "modelUrl": "/models/wanton-mee-shogun.glb",
+      "animated": false,
+      "rigLite": false,
+      "modelYaw": -1.5707963267948966,
+      "modelHeightM": 0.65,
+      "needsYawVerification": true,
+      "static": true
+    }
+  },
+  "finalize": {
+    "modelUrl": "/models/wanton-pup.glb",
+    "animated": false,
+    "rigLite": false,
+    "modelYaw": -1.5707963267948966,
+    "modelHeightM": 0.3,
+    "needsYawVerification": true,
+    "static": true
+  },
+  "skillsByStage": {
+    "wanton-pup": [
+      {
+        "id": "wanton-pup-skill-1",
+        "name": {
+          "en": "Plump Wanton Bomb",
+          "zh": "炸雲吞飛彈"
+        },
+        "description": {
+          "en": "Hurls a piping-hot wanton to deal salty metal-element damage to a single foe.",
+          "zh": "投擲熱騰騰的金黃雲吞，對單體敵人造成鹹香的金屬傷害。"
+        },
+        "power": 1,
+        "cooldown": 0
+      },
+      {
+        "id": "wanton-pup-skill-2",
+        "name": {
+          "en": "Springy Noodle Whip",
+          "zh": "竹升麵彈鞭"
+        },
+        "description": {
+          "en": "Lashes target enemies with flexible, springy egg noodles.",
+          "zh": "揮舞爽口彈牙的竹升麵，鞭打前方的敵人。"
+        },
+        "power": 1.4,
+        "cooldown": 2
+      }
+    ],
+    "charsiu-blade": [
+      {
+        "id": "charsiu-blade-skill-1",
+        "name": {
+          "en": "Honey-Glazed Cleave",
+          "zh": "蜜汁叉燒斬"
+        },
+        "description": {
+          "en": "Slashes an enemy with a caramelized blade to rend their armor.",
+          "zh": "揮舞焦香蜜汁叉燒刃，斬斷對手的防禦。"
+        },
+        "power": 1.1,
+        "cooldown": 0
+      },
+      {
+        "id": "charsiu-blade-skill-2",
+        "name": {
+          "en": "Dark Vinegar Silence",
+          "zh": "黑醋封喉刺"
+        },
+        "description": {
+          "en": "Splashes pungent dark vinegar onto the target, dealing damage and suppressing their skills.",
+          "zh": "潑灑濃郁酸香的黑醋，造成傷害並封印敵人的技能。"
+        },
+        "power": 1.7,
+        "cooldown": 2
+      }
+    ],
+    "wanton-mee-shogun": [
+      {
+        "id": "wanton-mee-shogun-skill-1",
+        "name": {
+          "en": "Thousand Strand Slash",
+          "zh": "千麵萬縷斬"
+        },
+        "description": {
+          "en": "Unleashes a whirlwind of razor-sharp noodle blades that shreds all foes.",
+          "zh": "揮斬出如鋼絲般鋒利的千縷麵條，撕裂全體敵人。"
+        },
+        "power": 1.2,
+        "cooldown": 0
+      },
+      {
+        "id": "wanton-mee-shogun-skill-2",
+        "name": {
+          "en": "Caramelized Barricade",
+          "zh": "蜜汁叉燒鐵壁"
+        },
+        "description": {
+          "en": "Summons a thick layer of glazed char siu armor that retaliates against striking attackers.",
+          "zh": "凝聚厚重的焦香叉燒鎧甲，並向攻擊者反彈傷害。"
+        },
+        "power": 2,
+        "cooldown": 3
+      },
+      {
+        "id": "wanton-mee-shogun-heal",
+        "name": {
+          "en": "Salty Broth Aegis",
+          "zh": "蜜汁叉燒護體"
+        },
+        "description": {
+          "en": "Envelops the team in a rich savory broth to restore health and reinforce defense.",
+          "zh": "以濃郁鹹香的叉燒與高湯精華庇護全隊，恢復生命並提升防禦。"
+        },
+        "power": 0,
+        "cooldown": 3,
+        "healPercent": 0.3
+      }
+    ]
+  },
+  "fxBySkill": {
+    "wanton-pup-skill-1": {
+      "archetype": "projectile",
+      "colors": [
+        "#ffd700",
+        "#fff2b0",
+        "#d8a12f"
+      ],
+      "food": "pepper"
+    },
+    "wanton-pup-skill-2": {
+      "archetype": "slash",
+      "colors": [
+        "#ffd700",
+        "#fff2b0",
+        "#d8a12f"
+      ],
+      "food": "noodle"
+    },
+    "charsiu-blade-skill-1": {
+      "archetype": "slash",
+      "colors": [
+        "#ffd700",
+        "#fff2b0",
+        "#d8a12f"
+      ],
+      "food": "pepper"
+    },
+    "charsiu-blade-skill-2": {
+      "archetype": "projectile",
+      "colors": [
+        "#ffd700",
+        "#fff2b0",
+        "#d8a12f"
+      ],
+      "food": "pepper"
+    },
+    "wanton-mee-shogun-skill-1": {
+      "archetype": "slash",
+      "colors": [
+        "#ffd700",
+        "#fff2b0",
+        "#d8a12f"
+      ],
+      "food": "noodle"
+    },
+    "wanton-mee-shogun-skill-2": {
+      "archetype": "shield",
+      "scale": 1.5,
+      "secondary": true,
+      "colors": [
+        "#ffd700",
+        "#fff2b0",
+        "#d8a12f"
+      ],
+      "food": "glow"
+    },
+    "wanton-mee-shogun-heal": {
+      "archetype": "heal",
+      "colors": [
+        "#ffd700",
+        "#fff2b0",
+        "#d8a12f"
+      ],
+      "food": "glow"
+    }
+  },
+  "basicFx": {
+    "motion": "shoot",
+    "colors": [
+      "#ffd700",
+      "#fff2b0",
+      "#d8a12f"
+    ],
+    "food": "noodle"
+  },
+  "skills": [
+    {
+      "id": "wanton-pup-skill-1",
+      "name": {
+        "en": "Plump Wanton Bomb",
+        "zh": "炸雲吞飛彈"
+      },
+      "description": {
+        "en": "Hurls a piping-hot wanton to deal salty metal-element damage to a single foe.",
+        "zh": "投擲熱騰騰的金黃雲吞，對單體敵人造成鹹香的金屬傷害。"
+      },
+      "power": 1,
+      "cooldown": 0
+    },
+    {
+      "id": "wanton-pup-skill-2",
+      "name": {
+        "en": "Springy Noodle Whip",
+        "zh": "竹升麵彈鞭"
+      },
+      "description": {
+        "en": "Lashes target enemies with flexible, springy egg noodles.",
+        "zh": "揮舞爽口彈牙的竹升麵，鞭打前方的敵人。"
+      },
+      "power": 1.4,
+      "cooldown": 2
+    }
+  ],
+  "decision": {
+    "verdict": "approve",
+    "reason": "後台 approve",
+    "by": "manual",
+    "at": "2026-07-29T07:43:59.518Z"
+  },
+  "telegram": {
+    "awaitingReason": false
+  },
+  "facingLockByStage": {
+    "wanton-pup": {
+      "at": "2026-07-29T07:22:16.742Z",
+      "modelYaw": 0,
+      "verified": true,
+      "yawLabel": "0"
+    },
+    "charsiu-blade": {
+      "at": "2026-07-29T07:22:16.742Z",
+      "modelYaw": 0,
+      "verified": true,
+      "yawLabel": "0"
+    },
+    "wanton-mee-shogun": {
+      "at": "2026-07-29T07:22:16.742Z",
+      "modelYaw": 0,
+      "verified": true,
+      "yawLabel": "0"
+    }
+  }
+}

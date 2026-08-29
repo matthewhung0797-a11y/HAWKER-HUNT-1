@@ -1,0 +1,4 @@
+{"at":"2026-08-01T07:03:00.000Z","personaId":"speedrun","type":"step","stepId":"map.open","ok":true,"ms":800,"url":"/map"}
+{"at":"2026-08-01T07:03:20.000Z","personaId":"speedrun","type":"step","stepId":"capture.open","ok":true,"ms":1200,"url":"/capture"}
+{"at":"2026-08-01T07:03:40.000Z","personaId":"speedrun","type":"step","stepId":"dex.open","ok":true,"ms":900,"url":"/dex"}
+{"at":"2026-08-01T07:04:10.000Z","personaId":"speedrun","type":"step","stepId":"battle.open","ok":true,"ms":2000,"url":"/battle"}

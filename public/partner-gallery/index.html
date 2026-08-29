@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Hawker Hunt — Spirit Gallery</title>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: #f3ebe0;
+      color: #2a1a0c;
+      padding: 12px;
+      padding-bottom: calc(24px + env(safe-area-inset-bottom));
+    }
+    header { position: sticky; top: 0; z-index: 2; background: #f3ebe0ee; backdrop-filter: blur(8px); padding: 10px 4px 12px; }
+    h1 { font-size: 1.25rem; margin: 0 0 6px; }
+    .sub { font-size: 0.8rem; color: #6a5644; margin: 0 0 10px; line-height: 1.4; }
+    input {
+      width: 100%;
+      font-size: 16px;
+      padding: 10px 12px;
+      border: 2px solid #d8a12f;
+      border-radius: 12px;
+      background: #fffdf8;
+    }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    @media (min-width: 640px) { .grid { grid-template-columns: 1fr 1fr; } }
+    @media (min-width: 960px) { .grid { grid-template-columns: 1fr 1fr 1fr; } }
+    .card {
+      background: #fffaf0;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #e6d3b0;
+      box-shadow: 0 4px 14px rgba(74,44,20,0.08);
+    }
+    .art {
+      aspect-ratio: 1;
+      background: linear-gradient(160deg, #fff6e0, #f0e0c8);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .art img { width: 100%; height: 100%; object-fit: contain; }
+    .missing { color: #a08060; font-weight: 700; }
+    .meta { padding: 10px 12px 14px; }
+    .meta h2 { margin: 0; font-size: 1.05rem; }
+    .en { margin: 2px 0 0; font-size: 0.85rem; color: #6a5644; }
+    .id, .flags { margin: 4px 0 0; font-size: 0.75rem; color: #8a7058; }
+    .dl {
+      display: inline-block; margin-top: 8px;
+      padding: 8px 12px; border-radius: 999px;
+      background: #e8c860; color: #2a1a0c; font-weight: 800; text-decoration: none; font-size: 0.85rem;
+    }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Hawker Hunt 精靈素材</h1>
+    <p class="sub">共 62 隻 · 立繪可 pinch 放大睇 · GLB 可下載 · <a href="./species.csv">species.csv</a><br/>手機請用遊戲同域開：<code>/partner-gallery/</code>（唔好用 file://）</p>
+    <input id="q" type="search" placeholder="搜 id / 中文 / English…" enterkeyhint="search" />
+  </header>
+  <div class="grid" id="grid">
+<article class="card" data-id="bkt-cub" data-text="肉骨仔 bak kut cub bkt-cub">
+  <div class="art"><img src="../spirits/full/bkt-cub.webp" alt="肉骨仔" loading="lazy" /></div>
+  <div class="meta">
+    <h2>肉骨仔</h2>
+    <p class="en">Bak Kut Cub</p>
+    <p class="id"><code>bkt-cub</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/bkt-cub.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="bkt-warrior" data-text="骨茶武士 bak kut warrior bkt-warrior">
+  <div class="art"><img src="../spirits/full/bkt-warrior.webp" alt="骨茶武士" loading="lazy" /></div>
+  <div class="meta">
+    <h2>骨茶武士</h2>
+    <p class="en">Bak Kut Warrior</p>
+    <p class="id"><code>bkt-warrior</code> · stage 2</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/bkt-warrior.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="bkt-grandmaster" data-text="骨茶宗師 bak kut grandmaster bkt-grandmaster">
+  <div class="art"><img src="../spirits/full/bkt-grandmaster.webp" alt="骨茶宗師" loading="lazy" /></div>
+  <div class="meta">
+    <h2>骨茶宗師</h2>
+    <p class="en">Bak Kut Grandmaster</p>
+    <p class="id"><code>bkt-grandmaster</code> · stage 3</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/bkt-grandmaster.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="radish-cubie" data-text="菜頭仔 radish cubie radish-cubie">
+  <div class="art"><img src="../spirits/full/radish-cubie.webp" alt="菜頭仔" loading="lazy" /></div>
+  <div class="meta">
+    <h2>菜頭仔</h2>
+    <p class="en">Radish Cubie</p>
+    <p class="id"><code>radish-cubie</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/radish-cubie.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="carrot-cake-warrior" data-text="菜頭粿武士 carrot cake warrior carrot-cake-warrior">
+  <div class="art"><img src="../spirits/full/carrot-cake-warrior.webp" alt="菜頭粿武士" loading="lazy" /></div>
+  <div class="meta">
+    <h2>菜頭粿武士</h2>
+    <p class="en">Carrot Cake Warrior</p>
+    <p class="id"><code>carrot-cake-warrior</code> · stage 2</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/carrot-cake-warrior.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="black-white-cake-king" data-text="黑白粿王 black & white cake king black-white-cake-king">
+  <div class="art"><img src="../spirits/full/black-white-cake-king.webp" alt="黑白粿王" loading="lazy" /></div>
+  <div class="meta">
+    <h2>黑白粿王</h2>
+    <p class="en">Black & White Cake King</p>
+    <p class="id"><code>black-white-cake-king</code> · stage 3</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/black-white-cake-king.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="kway-teow-kid" data-text="粿條仔 kway teow kid kway-teow-kid">
+  <div class="art"><img src="../spirits/full/kway-teow-kid.webp" alt="粿條仔" loading="lazy" /></div>
+  <div class="meta">
+    <h2>粿條仔</h2>
+    <p class="en">Kway Teow Kid</p>
+    <p class="id"><code>kway-teow-kid</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/kway-teow-kid.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="kway-teow-warrior" data-text="粿條武士 kway teow warrior kway-teow-warrior">
+  <div class="art"><img src="../spirits/full/kway-teow-warrior.webp" alt="粿條武士" loading="lazy" /></div>
+  <div class="meta">
+    <h2>粿條武士</h2>
+    <p class="en">Kway Teow Warrior</p>
+    <p class="id"><code>kway-teow-warrior</code> · stage 2</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/kway-teow-warrior.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="wok-hei-god" data-text="鑊氣神 wok hei god wok-hei-god">
+  <div class="art"><img src="../spirits/full/wok-hei-god.webp" alt="鑊氣神" loading="lazy" /></div>
+  <div class="meta">
+    <h2>鑊氣神</h2>
+    <p class="en">Wok Hei God</p>
+    <p class="id"><code>wok-hei-god</code> · stage 3</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/wok-hei-god.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="chendol-jelly" data-text="煎蕊仔 chendol jelly chendol-jelly">
+  <div class="art"><img src="../spirits/full/chendol-jelly.webp" alt="煎蕊仔" loading="lazy" /></div>
+  <div class="meta">
+    <h2>煎蕊仔</h2>
+    <p class="en">Chendol Jelly</p>
+    <p class="id"><code>chendol-jelly</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/chendol-jelly.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="chendol-warrior" data-text="煎蕊武士 chendol warrior chendol-warrior">
+  <div class="art"><img src="../spirits/full/chendol-warrior.webp" alt="煎蕊武士" loading="lazy" /></div>
+  <div class="meta">
+    <h2>煎蕊武士</h2>
+    <p class="en">Chendol Warrior</p>
+    <p class="id"><code>chendol-warrior</code> · stage 2</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/chendol-warrior.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="chendol-snow-queen" data-text="煎蕊雪后 chendol snow queen chendol-snow-queen">
+  <div class="art"><img src="../spirits/full/chendol-snow-queen.webp" alt="煎蕊雪后" loading="lazy" /></div>
+  <div class="meta">
+    <h2>煎蕊雪后</h2>
+    <p class="en">Chendol Snow Queen</p>
+    <p class="id"><code>chendol-snow-queen</code> · stage 3</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/chendol-snow-queen.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="oily-rice-chick" data-text="油飯雞仔 oily rice chick oily-rice-chick">
+  <div class="art"><img src="../spirits/full/oily-rice-chick.webp" alt="油飯雞仔" loading="lazy" /></div>
+  <div class="meta">
+    <h2>油飯雞仔</h2>
+    <p class="en">Oily Rice Chick</p>
+    <p class="id"><code>oily-rice-chick</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/oily-rice-chick.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="silky-chicken-warrior" data-text="滑雞武者 silky chicken warrior silky-chicken-warrior">
+  <div class="art"><img src="../spirits/full/silky-chicken-warrior.webp" alt="滑雞武者" loading="lazy" /></div>
+  <div class="meta">
+    <h2>滑雞武者</h2>
+    <p class="en">Silky Chicken Warrior</p>
+    <p class="id"><code>silky-chicken-warrior</code> · stage 2</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/silky-chicken-warrior.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="hainan-chicken-god" data-text="海南雞神 hainan chicken god hainan-chicken-god">
+  <div class="art"><img src="../spirits/full/hainan-chicken-god.webp" alt="海南雞神" loading="lazy" /></div>
+  <div class="meta">
+    <h2>海南雞神</h2>
+    <p class="en">Hainan Chicken God</p>
+    <p class="id"><code>hainan-chicken-god</code> · stage 3</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/hainan-chicken-god.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="chilli-baby" data-text="辣椒仔 chilli baby chilli-baby">
+  <div class="art"><img src="../spirits/full/chilli-baby.webp" alt="辣椒仔" loading="lazy" /></div>
+  <div class="meta">
+    <h2>辣椒仔</h2>
+    <p class="en">Chilli Baby</p>
+    <p class="id"><code>chilli-baby</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/chilli-baby.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="chilli-crablet" data-text="辣蟹仔 chilli crablet chilli-crablet">
+  <div class="art"><img src="../spirits/full/chilli-crablet.webp" alt="辣蟹仔" loading="lazy" /></div>
+  <div class="meta">
+    <h2>辣蟹仔</h2>
+    <p class="en">Chilli Crablet</p>
+    <p class="id"><code>chilli-crablet</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/chilli-crablet.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="crab-claw-warrior" data-text="辣蟹武士 crab claw warrior crab-claw-warrior">
+  <div class="art"><img src="../spirits/full/crab-claw-warrior.webp" alt="辣蟹武士" loading="lazy" /></div>
+  <div class="meta">
+    <h2>辣蟹武士</h2>
+    <p class="en">Crab Claw Warrior</p>
+    <p class="id"><code>crab-claw-warrior</code> · stage 2</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/crab-claw-warrior.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="chilli-crab-king" data-text="辣椒蟹王 chilli crab king chilli-crab-king">
+  <div class="art"><img src="../spirits/full/chilli-crab-king.webp" alt="辣椒蟹王" loading="lazy" /></div>
+  <div class="meta">
+    <h2>辣椒蟹王</h2>
+    <p class="en">Chilli Crab King</p>
+    <p class="id"><code>chilli-crab-king</code> · stage 3</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/chilli-crab-king.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="chwee-hamlet" data-text="水粿鼠仔 chwee hamlet chwee-hamlet">
+  <div class="art"><img src="../spirits/full/chwee-hamlet.webp" alt="水粿鼠仔" loading="lazy" /></div>
+  <div class="meta">
+    <h2>水粿鼠仔</h2>
+    <p class="en">Chwee Hamlet</p>
+    <p class="id"><code>chwee-hamlet</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/chwee-hamlet.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="chwee-sentry" data-text="水粿精兵 chwee sentry chwee-sentry">
+  <div class="art"><img src="../spirits/full/chwee-sentry.webp" alt="水粿精兵" loading="lazy" /></div>
+  <div class="meta">
+    <h2>水粿精兵</h2>
+    <p class="en">Chwee Sentry</p>
+    <p class="id"><code>chwee-sentry</code> · stage 2</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/chwee-sentry.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="chwee-shogun" data-text="水粿大將 chwee shogun chwee-shogun">
+  <div class="art"><img src="../spirits/full/chwee-shogun.webp" alt="水粿大將" loading="lazy" /></div>
+  <div class="meta">
+    <h2>水粿大將</h2>
+    <p class="en">Chwee Shogun</p>
+    <p class="id"><code>chwee-shogun</code> · stage 3</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/chwee-shogun.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="coconut-jelly" data-text="椰漿啫喱 coconut jelly coconut-jelly">
+  <div class="art"><img src="../spirits/full/coconut-jelly.webp" alt="椰漿啫喱" loading="lazy" /></div>
+  <div class="meta">
+    <h2>椰漿啫喱</h2>
+    <p class="en">Coconut Jelly</p>
+    <p class="id"><code>coconut-jelly</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/coconut-jelly.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="curry-puffling" data-text="咖喱卜仔 curry puffling curry-puffling">
+  <div class="art"><img src="../spirits/full/curry-puffling.webp" alt="咖喱卜仔" loading="lazy" /></div>
+  <div class="meta">
+    <h2>咖喱卜仔</h2>
+    <p class="en">Curry Puffling</p>
+    <p class="id"><code>curry-puffling</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/curry-puffling.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="curry-puff-warrior" data-text="咖喱卜武士 curry puff warrior curry-puff-warrior">
+  <div class="art"><img src="../spirits/full/curry-puff-warrior.webp" alt="咖喱卜武士" loading="lazy" /></div>
+  <div class="meta">
+    <h2>咖喱卜武士</h2>
+    <p class="en">Curry Puff Warrior</p>
+    <p class="id"><code>curry-puff-warrior</code> · stage 2</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/curry-puff-warrior.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="golden-puff-sovereign" data-text="咖喱卜尊 golden puff sovereign golden-puff-sovereign">
+  <div class="art"><img src="../spirits/full/golden-puff-sovereign.webp" alt="咖喱卜尊" loading="lazy" /></div>
+  <div class="meta">
+    <h2>咖喱卜尊</h2>
+    <p class="en">Golden Puff Sovereign</p>
+    <p class="id"><code>golden-puff-sovereign</code> · stage 3</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/golden-puff-sovereign.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="egg-guard" data-text="蛋蛋守衛 egg guard egg-guard">
+  <div class="art"><img src="../spirits/full/egg-guard.webp" alt="蛋蛋守衛" loading="lazy" /></div>
+  <div class="meta">
+    <h2>蛋蛋守衛</h2>
+    <p class="en">Egg Guard</p>
+    <p class="id"><code>egg-guard</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/egg-guard.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="garlic-guard" data-text="蒜頭衛兵 garlic guard garlic-guard">
+  <div class="art"><img src="../spirits/full/garlic-guard.webp" alt="蒜頭衛兵" loading="lazy" /></div>
+  <div class="meta">
+    <h2>蒜頭衛兵</h2>
+    <p class="en">Garlic Guard</p>
+    <p class="id"><code>garlic-guard</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/garlic-guard.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="kaya-blob" data-text="咖央仔 kaya blob kaya-blob">
+  <div class="art"><img src="../spirits/full/kaya-blob.webp" alt="咖央仔" loading="lazy" /></div>
+  <div class="meta">
+    <h2>咖央仔</h2>
+    <p class="en">Kaya Blob</p>
+    <p class="id"><code>kaya-blob</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/kaya-blob.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="kaya-warrior" data-text="咖央武士 kaya samurai kaya-warrior">
+  <div class="art"><img src="../spirits/full/kaya-warrior.webp" alt="咖央武士" loading="lazy" /></div>
+  <div class="meta">
+    <h2>咖央武士</h2>
+    <p class="en">Kaya Samurai</p>
+    <p class="id"><code>kaya-warrior</code> · stage 2</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/kaya-warrior.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="kaya-dragon" data-text="咖央聖龍 kaya dragon kaya-dragon">
+  <div class="art"><img src="../spirits/full/kaya-dragon.webp" alt="咖央聖龍" loading="lazy" /></div>
+  <div class="meta">
+    <h2>咖央聖龍</h2>
+    <p class="en">Kaya Dragon</p>
+    <p class="id"><code>kaya-dragon</code> · stage 3</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/kaya-dragon.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="kopi-bean" data-text="咖啡仔 kopi bean kopi-bean">
+  <div class="art"><img src="../spirits/full/kopi-bean.webp" alt="咖啡仔" loading="lazy" /></div>
+  <div class="meta">
+    <h2>咖啡仔</h2>
+    <p class="en">Kopi Bean</p>
+    <p class="id"><code>kopi-bean</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/kopi-bean.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="kopi-sock-warrior" data-text="咖啡武士 kopi sock warrior kopi-sock-warrior">
+  <div class="art"><img src="../spirits/full/kopi-sock-warrior.webp" alt="咖啡武士" loading="lazy" /></div>
+  <div class="meta">
+    <h2>咖啡武士</h2>
+    <p class="en">Kopi Sock Warrior</p>
+    <p class="id"><code>kopi-sock-warrior</code> · stage 2</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/kopi-sock-warrior.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="kopi-o-emperor" data-text="咖啡烏皇 kopi o emperor kopi-o-emperor">
+  <div class="art"><img src="../spirits/full/kopi-o-emperor.webp" alt="咖啡烏皇" loading="lazy" /></div>
+  <div class="meta">
+    <h2>咖啡烏皇</h2>
+    <p class="en">Kopi O Emperor</p>
+    <p class="id"><code>kopi-o-emperor</code> · stage 3</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/kopi-o-emperor.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="tutu-sprite" data-text="嘟嘟糕精 tutu sprite tutu-sprite">
+  <div class="art"><img src="../spirits/full/tutu-sprite.webp" alt="嘟嘟糕精" loading="lazy" /></div>
+  <div class="meta">
+    <h2>嘟嘟糕精</h2>
+    <p class="en">Tutu Sprite</p>
+    <p class="id"><code>tutu-sprite</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/tutu-sprite.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="lapis-queen" data-text="九層糕后 lapis queen lapis-queen">
+  <div class="art"><img src="../spirits/full/lapis-queen.webp" alt="九層糕后" loading="lazy" /></div>
+  <div class="meta">
+    <h2>九層糕后</h2>
+    <p class="en">Lapis Queen</p>
+    <p class="id"><code>lapis-queen</code> · stage 2</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/lapis-queen.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="pastry-queen" data-text="糕點女王 pastry sovereign pastry-queen">
+  <div class="art"><img src="../spirits/full/pastry-queen.webp" alt="糕點女王" loading="lazy" /></div>
+  <div class="meta">
+    <h2>糕點女王</h2>
+    <p class="en">Pastry Sovereign</p>
+    <p class="id"><code>pastry-queen</code> · stage 3</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/pastry-queen.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="little-laksa" data-text="叻沙仔 little laksa little-laksa">
+  <div class="art"><img src="../spirits/full/little-laksa.webp" alt="叻沙仔" loading="lazy" /></div>
+  <div class="meta">
+    <h2>叻沙仔</h2>
+    <p class="en">Little Laksa</p>
+    <p class="id"><code>little-laksa</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/little-laksa.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="laksa-warrior" data-text="叻沙武士 laksa warrior laksa-warrior">
+  <div class="art"><img src="../spirits/full/laksa-warrior.webp" alt="叻沙武士" loading="lazy" /></div>
+  <div class="meta">
+    <h2>叻沙武士</h2>
+    <p class="en">Laksa Warrior</p>
+    <p class="id"><code>laksa-warrior</code> · stage 2</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/laksa-warrior.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="laksa-dragon" data-text="叻沙龍 laksa dragon laksa-dragon">
+  <div class="art"><img src="../spirits/full/laksa-dragon.webp" alt="叻沙龍" loading="lazy" /></div>
+  <div class="meta">
+    <h2>叻沙龍</h2>
+    <p class="en">Laksa Dragon</p>
+    <p class="id"><code>laksa-dragon</code> · stage 3</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/laksa-dragon.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="lemongrass-swordsman" data-text="香茅劍客 lemongrass swordsman lemongrass-swordsman">
+  <div class="art"><img src="../spirits/full/lemongrass-swordsman.webp" alt="香茅劍客" loading="lazy" /></div>
+  <div class="meta">
+    <h2>香茅劍客</h2>
+    <p class="en">Lemongrass Swordsman</p>
+    <p class="id"><code>lemongrass-swordsman</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/lemongrass-swordsman.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="nasi-lemak-tot" data-text="椰漿飯仔 nasi lemak tot nasi-lemak-tot">
+  <div class="art"><img src="../spirits/full/nasi-lemak-tot.webp" alt="椰漿飯仔" loading="lazy" /></div>
+  <div class="meta">
+    <h2>椰漿飯仔</h2>
+    <p class="en">Nasi Lemak Tot</p>
+    <p class="id"><code>nasi-lemak-tot</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/nasi-lemak-tot.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="nasi-lemak-scout" data-text="椰漿飯小兵 nasi lemak scout nasi-lemak-scout">
+  <div class="art"><img src="../spirits/full/nasi-lemak-scout.webp" alt="椰漿飯小兵" loading="lazy" /></div>
+  <div class="meta">
+    <h2>椰漿飯小兵</h2>
+    <p class="en">Nasi Lemak Scout</p>
+    <p class="id"><code>nasi-lemak-scout</code> · stage 2</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/nasi-lemak-scout.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="nasi-lemak-general" data-text="椰漿飯大將軍 nasi lemak general nasi-lemak-general">
+  <div class="art"><img src="../spirits/full/nasi-lemak-general.webp" alt="椰漿飯大將軍" loading="lazy" /></div>
+  <div class="meta">
+    <h2>椰漿飯大將軍</h2>
+    <p class="en">Nasi Lemak General</p>
+    <p class="id"><code>nasi-lemak-general</code> · stage 3</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/nasi-lemak-general.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="otah-tot" data-text="烏達小龍 otah tot otah-tot">
+  <div class="art"><img src="../spirits/full/otah-tot.webp" alt="烏達小龍" loading="lazy" /></div>
+  <div class="meta">
+    <h2>烏達小龍</h2>
+    <p class="en">Otah Tot</p>
+    <p class="id"><code>otah-tot</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/otah-tot.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="otah-swashbuckler" data-text="烏達劍客 otah swashbuckler otah-swashbuckler">
+  <div class="art"><img src="../spirits/full/otah-swashbuckler.webp" alt="烏達劍客" loading="lazy" /></div>
+  <div class="meta">
+    <h2>烏達劍客</h2>
+    <p class="en">Otah Swashbuckler</p>
+    <p class="id"><code>otah-swashbuckler</code> · stage 2</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/otah-swashbuckler.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="otah-pyrolord-chong" data-text="烏達炎領 otah pyrolord otah-pyrolord-chong">
+  <div class="art"><img src="../spirits/full/otah-pyrolord-chong.webp" alt="烏達炎領" loading="lazy" /></div>
+  <div class="meta">
+    <h2>烏達炎領</h2>
+    <p class="en">Otah Pyrolord</p>
+    <p class="id"><code>otah-pyrolord-chong</code> · stage 3</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/otah-pyrolord-chong.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="little-orh-luak" data-text="蠔煎仔 little orh luak little-orh-luak">
+  <div class="art"><img src="../spirits/full/little-orh-luak.webp" alt="蠔煎仔" loading="lazy" /></div>
+  <div class="meta">
+    <h2>蠔煎仔</h2>
+    <p class="en">Little Orh Luak</p>
+    <p class="id"><code>little-orh-luak</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/little-orh-luak.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="omelette-warrior" data-text="蠔煎武者 omelette warrior omelette-warrior">
+  <div class="art"><img src="../spirits/full/omelette-warrior.webp" alt="蠔煎武者" loading="lazy" /></div>
+  <div class="meta">
+    <h2>蠔煎武者</h2>
+    <p class="en">Omelette Warrior</p>
+    <p class="id"><code>omelette-warrior</code> · stage 2</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/omelette-warrior.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="oyster-immortal" data-text="蠔煎仙 oyster immortal oyster-immortal">
+  <div class="art"><img src="../spirits/full/oyster-immortal.webp" alt="蠔煎仙" loading="lazy" /></div>
+  <div class="meta">
+    <h2>蠔煎仙</h2>
+    <p class="en">Oyster Immortal</p>
+    <p class="id"><code>oyster-immortal</code> · stage 3</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/oyster-immortal.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="prata-pup" data-text="煎餅仔 prata pup prata-pup">
+  <div class="art"><img src="../spirits/full/prata-pup.webp" alt="煎餅仔" loading="lazy" /></div>
+  <div class="meta">
+    <h2>煎餅仔</h2>
+    <p class="en">Prata Pup</p>
+    <p class="id"><code>prata-pup</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/prata-pup.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="prata-warrior" data-text="煎餅武士 prata warrior prata-warrior">
+  <div class="art"><img src="../spirits/full/prata-warrior.webp" alt="煎餅武士" loading="lazy" /></div>
+  <div class="meta">
+    <h2>煎餅武士</h2>
+    <p class="en">Prata Warrior</p>
+    <p class="id"><code>prata-warrior</code> · stage 2</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/prata-warrior.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="prata-sky-elephant" data-text="飛餅神象 prata sky elephant prata-sky-elephant">
+  <div class="art"><img src="../spirits/full/prata-sky-elephant.webp" alt="飛餅神象" loading="lazy" /></div>
+  <div class="meta">
+    <h2>飛餅神象</h2>
+    <p class="en">Prata Sky Elephant</p>
+    <p class="id"><code>prata-sky-elephant</code> · stage 3</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/prata-sky-elephant.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="riceball-baby" data-text="飯團寶寶 riceball baby riceball-baby">
+  <div class="art"><img src="../spirits/full/riceball-baby.webp" alt="飯團寶寶" loading="lazy" /></div>
+  <div class="meta">
+    <h2>飯團寶寶</h2>
+    <p class="en">Riceball Baby</p>
+    <p class="id"><code>riceball-baby</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/riceball-baby.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="rojak-tot" data-text="囉喏仔 rojak tot rojak-tot">
+  <div class="art"><img src="../spirits/full/rojak-tot.webp" alt="囉喏仔" loading="lazy" /></div>
+  <div class="meta">
+    <h2>囉喏仔</h2>
+    <p class="en">Rojak Tot</p>
+    <p class="id"><code>rojak-tot</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/rojak-tot.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="rojak-warrior" data-text="囉喏武士 rojak warrior rojak-warrior">
+  <div class="art"><img src="../spirits/full/rojak-warrior.webp" alt="囉喏武士" loading="lazy" /></div>
+  <div class="meta">
+    <h2>囉喏武士</h2>
+    <p class="en">Rojak Warrior</p>
+    <p class="id"><code>rojak-warrior</code> · stage 2</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/rojak-warrior.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="rojak-king" data-text="囉喏王 rojak king rojak-king">
+  <div class="art"><img src="../spirits/full/rojak-king.webp" alt="囉喏王" loading="lazy" /></div>
+  <div class="meta">
+    <h2>囉喏王</h2>
+    <p class="en">Rojak King</p>
+    <p class="id"><code>rojak-king</code> · stage 3</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/rojak-king.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="satay-skewerling" data-text="沙嗲仔 satay skewerling satay-skewerling">
+  <div class="art"><img src="../spirits/full/satay-skewerling.webp" alt="沙嗲仔" loading="lazy" /></div>
+  <div class="meta">
+    <h2>沙嗲仔</h2>
+    <p class="en">Satay Skewerling</p>
+    <p class="id"><code>satay-skewerling</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/satay-skewerling.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="satay-warrior" data-text="沙嗲武士 satay warrior satay-warrior">
+  <div class="art"><img src="../spirits/full/satay-warrior.webp" alt="沙嗲武士" loading="lazy" /></div>
+  <div class="meta">
+    <h2>沙嗲武士</h2>
+    <p class="en">Satay Warrior</p>
+    <p class="id"><code>satay-warrior</code> · stage 2</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/satay-warrior.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="satay-flame-emperor" data-text="沙嗲炎帝 satay flame emperor satay-flame-emperor">
+  <div class="art"><img src="../spirits/full/satay-flame-emperor.webp" alt="沙嗲炎帝" loading="lazy" /></div>
+  <div class="meta">
+    <h2>沙嗲炎帝</h2>
+    <p class="en">Satay Flame Emperor</p>
+    <p class="id"><code>satay-flame-emperor</code> · stage 3</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/satay-flame-emperor.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="shrimp-hopper" data-text="蝦仔跳跳 shrimp hopper shrimp-hopper">
+  <div class="art"><img src="../spirits/full/shrimp-hopper.webp" alt="蝦仔跳跳" loading="lazy" /></div>
+  <div class="meta">
+    <h2>蝦仔跳跳</h2>
+    <p class="en">Shrimp Hopper</p>
+    <p class="id"><code>shrimp-hopper</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/shrimp-hopper.glb" download>Download GLB</a>
+  </div>
+</article>
+<article class="card" data-id="vermicelli-sprite" data-text="米粉精靈 vermicelli sprite vermicelli-sprite">
+  <div class="art"><img src="../spirits/full/vermicelli-sprite.webp" alt="米粉精靈" loading="lazy" /></div>
+  <div class="meta">
+    <h2>米粉精靈</h2>
+    <p class="en">Vermicelli Sprite</p>
+    <p class="id"><code>vermicelli-sprite</code> · stage 1</p>
+    <p class="flags">GLB ✓ · Art ✓</p>
+    <a class="dl" href="../models/vermicelli-sprite.glb" download>Download GLB</a>
+  </div>
+</article>
+  </div>
+  <script>
+    const q = document.getElementById("q");
+    const cards = [...document.querySelectorAll(".card")];
+    q.addEventListener("input", () => {
+      const s = q.value.trim().toLowerCase();
+      for (const c of cards) {
+        const hit = !s || (c.dataset.text || "").includes(s) || c.dataset.id.includes(s);
+        c.classList.toggle("hidden", !hit);
+      }
+    });
+  </script>
+</body>
+</html>

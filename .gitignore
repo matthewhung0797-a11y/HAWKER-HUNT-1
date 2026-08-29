@@ -1,0 +1,72 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+
+# model pipeline raw assets (huge source files, not for git)
+/model-pipeline/raw/
+/model-pipeline/*.glb
+# pipeline 生成中間檔（2.7GB，可由 scripts 重新生成）同模型備份（本機還原用）
+/model-pipeline/gen/
+/model-pipeline/backup-anim/
+/model-pipeline/backup-models/
+/model-pipeline/backup-art/
+
+# generated service worker
+/public/sw.js
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+.env.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# visual test output
+/test-shots
+/playtest-runs
+# facing golden 運行暫存（baseline 喺 test-fixtures/facing-golden/ 要入 git）
+/test-fixtures/facing-golden/last-run.json
+
+# font source (subset output in public/fonts is committed)
+/jf-openhuninn.ttf
+
+# capacitor native builds
+/android/app/build
+/android/.gradle
+/android/local.properties
+/ios/App/Pods
+/ios/App/output
+
+.vercel

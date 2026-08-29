@@ -1,0 +1,760 @@
+{
+  "id": "auto-20260728-1af4",
+  "createdAt": "2026-07-28T18:28:17.624Z",
+  "updatedAt": "2026-07-29T05:01:47.762Z",
+  "status": "published",
+  "kind": "catalogue",
+  "allowTextOnly": false,
+  "instructions": "聖誕節主題小販美食精靈，要有聖誕元素",
+  "artifacts": {
+    "artByStage": {
+      "kachang-snowling": "public/spirits/full/kachang-snowling.webp",
+      "kachang-frost-drake": "public/spirits/full/kachang-frost-drake.webp",
+      "kachang-deity-sovereign": "public/spirits/full/kachang-deity-sovereign.webp"
+    },
+    "art": "public/spirits/full/kachang-snowling.webp",
+    "previewUrl": "https://iinbjhpybbdxclyzohtv.supabase.co/storage/v1/object/sign/pet-job-refs/previews/auto-20260728-1af4.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9mZTdlOGRmZS0wMTc1LTRmMDAtYmVkMy1jOTExZDRlYWI3NTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwZXQtam9iLXJlZnMvcHJldmlld3MvYXV0by0yMDI2MDcyOC0xYWY0LndlYnAiLCJzY29wZSI6ImRvd25sb2FkIiwiaWF0IjoxNzg1MzAwNzE0LCJleHAiOjE3ODU5MDU1MTR9.SPY3evWnEKxNsTGbcyP3f_F4Ch0Ot3ruiBlYYm5QgbU",
+    "model3dByStage": {
+      "kachang-snowling": "model-pipeline/gen/tripo/kachang-snowling.glb",
+      "kachang-frost-drake": "model-pipeline/gen/tripo/kachang-frost-drake.glb",
+      "kachang-deity-sovereign": "model-pipeline/gen/tripo/kachang-deity-sovereign.glb"
+    },
+    "model3d": "model-pipeline/gen/tripo/kachang-snowling.glb",
+    "riggedByStage": {
+      "kachang-snowling": "model-pipeline/gen/anim/kachang-snowling",
+      "kachang-frost-drake": "model-pipeline/gen/anim/kachang-frost-drake",
+      "kachang-deity-sovereign": "model-pipeline/gen/anim/kachang-deity-sovereign"
+    },
+    "rigModeByStage": {
+      "kachang-snowling": "meshy",
+      "kachang-frost-drake": "meshy",
+      "kachang-deity-sovereign": "meshy"
+    },
+    "rigged": "model-pipeline/gen/anim/kachang-snowling",
+    "finalByStage": {
+      "kachang-snowling": "public/models/kachang-snowling.glb",
+      "kachang-frost-drake": "public/models/kachang-frost-drake.glb",
+      "kachang-deity-sovereign": "public/models/kachang-deity-sovereign.glb"
+    },
+    "final": "public/models/kachang-snowling.glb",
+    "facingLockByStage": {
+      "kachang-snowling": {
+        "verified": true,
+        "modelYaw": 0,
+        "at": "2026-07-29T04:55:47.878Z"
+      },
+      "kachang-frost-drake": {
+        "verified": true,
+        "modelYaw": 0,
+        "at": "2026-07-29T04:55:47.878Z"
+      },
+      "kachang-deity-sovereign": {
+        "verified": true,
+        "modelYaw": 0,
+        "at": "2026-07-29T04:55:47.878Z"
+      }
+    }
+  },
+  "manifest": {
+    "concept": {
+      "status": "done",
+      "mode": "gemini",
+      "detail": "LLM family=ice-kachang-christmas-dragon",
+      "at": "2026-07-28T18:28:35.346Z"
+    },
+    "art": {
+      "status": "done",
+      "mode": "gemini",
+      "detail": "3/3 階真圖",
+      "at": "2026-07-28T18:30:15.475Z"
+    },
+    "draft": {
+      "status": "done",
+      "detail": "三階真 3D + facing-lock 已上線；status=published",
+      "at": "2026-07-29T05:01:47.761Z"
+    },
+    "model3d": {
+      "status": "done",
+      "mode": "real",
+      "detail": "3/3 階真生成",
+      "at": "2026-07-29T04:42:55.540Z"
+    },
+    "rig": {
+      "status": "done",
+      "mode": "real",
+      "detail": "3/3 階真 rig（Meshy 3／Tripo 0）",
+      "at": "2026-07-29T04:51:48.234Z"
+    },
+    "finalize": {
+      "status": "done",
+      "mode": "real",
+      "detail": "3/3 階真 finalize",
+      "at": "2026-07-29T04:51:53.423Z"
+    },
+    "skills": {
+      "status": "mock",
+      "mode": "mock",
+      "detail": "6 skills / 3 階",
+      "at": "2026-07-29T04:51:53.911Z"
+    },
+    "facingLockByStage": {
+      "kachang-snowling": {
+        "verified": true,
+        "modelYaw": 0,
+        "at": "2026-07-29T04:55:47.878Z"
+      },
+      "kachang-frost-drake": {
+        "verified": true,
+        "modelYaw": 0,
+        "at": "2026-07-29T04:55:47.878Z"
+      },
+      "kachang-deity-sovereign": {
+        "verified": true,
+        "modelYaw": 0,
+        "at": "2026-07-29T04:55:47.878Z"
+      }
+    }
+  },
+  "conceptPrompt": "Invent ONE brand-new Singapore/Malaysian hawker-food spirit FAMILY for the game Hawker Hunt.\nIt must be a real or highly plausible hawker dish, turned into a cute collectible monster family of 3 evolution stages.\nDesign goals: every dish must be UNIQUE (no collision with existing pets); may resemble the style but never be identical.\nSPECIES FORM for stages 1–2 (baby and warrior forms share it): an upright bipedal DRAGON-person: horned reptilian head, scaled humanoid body, a tail held clear behind the legs, small folded wings tucked to the SIDES (not over the arms). Stage 1 may be a rounder baby version. STAGE 3 MUST be an ARCHETYPE JUMP — a DRAMATIC rebirth whose SILHOUETTE CLASS is clearly different from stage 2. For THIS family, shape the final form as: a multi-armed guardian DEITY — TWO or THREE pairs of arms, each gripping a different food-forged implement, a circular mandala aura behind the head (NO feathered wings). Commit fully to that ONE archetype; do NOT fall back on a generic winged-angel-with-halo look unless that is the chosen archetype. Keep the species' face and palette recognisable, but stage 3 is a transformation, NOT a bigger warrior. Every stage MUST carry a DIFFERENT weapon or armament (never the same tool twice). ALL stages (including stage 3's mythic form) MUST be describable as an upright bipedal figure with arms/legs/claws clearly separate from the body (this is required so the 2D art can be auto-rigged into an animated 3D model). Write each stage's theme so an artist would naturally draw that upright, limbs-apart pose.\nCreator direction for this one: 聖誕節主題小販美食精靈，要有聖誕元素\n\nReturn JSON with: seriesId (ascii kebab-case, unique), foodOrigin {en,zh}, element (one of metal/wood/water/fire/earth), flavor (one of bitter/sour/salty/sweet/spicy per 五行五味), and stages: an array of EXACTLY 3 objects each { id (ascii kebab-case, unique per stage), stage (1|2|3), name{en,zh}, description{en,zh}, theme, skillIdeas[] }.\nNAMING RULES (strict):\n- Each name{zh} MUST be ONE single title only. Never append a second personal/epithet name after a separator.\n- FORBIDDEN in names: the interpunct 「·」, 「‧」, 「•」, 「・」, and any of : ： - — / ( ) 「」.\n  Write 叻沙龍, NOT 叻沙龍·辛焱. Write 咖啡烏皇, NOT 咖啡烏皇·夜濃.\n- name{zh} should be 2–5 Han characters; name{en} 1–4 words, no transliterated epithet tacked on the end\n  (write \"Laksa Dragon\", NOT \"Laksa Dragon Xinyan\").\n- Save any poetic epithet for the skill names in skillIdeas instead.\nKeep every stage consistent with this art DNA: Chibi anthropomorphic Singapore hawker-food creature mascot, big expressive cartoon eyes, rounded soft chunky body, MEDIUM: rich digital oil painting — every surface hand-painted with thick layered opaque brushstrokes, soft blended painted edges, like premium collectible-figurine box art, TECHNIQUE: forms modelled purely with light and colour (painted edges, never inked contour lines; smooth colour gradations, never flat cel fills), TEXTURE: appetising food materials — crispy, juicy, glossy, caramelised surfaces with wet specular highlights and visible tactile depth, high detail density and ornate finishing (armour trim, gems, sauce drips), scaling UP with evolution stage, strong three-dimensional volume and form, dramatic warm studio lighting, soft rim light, subtle ambient occlusion on the character, warm friendly collectible-monster design, full body head-to-toe, standing, slight 3/4 front view facing camera, cohesive with a unified premium collectible set of food spirits.\n\n\nDO NOT duplicate any of these already-used dishes or names (you MAY be stylistically similar, but the dish, the name and the id MUST be distinct and unique).\nThis list is ONLY for collision avoidance — do NOT copy its naming FORMAT; follow the NAMING RULES above.\nDishes: Hainanese Chicken Rice, 海南雞飯, Laksa, 叻沙, Bak Kut Teh, 肉骨茶, Kueh Lapis, 九層糕, Kaya Toast, 咖椰吐司, Chilli Crab, 辣椒蟹, Satay, 沙嗲, Kopi O, 咖啡烏, Chai Tow Kway, 菜頭粿, Rojak, 囉喏, Oyster Omelette, 蠔煎, Char Kway Teow, 炒粿條, Curry Puff, 咖喱卜, Roti Prata, 印度煎餅, Chendol, 煎蕊, Chilli Padi, 辣椒, Garlic, 蒜頭, Lemongrass, 香茅, Rice Ball, 飯團, Rice Vermicelli, 米粉, Egg, 雞蛋, Fresh Shrimp, 鮮蝦, Coconut Milk, 椰漿, Kueh Tutu, 嘟嘟糕, Nasi Lemak, 椰漿飯, Otak-Otak, 烏達, Chwee Kueh, 水粿\nNames: Chicken Rice Alliance, 雞飯聯盟, Noodle Clan, 麵食家族, Bak Kut Teh Order, 肉骨茶系, Kueh Dynasty, 糕點系, Kaya Legion, 咖椰系, Chilli Crab Gang, 辣蟹幫, Satay Legion, 沙嗲軍團, Kopi Society, 咖啡烏會, Carrot Cake Clan, 菜頭粿門, Rojak Union, 囉喏聯盟, Orh Luak Tribe, 蠔煎眾, Wok Hei Sect, 鑊氣幫, Curry Puff Order, 咖喱卜團, Prata Tribe, 煎餅族, Chendol School, 煎蕊派, Chilli Baby, 辣椒仔, Garlic Guard, 蒜頭衛兵, Lemongrass Swordsman, 香茅劍客, Riceball Baby, 飯團寶寶, Vermicelli Sprite, 米粉精靈, Egg Guard, 蛋蛋守衛, Shrimp Hopper, 蝦仔跳跳, Coconut Jelly, 椰漿啫喱, Oily Rice Chick, 油飯雞仔, Rice Peck, 米粒啄擊, Oily Rice Heal, 油飯治癒, Silky Chicken Warrior, 滑雞武者, Poached Blade, 白斬刀法, Ginger Splash, 薑蓉飛濺, Hainan Chicken God, 海南雞神, Golden Rice Storm, 黃金飯暴, Chilli Sauce Cannon, 辣椒醬炮, Little Laksa, 叻沙仔, Broth Splash, 湯底潑濺, Coconut Shield, 椰漿護盾, Laksa Warrior, 叻沙武士, Shell Claw, 蝦殼鉗擊, Spicy Surge, 辣浪翻騰, Laksa Dragon, 叻沙龍, Spice Inferno, 香料烈焰, Dragon Noodle Whip, 龍鬚麵鞭, Bak Kut Cub, 肉骨仔, Rib Bonk, 排骨敲擊, Herbal Sip, 藥膳補湯, Bak Kut Warrior, 骨茶武士, Youtiao Strike, 油條重擊, Pepper Guard, 胡椒鐵壁, Bak Kut Grandmaster, 骨茶宗師, Garlic Meteor, 蒜頭流星, Claypot Slam, 砂鍋猛擊, Tutu Sprite, 嘟嘟糕精, Coconut Puff, 椰絲噴發, Steam Veil, 蒸氣面紗, Lapis Queen, 九層糕后, Layer Slice, 分層切擊, Sticky Trap, 黏糕陷阱, Pastry Sovereign, 糕點女王, Gula Melaka Burst, 椰糖爆漿, Royal Decree, 女王詔令, Kaya Blob, 咖央仔, Jam Splat, 醬汁飛濺, Pandan Breeze, 斑蘭清風, Kaya Samurai, 咖央武士, Toast Hammer, 吐司重錘, Butter Slick, 牛油滑步, Kaya Dragon, 咖央聖龍, Phantom Flame, 翡翠幻火, Soft Egg Orb, 半熟蛋彈, Chilli Crablet, 辣蟹仔, Bubble Spit, 泡泡醬沫, Mantou Recovery, 饅頭回氣, Crab Claw Warrior, 辣蟹武士, Claw Crush, 巨鉗粉碎, Sauce Whirl, 醬濤翻滾, Chilli Crab King, 辣椒蟹王, Chilli Tsunami, 辣醬海嘯, Golden Mantou Barrage, 金饅頭連炮, Satay Skewerling, 沙嗲仔, Skewer Jab, 竹籤突刺, Ketupat Rest, 馬來米糕休整, Satay Warrior, 沙嗲武士, Charcoal Grill, 炭火串燒, Triple Skewer, 三串連擊, Satay Flame Emperor, 沙嗲炎帝, Hundred Skewer Storm, 百串燎原, Peanut Sauce Flood, 花生醬洪流, Kopi Bean, 咖啡仔, Bean Toss, 咖啡豆投擲, Kopi Sip, 提神一啖, Kopi Sock Warrior, 咖啡武士, Sock Swing, 咖啡袋重甩, Steam Scald, 滾水燙擊, Kopi O Emperor, 咖啡烏皇, Black Gold Waterfall, 黑金瀑布, Caffeine Rush, 咖啡因狂熱, Radish Cubie, 菜頭仔, Cube Tumble, 粿粒翻滾, Radish Juice, 菜頭甜汁, Carrot Cake Warrior, 菜頭粿武士, Griddle Press, 鐵板煎壓, Egg Crust Slam, 蛋香脆擊, Black & White Cake King, 黑白粿王, Black & White Duet, 黑白雙煎, Sweet Sauce Quake, 甜醬地震, Rojak Tot, 囉喏仔, Pineapple Jab, 菠蘿刺擊, Peanut Dust, 花生碎療癒, Rojak Warrior, 囉喏武士, Haeko Whip, 蝦膏黑鞭, Jicama Shield Bash, 沙葛盾擊, Rojak King, 囉喏王, Hundred Flavour Vortex, 百味漩渦, Black Sauce Deluge, 黑醬傾盆, Little Orh Luak, 蠔煎仔, Starch Flick, 粉漿彈射, Egg Blanket, 蛋被治癒, Omelette Warrior, 蠔煎武者, Sizzle Flip, 鑊氣翻面, Oyster Pearl Shot, 珍珠蠔彈, Oyster Immortal, 蠔煎仙, Tidal Omelette, 蛋海狂潮, Vinegar Mist, 酸醋銀霧, Kway Teow Kid, 粿條仔, Flat Noodle Lash, 粿條抽擊, Lard Crisp Boost, 豬油渣滋補, Kway Teow Warrior, 粿條武士, Wok Toss, 拋鑊翻炒, Cockle Bomb, 血蚶炸彈, Wok Hei God, 鑊氣神, Wok Hei Blast, 鑊氣爆發, Dark Soy Tide, 黑甜醬浪, Curry Puffling, 咖喱卜仔, Crust Flick, 酥皮碎擊, Potato Cushion, 薯仔軟墊, Curry Puff Warrior, 咖喱卜武士, Spiral Crust Cutter, 螺旋酥皮刃, Curry Burst, 咖喱噴發, Golden Puff Sovereign, 咖喱卜尊, Thousand Layer Blades, 千層酥刃, Molten Curry Cannon, 熔岩咖喱炮, Prata Pup, 煎餅仔, Dough Slap, 麵團拍打, Ghee Shine, 酥油滋潤, Prata Warrior, 煎餅武士, Flip Spin Throw, 拋餅迴旋, Crispy Fold Strike, 摺疊脆擊, Prata Sky Elephant, 飛餅神象, Sky Prata Cyclone, 飛天餅旋風, Curry Dip Flood, 咖喱蘸海, Chendol Jelly, 煎蕊仔, Jelly Wiggle, 綠蕊蠕彈, Coconut Milk Bath, 椰奶浴, Chendol Warrior, 煎蕊武士, Shaved Ice Flurry, 刨冰亂舞, Jelly Whip, 綠蕊長鞭, Chendol Snow Queen, 煎蕊雪后, Emerald Blizzard, 翡翠暴雪, Red Bean Meteor, 紅豆流星雨, Fiery Temper, 火爆脾氣, Antibacterial Shield, 抗菌護盾, Lemongrass Sword Dance, 香茅劍舞, Sticky Rice Bind, 糯米黏著, Vermicelli Wrap, 米粉纏繞, Yolk Guard, 蛋黃守護, Bubble Shot, 水泡射擊, Coconut Heal, 椰香治癒, Nasi Lemak Tot, 椰漿飯仔, Pandan Whiff, 斑蘭飄香, Bilis Bonk, 脆炸江魚撞, Nasi Lemak Scout, 椰漿飯小兵, Cucumber Shield Bash, 青瓜爽脆盾, Sambal Splash, 參巴辣醬擊, Nasi Lemak General, 椰漿飯大將軍, Golden Wing Slasher, 酥脆炸雞斬, Volcanic Sambal Eruption, 參巴火山爆, Otah Tot, 烏達小龍, Lemongrass Smoke Puff, 香茅蕉葉煙, Chili Paste Nibble, 辣味魚蓉咬, Otah Swashbuckler, 烏達劍客, Bamboo Skewer Thrust, 竹籤連環刺, Charcoal Grill Wave, 炭香燒烤熱浪, Otah Pyrolord, 烏達炎領, Sambal Otah Torrent, 烈焰參巴魚漿潮, Charcoal Ember Storm, 椰殼炭火烈焰風暴, Chwee Hamlet, 水粿鼠仔, Cup-Mold Steamer Leap, 砵仔蒸騰躍, Savory Chai Poh Splatter, 鹹香菜脯潑, Chwee Sentry, 水粿精兵, Chai Poh Bastion Bash, 菜脯重盾擊, Bamboo Spatula Sweep, 竹製糕鏟掃, Chwee Shogun, 水粿大將, Grand Steamer Pressure Eruption, 巨神蒸籠大爆發, Caramelized Chai Poh Tempest, 焦香菜脯狂風暴",
+  "family": {
+    "seriesId": "ice-kachang-christmas-dragon",
+    "element": "water",
+    "flavor": "sweet",
+    "foodOrigin": {
+      "en": "Ice Kachang",
+      "zh": "紅豆冰"
+    },
+    "evolutionItemId": "ice-kachang-christmas-dragon-essence",
+    "evolutionItem": {
+      "id": "ice-kachang-christmas-dragon-essence",
+      "name": {
+        "en": "Ice Kachang Essence",
+        "zh": "紅豆冰精華"
+      },
+      "description": {
+        "en": "Concentrated essence of Ice Kachang, fuel for evolution.",
+        "zh": "濃縮嘅紅豆冰精華，進化嘅燃料。"
+      },
+      "icon": "star"
+    },
+    "stages": [
+      {
+        "id": "kachang-snowling",
+        "stage": 1,
+        "name": {
+          "en": "Kachang Snowling",
+          "zh": "冰豆龍仔"
+        },
+        "element": "water",
+        "flavor": "sweet",
+        "rarity": "common",
+        "foodOrigin": {
+          "en": "Ice Kachang",
+          "zh": "紅豆冰"
+        },
+        "description": {
+          "en": "A chubby baby dragon made of fluffy shaved ice draped in vibrant red rose syrup and green jelly glaze. It sports a cute holly-berry scarf and holds a festive striped peppermint ice spoon.",
+          "zh": "隻身圓滾滾的幼龍，全身由綿密刨冰砌成，淋上鮮紅玫瑰糖漿與翠綠仙草醬。戴著冬青漿果圍巾，手握一支聖誕糖果棒造型的甜品匙。"
+        },
+        "theme": "Chibi anthropomorphic Christmas Ice Kachang baby dragon mascot, standing upright bipedal pose with legs and arms clearly separated, round chubby icy reptilian body, horned head with miniature frosted icicle horns, small folded jelly wings tucked closely at sides, holding a candy-cane ice spoon, rich digital oil painting, glossy syrup highlights and translucent snow texture, studio lighting.；額外指示：聖誕節主題小販美食精靈，要有聖誕元素",
+        "skillIdeas": [
+          "Sugar Snow Flurry",
+          "Peppermint Scoop Slam"
+        ],
+        "bodyPlan": "dragon-kin"
+      },
+      {
+        "id": "kachang-frost-drake",
+        "stage": 2,
+        "name": {
+          "en": "Kachang Frost Drake",
+          "zh": "紅豆雪山龍"
+        },
+        "element": "water",
+        "flavor": "sweet",
+        "rarity": "rare",
+        "foodOrigin": {
+          "en": "Ice Kachang",
+          "zh": "紅豆冰"
+        },
+        "description": {
+          "en": "A proud reptilian warrior whose dragon scale armor glistens like sweet corn kernels and caramelized gula melaka. It wields an ice-scraper halberd dripping with chilled rose syrup and wears a wreath of glowing Christmas pine needles.",
+          "zh": "英姿颯爽的龍族武士，胸甲如玉米粒般金黃耀眼，搭配焦糖色椰糖龍鱗。手持滴著玫瑰冷漿的雙刃刨冰戟，頸間環繞著發光的聖誕松針環。"
+        },
+        "theme": "Chibi anthropomorphic warrior dragon, upright bipedal stance with arms and legs held apart for rigging, athletic scaled body with glistening red bean and sweet corn plate armor, reptilian horned head, tail with spiky ice-crystal tip, small folded icy wings tucked to sides, wielding a double-bladed frozen ice-scraper halberd, rich layered digital oil painting, appetising glistening surfaces, warm rim light.；額外指示：聖誕節主題小販美食精靈，要有聖誕元素",
+        "skillIdeas": [
+          "Rose Syrup Torrent",
+          "Frost Scraper Strike"
+        ],
+        "bodyPlan": "dragon-kin"
+      },
+      {
+        "id": "kachang-deity-sovereign",
+        "stage": 3,
+        "name": {
+          "en": "Kachang Feast Guardian",
+          "zh": "彩冰聖誕神"
+        },
+        "element": "water",
+        "flavor": "sweet",
+        "rarity": "epic",
+        "foodOrigin": {
+          "en": "Ice Kachang",
+          "zh": "紅豆冰"
+        },
+        "description": {
+          "en": "A magnificent six-armed guardian deity reborn in full Christmas grandeur. A glowing golden-star mandala aura shines behind its head while its six arms grip sacred food-forged implements to spread festive cheer.",
+          "zh": "幻化為六臂聖誕護法神祗，頭後懸浮著璀璨的八角星聖誕冰晶光輪。六隻手臂各持由美食化成的法器，散發濃郁甜蜜的聖誕節慶神光。"
+        },
+        "theme": "Chibi anthropomorphic multi-armed deity, dramatic archetype jump, upright bipedal figure with feet firmly planted and legs/arms clearly spread apart, six distinct arms each holding a unique artifact (shaved ice hammer, sweet corn orb, rose syrup trident, grass jelly shield blade, gula melaka star wand, red bean holy chalice), circular mandala aura behind head (NO wings), crown of ice crystals and holly leaves, rich digital oil painting with specular wet syrup drips and golden warm glow.；額外指示：聖誕節主題小販美食精靈，要有聖誕元素",
+        "skillIdeas": [
+          "Mandala Frost Blessing",
+          "Six Arm Avalanche",
+          "Sweet Noel Cascade"
+        ],
+        "bodyPlan": "dragon-kin"
+      }
+    ],
+    "bodyPlan": "dragon-kin",
+    "mythicArchetype": "many-armed-deity"
+  },
+  "concept": {
+    "name": {
+      "en": "Kachang Snowling",
+      "zh": "冰豆龍仔"
+    },
+    "seriesId": "ice-kachang-christmas-dragon",
+    "stage": 1,
+    "element": "water",
+    "flavor": "sweet",
+    "rarity": "common",
+    "foodOrigin": {
+      "en": "Ice Kachang",
+      "zh": "紅豆冰"
+    },
+    "description": {
+      "en": "A chubby baby dragon made of fluffy shaved ice draped in vibrant red rose syrup and green jelly glaze. It sports a cute holly-berry scarf and holds a festive striped peppermint ice spoon.",
+      "zh": "隻身圓滾滾的幼龍，全身由綿密刨冰砌成，淋上鮮紅玫瑰糖漿與翠綠仙草醬。戴著冬青漿果圍巾，手握一支聖誕糖果棒造型的甜品匙。"
+    },
+    "theme": "Chibi anthropomorphic Christmas Ice Kachang baby dragon mascot, standing upright bipedal pose with legs and arms clearly separated, round chubby icy reptilian body, horned head with miniature frosted icicle horns, small folded jelly wings tucked closely at sides, holding a candy-cane ice spoon, rich digital oil painting, glossy syrup highlights and translucent snow texture, studio lighting.；額外指示：聖誕節主題小販美食精靈，要有聖誕元素",
+    "skillIdeas": [
+      "Sugar Snow Flurry",
+      "Peppermint Scoop Slam"
+    ]
+  },
+  "poolStatus": {
+    "total": 4,
+    "usable": 3,
+    "low": false,
+    "exhausted": false,
+    "note": null
+  },
+  "speciesList": [
+    {
+      "id": "kachang-snowling",
+      "seriesId": "ice-kachang-christmas-dragon",
+      "stage": 1,
+      "name": {
+        "en": "Kachang Snowling",
+        "zh": "冰豆龍仔"
+      },
+      "element": "water",
+      "flavor": "sweet",
+      "rarity": "common",
+      "foodOrigin": {
+        "en": "Ice Kachang",
+        "zh": "紅豆冰"
+      },
+      "description": {
+        "en": "A chubby baby dragon made of fluffy shaved ice draped in vibrant red rose syrup and green jelly glaze. It sports a cute holly-berry scarf and holds a festive striped peppermint ice spoon.",
+        "zh": "隻身圓滾滾的幼龍，全身由綿密刨冰砌成，淋上鮮紅玫瑰糖漿與翠綠仙草醬。戴著冬青漿果圍巾，手握一支聖誕糖果棒造型的甜品匙。"
+      },
+      "baseStats": {
+        "hp": 45,
+        "attack": 13,
+        "defense": 10,
+        "speed": 14
+      },
+      "skills": [
+        {
+          "id": "kachang-snowling-skill-1",
+          "name": {
+            "en": "Skill 1",
+            "zh": "Sugar Snow Flurry"
+          },
+          "description": {
+            "en": "Mock skill from concept idea 1.",
+            "zh": "由概念點子生成：Sugar Snow Flurry"
+          },
+          "power": 1,
+          "cooldown": 0
+        },
+        {
+          "id": "kachang-snowling-skill-2",
+          "name": {
+            "en": "Skill 2",
+            "zh": "Peppermint Scoop Slam"
+          },
+          "description": {
+            "en": "Mock skill from concept idea 2.",
+            "zh": "由概念點子生成：Peppermint Scoop Slam"
+          },
+          "power": 1.4,
+          "cooldown": 2
+        }
+      ],
+      "evolvesTo": "kachang-frost-drake",
+      "evolutionRequirement": {
+        "items": {
+          "ice-kachang-christmas-dragon-essence": 5
+        },
+        "checkinCentres": 2
+      },
+      "modelUrl": "/models/kachang-snowling.glb",
+      "modelHeightM": 0.3,
+      "animated": true,
+      "modelYaw": 0
+    },
+    {
+      "id": "kachang-frost-drake",
+      "seriesId": "ice-kachang-christmas-dragon",
+      "stage": 2,
+      "name": {
+        "en": "Kachang Frost Drake",
+        "zh": "紅豆雪山龍"
+      },
+      "element": "water",
+      "flavor": "sweet",
+      "rarity": "rare",
+      "foodOrigin": {
+        "en": "Ice Kachang",
+        "zh": "紅豆冰"
+      },
+      "description": {
+        "en": "A proud reptilian warrior whose dragon scale armor glistens like sweet corn kernels and caramelized gula melaka. It wields an ice-scraper halberd dripping with chilled rose syrup and wears a wreath of glowing Christmas pine needles.",
+        "zh": "英姿颯爽的龍族武士，胸甲如玉米粒般金黃耀眼，搭配焦糖色椰糖龍鱗。手持滴著玫瑰冷漿的雙刃刨冰戟，頸間環繞著發光的聖誕松針環。"
+      },
+      "baseStats": {
+        "hp": 72,
+        "attack": 22,
+        "defense": 18,
+        "speed": 20
+      },
+      "skills": [
+        {
+          "id": "kachang-frost-drake-skill-1",
+          "name": {
+            "en": "Skill 1",
+            "zh": "Rose Syrup Torrent"
+          },
+          "description": {
+            "en": "Mock skill from concept idea 1.",
+            "zh": "由概念點子生成：Rose Syrup Torrent"
+          },
+          "power": 1.1,
+          "cooldown": 0
+        },
+        {
+          "id": "kachang-frost-drake-skill-2",
+          "name": {
+            "en": "Skill 2",
+            "zh": "Frost Scraper Strike"
+          },
+          "description": {
+            "en": "Mock skill from concept idea 2.",
+            "zh": "由概念點子生成：Frost Scraper Strike"
+          },
+          "power": 1.7,
+          "cooldown": 2
+        }
+      ],
+      "evolvesTo": "kachang-deity-sovereign",
+      "evolutionRequirement": {
+        "items": {
+          "ice-kachang-christmas-dragon-essence": 10
+        },
+        "checkinCentres": 5
+      },
+      "modelUrl": "/models/kachang-frost-drake.glb",
+      "modelHeightM": 0.5,
+      "animated": true,
+      "modelYaw": 0
+    },
+    {
+      "id": "kachang-deity-sovereign",
+      "seriesId": "ice-kachang-christmas-dragon",
+      "stage": 3,
+      "name": {
+        "en": "Kachang Feast Guardian",
+        "zh": "彩冰聖誕神"
+      },
+      "element": "water",
+      "flavor": "sweet",
+      "rarity": "epic",
+      "foodOrigin": {
+        "en": "Ice Kachang",
+        "zh": "紅豆冰"
+      },
+      "description": {
+        "en": "A magnificent six-armed guardian deity reborn in full Christmas grandeur. A glowing golden-star mandala aura shines behind its head while its six arms grip sacred food-forged implements to spread festive cheer.",
+        "zh": "幻化為六臂聖誕護法神祗，頭後懸浮著璀璨的八角星聖誕冰晶光輪。六隻手臂各持由美食化成的法器，散發濃郁甜蜜的聖誕節慶神光。"
+      },
+      "baseStats": {
+        "hp": 102,
+        "attack": 34,
+        "defense": 28,
+        "speed": 26
+      },
+      "skills": [
+        {
+          "id": "kachang-deity-sovereign-skill-1",
+          "name": {
+            "en": "Skill 1",
+            "zh": "Mandala Frost Blessing"
+          },
+          "description": {
+            "en": "Mock skill from concept idea 1.",
+            "zh": "由概念點子生成：Mandala Frost Blessing"
+          },
+          "power": 1.2,
+          "cooldown": 0
+        },
+        {
+          "id": "kachang-deity-sovereign-skill-2",
+          "name": {
+            "en": "Skill 2",
+            "zh": "Six Arm Avalanche"
+          },
+          "description": {
+            "en": "Mock skill from concept idea 2.",
+            "zh": "由概念點子生成：Six Arm Avalanche"
+          },
+          "power": 2,
+          "cooldown": 3
+        }
+      ],
+      "evolvesTo": null,
+      "evolutionRequirement": null,
+      "modelUrl": "/models/kachang-deity-sovereign.glb",
+      "modelHeightM": 0.65,
+      "animated": true,
+      "modelYaw": 0
+    }
+  ],
+  "species": {
+    "id": "kachang-snowling",
+    "seriesId": "ice-kachang-christmas-dragon",
+    "stage": 1,
+    "name": {
+      "en": "Kachang Snowling",
+      "zh": "冰豆龍仔"
+    },
+    "element": "water",
+    "flavor": "sweet",
+    "rarity": "common",
+    "foodOrigin": {
+      "en": "Ice Kachang",
+      "zh": "紅豆冰"
+    },
+    "description": {
+      "en": "A chubby baby dragon made of fluffy shaved ice draped in vibrant red rose syrup and green jelly glaze. It sports a cute holly-berry scarf and holds a festive striped peppermint ice spoon.",
+      "zh": "隻身圓滾滾的幼龍，全身由綿密刨冰砌成，淋上鮮紅玫瑰糖漿與翠綠仙草醬。戴著冬青漿果圍巾，手握一支聖誕糖果棒造型的甜品匙。"
+    },
+    "baseStats": {
+      "hp": 45,
+      "attack": 13,
+      "defense": 10,
+      "speed": 14
+    },
+    "skills": [
+      {
+        "id": "kachang-snowling-skill-1",
+        "name": {
+          "en": "Skill 1",
+          "zh": "Sugar Snow Flurry"
+        },
+        "description": {
+          "en": "Mock skill from concept idea 1.",
+          "zh": "由概念點子生成：Sugar Snow Flurry"
+        },
+        "power": 1,
+        "cooldown": 0
+      },
+      {
+        "id": "kachang-snowling-skill-2",
+        "name": {
+          "en": "Skill 2",
+          "zh": "Peppermint Scoop Slam"
+        },
+        "description": {
+          "en": "Mock skill from concept idea 2.",
+          "zh": "由概念點子生成：Peppermint Scoop Slam"
+        },
+        "power": 1.4,
+        "cooldown": 2
+      }
+    ],
+    "evolvesTo": "kachang-frost-drake",
+    "evolutionRequirement": {
+      "items": {
+        "ice-kachang-christmas-dragon-essence": 5
+      },
+      "checkinCentres": 2
+    },
+    "modelUrl": "/models/kachang-snowling.glb",
+    "modelHeightM": 0.3,
+    "animated": true,
+    "modelYaw": 1.5707963267948966
+  },
+  "evolutionItemId": "ice-kachang-christmas-dragon-essence",
+  "evolutionItem": {
+    "id": "ice-kachang-christmas-dragon-essence",
+    "name": {
+      "en": "Ice Kachang Essence",
+      "zh": "紅豆冰精華"
+    },
+    "description": {
+      "en": "Concentrated essence of Ice Kachang, fuel for evolution.",
+      "zh": "濃縮嘅紅豆冰精華，進化嘅燃料。"
+    },
+    "icon": "star"
+  },
+  "pipelinePhase": "from-3d",
+  "finalizeByStage": {
+    "kachang-snowling": {
+      "modelUrl": "/models/kachang-snowling.glb",
+      "animated": true,
+      "modelYaw": 1.5707963267948966,
+      "modelHeightM": 0.3,
+      "needsYawVerification": true
+    },
+    "kachang-frost-drake": {
+      "modelUrl": "/models/kachang-frost-drake.glb",
+      "animated": true,
+      "modelYaw": 1.5707963267948966,
+      "modelHeightM": 0.5,
+      "needsYawVerification": true
+    },
+    "kachang-deity-sovereign": {
+      "modelUrl": "/models/kachang-deity-sovereign.glb",
+      "animated": true,
+      "modelYaw": 1.5707963267948966,
+      "modelHeightM": 0.65,
+      "needsYawVerification": true
+    }
+  },
+  "finalize": {
+    "modelUrl": "/models/kachang-snowling.glb",
+    "animated": true,
+    "modelYaw": 1.5707963267948966,
+    "modelHeightM": 0.3,
+    "needsYawVerification": true
+  },
+  "skillsByStage": {
+    "kachang-snowling": [
+      {
+        "id": "kachang-snowling-skill-1",
+        "name": {
+          "en": "Skill 1",
+          "zh": "Sugar Snow Flurry"
+        },
+        "description": {
+          "en": "Mock skill from concept idea 1.",
+          "zh": "由概念點子生成：Sugar Snow Flurry"
+        },
+        "power": 1,
+        "cooldown": 0
+      },
+      {
+        "id": "kachang-snowling-skill-2",
+        "name": {
+          "en": "Skill 2",
+          "zh": "Peppermint Scoop Slam"
+        },
+        "description": {
+          "en": "Mock skill from concept idea 2.",
+          "zh": "由概念點子生成：Peppermint Scoop Slam"
+        },
+        "power": 1.4,
+        "cooldown": 2
+      }
+    ],
+    "kachang-frost-drake": [
+      {
+        "id": "kachang-frost-drake-skill-1",
+        "name": {
+          "en": "Skill 1",
+          "zh": "Rose Syrup Torrent"
+        },
+        "description": {
+          "en": "Mock skill from concept idea 1.",
+          "zh": "由概念點子生成：Rose Syrup Torrent"
+        },
+        "power": 1.1,
+        "cooldown": 0
+      },
+      {
+        "id": "kachang-frost-drake-skill-2",
+        "name": {
+          "en": "Skill 2",
+          "zh": "Frost Scraper Strike"
+        },
+        "description": {
+          "en": "Mock skill from concept idea 2.",
+          "zh": "由概念點子生成：Frost Scraper Strike"
+        },
+        "power": 1.7,
+        "cooldown": 2
+      }
+    ],
+    "kachang-deity-sovereign": [
+      {
+        "id": "kachang-deity-sovereign-skill-1",
+        "name": {
+          "en": "Skill 1",
+          "zh": "Mandala Frost Blessing"
+        },
+        "description": {
+          "en": "Mock skill from concept idea 1.",
+          "zh": "由概念點子生成：Mandala Frost Blessing"
+        },
+        "power": 1.2,
+        "cooldown": 0
+      },
+      {
+        "id": "kachang-deity-sovereign-skill-2",
+        "name": {
+          "en": "Skill 2",
+          "zh": "Six Arm Avalanche"
+        },
+        "description": {
+          "en": "Mock skill from concept idea 2.",
+          "zh": "由概念點子生成：Six Arm Avalanche"
+        },
+        "power": 2,
+        "cooldown": 3
+      }
+    ]
+  },
+  "fxBySkill": {
+    "kachang-snowling-skill-1": {
+      "archetype": "projectile",
+      "colors": [
+        "#4fc3f7",
+        "#a8e6ff",
+        "#2196d8"
+      ],
+      "food": "droplet"
+    },
+    "kachang-snowling-skill-2": {
+      "archetype": "smash",
+      "colors": [
+        "#4fc3f7",
+        "#a8e6ff",
+        "#2196d8"
+      ],
+      "food": "pepper"
+    },
+    "kachang-frost-drake-skill-1": {
+      "archetype": "projectile",
+      "colors": [
+        "#4fc3f7",
+        "#a8e6ff",
+        "#2196d8"
+      ],
+      "food": "droplet"
+    },
+    "kachang-frost-drake-skill-2": {
+      "archetype": "projectile",
+      "colors": [
+        "#4fc3f7",
+        "#a8e6ff",
+        "#2196d8"
+      ],
+      "food": "droplet"
+    },
+    "kachang-deity-sovereign-skill-1": {
+      "archetype": "projectile",
+      "colors": [
+        "#4fc3f7",
+        "#a8e6ff",
+        "#2196d8"
+      ],
+      "food": "droplet"
+    },
+    "kachang-deity-sovereign-skill-2": {
+      "archetype": "projectile",
+      "scale": 1.5,
+      "secondary": true,
+      "colors": [
+        "#4fc3f7",
+        "#a8e6ff",
+        "#2196d8"
+      ],
+      "food": "droplet"
+    }
+  },
+  "basicFx": {
+    "motion": "shoot",
+    "colors": [
+      "#4fc3f7",
+      "#a8e6ff",
+      "#2196d8"
+    ],
+    "food": "bean"
+  },
+  "skills": [
+    {
+      "id": "kachang-snowling-skill-1",
+      "name": {
+        "en": "Skill 1",
+        "zh": "Sugar Snow Flurry"
+      },
+      "description": {
+        "en": "Mock skill from concept idea 1.",
+        "zh": "由概念點子生成：Sugar Snow Flurry"
+      },
+      "power": 1,
+      "cooldown": 0
+    },
+    {
+      "id": "kachang-snowling-skill-2",
+      "name": {
+        "en": "Skill 2",
+        "zh": "Peppermint Scoop Slam"
+      },
+      "description": {
+        "en": "Mock skill from concept idea 2.",
+        "zh": "由概念點子生成：Peppermint Scoop Slam"
+      },
+      "power": 1.4,
+      "cooldown": 2
+    }
+  ],
+  "decision": {
+    "verdict": "approve",
+    "reason": "後台 approve",
+    "by": "manual",
+    "at": "2026-07-28T18:36:47.125Z"
+  },
+  "telegram": {
+    "awaitingReason": false
+  },
+  "facingLockByStage": {
+    "kachang-snowling": {
+      "verified": true,
+      "modelYaw": 0,
+      "at": "2026-07-29T04:55:47.878Z"
+    },
+    "kachang-frost-drake": {
+      "verified": true,
+      "modelYaw": 0,
+      "at": "2026-07-29T04:55:47.878Z"
+    },
+    "kachang-deity-sovereign": {
+      "verified": true,
+      "modelYaw": 0,
+      "at": "2026-07-29T04:55:47.878Z"
+    }
+  }
+}

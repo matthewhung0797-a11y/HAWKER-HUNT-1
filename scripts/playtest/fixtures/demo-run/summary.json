@@ -1,0 +1,214 @@
+{
+  "schemaVersion": 1,
+  "runId": "demo-run",
+  "suite": "core-loop",
+  "suites": [
+    "core-loop"
+  ],
+  "generatedAt": "2026-08-01T07:54:39.547Z",
+  "funnel": {
+    "sessions": 6,
+    "completed": 4,
+    "failed": 2,
+    "completionRate": 0.6666666666666666,
+    "stepSuccessRate": 0.9,
+    "highFidelitySessions": 0
+  },
+  "load": {
+    "target": 1000,
+    "completed": 979,
+    "failed": 21,
+    "peakInFlight": 120,
+    "windowMs": 42000,
+    "p50Ms": 95,
+    "p95Ms": 280,
+    "errorRate": 0.021,
+    "captureSuccessRate": 0.725,
+    "battleWinRate": 0.55,
+    "note": "Demo 蜂群：示範千人同時在線視覺；真跑 npm run playtest:1k"
+  },
+  "facing": {
+    "staticOk": false,
+    "note": "Gate A 失敗（詳見 facing-static session）"
+  },
+  "stuckTop": [
+    {
+      "stepId": "dex.open",
+      "count": 1
+    },
+    {
+      "stepId": "facing.static",
+      "count": 1
+    }
+  ],
+  "failReasons": {
+    "Timeout waiting for dex grid": 1,
+    "facing:static exit 1（示範：現有 species 缺 lock／rigLite）": 1
+  },
+  "sentiment": {
+    "negative": 4,
+    "neutral": 10,
+    "positive": 1
+  },
+  "themes": [
+    {
+      "theme": "其他體驗",
+      "count": 5,
+      "sample": "開場對白…睇吓師傅講咩"
+    },
+    {
+      "theme": "捕捉手感／失敗",
+      "count": 3,
+      "sample": "狂撳好攰，險啲搓唔切"
+    },
+    {
+      "theme": "切磋節奏／能量",
+      "count": 3,
+      "sample": "切磋場——對住敵位睇吓站位正唔正"
+    },
+    {
+      "theme": "面向／站位睇落怪",
+      "count": 3,
+      "sample": "敵位面向要再核對（建議跑 facing golden）"
+    },
+    {
+      "theme": "導覽／文案唔明",
+      "count": 1,
+      "sample": "導覽完可以出發！"
+    },
+    {
+      "theme": "卡死／錯誤",
+      "count": 1,
+      "sample": "卡住咗：dex.open（Timeout waiting for dex grid）"
+    }
+  ],
+  "priorities": [
+    {
+      "level": "P0",
+      "title": "面向閘 A（facing:static）未過",
+      "detail": "補 facing-lock／rigLite；或跑 diag-facing-calibrate + apply-facing-lock",
+      "stepId": "facing.static"
+    },
+    {
+      "level": "P2",
+      "title": "卡點：dex.open",
+      "detail": "1 個 session 失敗／卡住",
+      "stepId": "dex.open"
+    },
+    {
+      "level": "P2",
+      "title": "卡點：facing.static",
+      "detail": "1 個 session 失敗／卡住",
+      "stepId": "facing.static"
+    },
+    {
+      "level": "P1",
+      "title": "其他體驗",
+      "detail": "開場對白…睇吓師傅講咩"
+    },
+    {
+      "level": "P1",
+      "title": "捕捉手感／失敗",
+      "detail": "狂撳好攰，險啲搓唔切"
+    },
+    {
+      "level": "P1",
+      "title": "切磋節奏／能量",
+      "detail": "切磋場——對住敵位睇吓站位正唔正"
+    },
+    {
+      "level": "P1",
+      "title": "面向／站位睇落怪",
+      "detail": "敵位面向要再核對（建議跑 facing golden）"
+    },
+    {
+      "level": "P2",
+      "title": "導覽／文案唔明",
+      "detail": "導覽完可以出發！"
+    }
+  ],
+  "sessions": [
+    {
+      "personaId": "battler",
+      "label": "切磋優先",
+      "status": "done",
+      "steps": 3,
+      "stepsOk": 3,
+      "durationMs": 80000,
+      "lastStepId": "battle.open",
+      "lastShot": null,
+      "notes": [
+        "facing 僅截圖抽樣；硬閘請跑 npm run facing:static / facing:golden"
+      ]
+    },
+    {
+      "personaId": "clumsy",
+      "label": "手殘玩家",
+      "status": "failed",
+      "steps": 3,
+      "stepsOk": 2,
+      "durationMs": 90000,
+      "lastStepId": "dex.open",
+      "lastShot": null,
+      "notes": [
+        "圖鑑頁載入慢／選擇器不穩——示範卡點"
+      ]
+    },
+    {
+      "personaId": "completionist",
+      "label": "完成主義",
+      "status": "done",
+      "steps": 4,
+      "stepsOk": 4,
+      "durationMs": 95000,
+      "lastStepId": "battle.open",
+      "lastShot": null,
+      "notes": []
+    },
+    {
+      "personaId": "facing-static",
+      "label": "面向閘 A（static）",
+      "status": "failed",
+      "steps": 1,
+      "stepsOk": 0,
+      "durationMs": 800,
+      "lastStepId": "facing.report",
+      "lastShot": null,
+      "notes": [
+        "Demo：示範 facing 失敗點會入總結 P0",
+        "真跑：npm run playtest:facing"
+      ]
+    },
+    {
+      "personaId": "newbie",
+      "label": "新手小白",
+      "status": "done",
+      "steps": 5,
+      "stepsOk": 5,
+      "durationMs": 120000,
+      "lastStepId": "onb.finish",
+      "lastShot": null,
+      "notes": []
+    },
+    {
+      "personaId": "speedrun",
+      "label": "速通黨",
+      "status": "done",
+      "steps": 4,
+      "stepsOk": 4,
+      "durationMs": 70000,
+      "lastStepId": "battle.open",
+      "lastShot": null,
+      "notes": []
+    }
+  ],
+  "feedCount": 15,
+  "coverageGaps": [
+    "AR／SLAM／真陀螺儀（要真機）",
+    "GPS 打卡 geofence（要真機）",
+    "iOS／Android 分享入相簿（要真機）",
+    "facing Gate B/C golden（要 :3000＋基線）",
+    "千人層＝HTTP 虛擬玩家；高仿真 Chrome 另計（並行有限）"
+  ],
+  "notes": "混合模型：load≈同時千人；human/core＝真人感瀏覽器。規則總結（非 LLM）。"
+}

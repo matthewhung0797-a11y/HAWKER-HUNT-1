@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hawker Hunt 打卡 QR 印刷版</title>
+<style>
+  :root { --ink: #4a2c14; --paper: #f0e2c4; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 16mm 12mm;
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    color: var(--ink);
+    background: #fff;
+  }
+  h1 { font-size: 20pt; margin: 0 0 2mm; }
+  p.note { font-size: 9pt; color: #7a5a38; margin: 0 0 8mm; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10mm;
+  }
+  .card {
+    margin: 0;
+    padding: 6mm;
+    border: 1.5pt dashed #b8935a;
+    border-radius: 4mm;
+    text-align: center;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    background: #fffdf6;
+  }
+  .card img { width: 100%; max-width: 68mm; height: auto; image-rendering: pixelated; }
+  figcaption { display: flex; flex-direction: column; gap: 1mm; margin-top: 4mm; }
+  figcaption .zh { font-size: 15pt; font-weight: 800; }
+  figcaption .en { font-size: 10pt; color: #7a5a38; }
+  @page { size: A4; margin: 12mm; }
+  @media print {
+    body { padding: 0; }
+    p.note { display: none; }
+  }
+</style>
+</head>
+<body>
+  <h1>Hawker Hunt — 打卡 QR 貼紙</h1>
+  <p class="note">將呢頁 print 出嚟（A4），沿虛線剪開貼喺對應據點。掃描格式：https://hawkerhunt.app/c/&lt;centreId&gt;</p>
+  <div class="grid">
+      <figure class="card">
+        <img src="maxwell.png" alt="Maxwell Food Centre QR" />
+        <figcaption>
+          <span class="zh">麥士威熟食中心</span>
+          <span class="en">Maxwell Food Centre</span>
+        </figcaption>
+      </figure>
+      <figure class="card">
+        <img src="chinatown-complex.png" alt="Chinatown Complex Food Centre QR" />
+        <figcaption>
+          <span class="zh">牛車水大廈熟食中心</span>
+          <span class="en">Chinatown Complex Food Centre</span>
+        </figcaption>
+      </figure>
+      <figure class="card">
+        <img src="old-airport-road.png" alt="Old Airport Road Food Centre QR" />
+        <figcaption>
+          <span class="zh">舊機場路熟食中心</span>
+          <span class="en">Old Airport Road Food Centre</span>
+        </figcaption>
+      </figure>
+      <figure class="card">
+        <img src="tekka-centre.png" alt="Tekka Centre QR" />
+        <figcaption>
+          <span class="zh">竹腳中心</span>
+          <span class="en">Tekka Centre</span>
+        </figcaption>
+      </figure>
+      <figure class="card">
+        <img src="lau-pa-sat.png" alt="Lau Pa Sat QR" />
+        <figcaption>
+          <span class="zh">老巴剎</span>
+          <span class="en">Lau Pa Sat</span>
+        </figcaption>
+      </figure>
+      <figure class="card">
+        <img src="hk-test.png" alt="Kam Tin Po Tei Playground (Dev) QR" />
+        <figcaption>
+          <span class="zh">錦田波地遊樂場（測試）</span>
+          <span class="en">Kam Tin Po Tei Playground (Dev)</span>
+        </figcaption>
+      </figure>
+  </div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+# 系統一 — 24x7 uptime 監測（GitHub Actions cron）
+# 每 5 分鐘 ping /api/health；連續失敗即當網站 down：發 Telegram 警報 ＋ 自動觸發 rollback。
+# 未設 HEALTH_URL / APP_URL secret 時整個 job graceful skip（唔會誤報）。
+name: uptime-monitor
+
+on:
+  schedule:
+    - cron: "*/5 * * * *" # 每 5 分鐘（GitHub cron 最密約 5 分鐘）
+  workflow_dispatch: {}
+
+permissions:
+  actions: write # 允許觸發 auto-rollback workflow
+  contents: read
+
+concurrency:
+  group: uptime-monitor
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Health check
+        id: hc
+        env:
+          HEALTH_URL: ${{ secrets.HEALTH_URL }}
+          APP_URL: ${{ secrets.APP_URL }}
+        run: |
+          if [ -z "${HEALTH_URL}${APP_URL}" ]; then
+            echo "state=unconfigured" >> "$GITHUB_OUTPUT"
+            echo "no HEALTH_URL / APP_URL secret set — skipping (configure to enable)"
+            exit 0
+          fi
+          set +e
+          node scripts/ops/health-check.mjs
+          code=$?
+          set -e
+          if [ $code -eq 0 ]; then echo "state=ok" >> "$GITHUB_OUTPUT";
+          elif [ $code -eq 2 ]; then echo "state=unconfigured" >> "$GITHUB_OUTPUT";
+          else echo "state=down" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Alert + trigger rollback (site down)
+        if: steps.hc.outputs.state == 'down'
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node scripts/ops/notify-telegram.mjs "🔴 *網站 DOWN* — /api/health 連續失敗。正在自動觸發 rollback…"
+          gh workflow run auto-rollback.yml -f reason="uptime-monitor: health check failed" || \
+            node scripts/ops/notify-telegram.mjs "⚠️ 觸發 auto-rollback workflow 失敗，請手動介入。"

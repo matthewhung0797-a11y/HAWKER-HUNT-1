@@ -1,0 +1,15 @@
+---
+description: 呢部機係 Windows + PowerShell，shell / git / 檔案編碼要避開嘅坑
+alwaysApply: true
+---
+
+# Windows / PowerShell 注意事項
+
+呢個 workspace 喺 Windows，預設 shell 係 PowerShell（舊版）：
+
+- **唔支援 `&&` 串聯**。用 `;` 分開，或者分開幾次 tool call（要條件式先後執行就分開叫）。
+- **git commit 用 `-F` 檔案傳 message**，唔好用 heredoc（`$(cat <<'EOF')` 喺 PowerShell 會 ParserError）。用 Write 工具寫去例如 `.git/COMMIT_MSG.txt`（UTF-8，中文先唔會爛），`git commit -F` 之後再刪。
+- **千祈唔好用 `Get-Content ... | Set-Content` round-trip 改檔**——會將 UTF-8／中文轉成 `?` 整爛成 mojibake。改檔一律用 StrReplace / Write 工具。
+- 腳本入面**唔好喺 regex literal 放中文**（`/開始/`），編碼一爛就變成無效 regex 令成個檔 parse 唔到。要 match 中文用普通 string，或者索性用 `data-testid` 等 ASCII selector。
+- git 會出 `LF will be replaced by CRLF` warning——正常，唔使理。純 EOL 改動嘅檔（`git diff --stat` 冇內容）唔好特登 stage。
+- **`git push`／`ls-remote` 對 github.com 成日 hang 幾分鐘**：唔係網絡（TCP 443 即通），係 GCM 想彈互動認證視窗但背景 shell 彈唔出。唔好乾等／狂 retry——直接一次性借 gh CLI 憑證：`git -c credential.helper="!gh auth git-credential" push origin master`（gh 已登入 `49violetblazeai`，唔使改全局配置）。診斷用 `$env:GCM_INTERACTIVE="never"` 可令佢即刻 fail 而唔係 hang。另外：hang 咗嘅 push 可能其實已推成功，retry 前先 `git log origin/master..master` 核實。

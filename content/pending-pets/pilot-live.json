@@ -1,0 +1,632 @@
+{
+  "id": "pilot-live",
+  "createdAt": "2026-07-19T18:24:20.482Z",
+  "updatedAt": "2026-07-19T19:39:20.050Z",
+  "status": "approved",
+  "artifacts": {
+    "artByStage": {
+      "nasi-lemak-tot": "public/spirits/full/nasi-lemak-tot.webp",
+      "nasi-lemak-scout": "public/spirits/full/nasi-lemak-scout.webp",
+      "nasi-lemak-general": "public/spirits/full/nasi-lemak-general.webp"
+    },
+    "art": "public/spirits/full/nasi-lemak-tot.webp",
+    "model3dByStage": {
+      "nasi-lemak-tot": "model-pipeline/gen/tripo/nasi-lemak-tot.glb",
+      "nasi-lemak-scout": "model-pipeline/gen/tripo/nasi-lemak-scout.glb",
+      "nasi-lemak-general": "model-pipeline/gen/tripo/nasi-lemak-general.glb"
+    },
+    "model3d": "model-pipeline/gen/tripo/nasi-lemak-tot.glb",
+    "riggedByStage": {
+      "nasi-lemak-tot": "model-pipeline/gen/anim/nasi-lemak-tot",
+      "nasi-lemak-scout": "model-pipeline/gen/anim/nasi-lemak-scout",
+      "nasi-lemak-general": "model-pipeline/gen/anim/nasi-lemak-general"
+    },
+    "rigged": "model-pipeline/gen/anim/nasi-lemak-tot",
+    "finalByStage": {
+      "nasi-lemak-tot": "public/models/nasi-lemak-tot.glb",
+      "nasi-lemak-scout": "public/models/nasi-lemak-scout.glb",
+      "nasi-lemak-general": "public/models/nasi-lemak-general.glb"
+    },
+    "final": null
+  },
+  "manifest": {
+    "concept": {
+      "status": "done",
+      "mode": "gemini",
+      "detail": "LLM family=nasi-lemak-squad",
+      "at": "2026-07-19T18:27:32.216Z"
+    },
+    "art": {
+      "status": "done",
+      "mode": "gemini",
+      "detail": "3/3 階真圖",
+      "at": "2026-07-19T18:28:39.157Z"
+    },
+    "model3d": {
+      "status": "done",
+      "mode": "real",
+      "detail": "3/3 階真生成",
+      "at": "2026-07-19T18:59:44.017Z"
+    },
+    "rig": {
+      "status": "done",
+      "mode": "real",
+      "detail": "3/3 階真 rig",
+      "at": "2026-07-19T19:06:06.665Z"
+    },
+    "finalize": {
+      "status": "partial",
+      "mode": "real",
+      "detail": "2/3 階真 finalize",
+      "at": "2026-07-19T19:06:09.699Z"
+    },
+    "skills": {
+      "status": "done",
+      "mode": "gemini",
+      "detail": "6 skills / 3 階",
+      "at": "2026-07-19T19:31:29.571Z"
+    },
+    "draft": {
+      "status": "done",
+      "detail": "三階 species 已組裝（nasi-lemak-tot → nasi-lemak-scout → nasi-lemak-general）",
+      "at": "2026-07-19T19:38:24.854Z"
+    }
+  },
+  "conceptPrompt": "Invent ONE brand-new Singapore/Malaysian hawker-food spirit FAMILY for the game Hawker Hunt.\nIt must be a real or highly plausible hawker dish, turned into a cute collectible monster family of 3 evolution stages.\nDesign goals: every dish must be UNIQUE (no collision with existing pets); may resemble the style but never be identical.\nNo specific direction — free creative choice.\n\nReturn JSON with: seriesId (ascii kebab-case, unique), foodOrigin {en,zh}, element (one of metal/wood/water/fire/earth), flavor (one of bitter/sour/salty/sweet/spicy per 五行五味), and stages: an array of EXACTLY 3 objects each { id (ascii kebab-case, unique per stage), stage (1|2|3), name{en,zh}, description{en,zh}, theme, skillIdeas[] }.\nKeep every stage consistent with this art DNA: Chibi anthropomorphic Singapore hawker-food creature mascot, big expressive cartoon eyes, rounded soft chunky body, thick painterly cartoon shading (not flat vector, not realistic), warm friendly collectible-monster design, full body head-to-toe, standing, slight 3/4 front view facing camera, cohesive with a unified collectible set of food spirits.\n\n\nDO NOT duplicate any of these already-used dishes or names (you MAY be stylistically similar, but the dish, the name and the id MUST be distinct and unique):\nDishes: Hainanese Chicken Rice, 海南雞飯, Laksa, 叻沙, Bak Kut Teh, 肉骨茶, Kueh Lapis, 九層糕, Kaya Toast, 咖椰吐司, Chilli Crab, 辣椒蟹, Satay, 沙嗲, Kopi O, 咖啡烏, Chai Tow Kway, 菜頭粿, Rojak, 囉喏, Oyster Omelette, 蠔煎, Char Kway Teow, 炒粿條, Curry Puff, 咖喱卜, Roti Prata, 印度煎餅, Chendol, 煎蕊, Chilli Padi, 辣椒, Garlic, 蒜頭, Lemongrass, 香茅, Rice Ball, 飯團, Rice Vermicelli, 米粉, Egg, 雞蛋, Fresh Shrimp, 鮮蝦, Coconut Milk, 椰漿, Kueh Tutu, 嘟嘟糕\nNames: Chicken Rice Alliance, 雞飯聯盟, Noodle Clan, 麵食家族, Bak Kut Teh Order, 肉骨茶系, Kueh Dynasty, 糕點系, Kaya Legion, 咖椰系, Chilli Crab Gang, 辣蟹幫, Satay Legion, 沙嗲軍團, Kopi Society, 咖啡烏會, Carrot Cake Clan, 菜頭粿門, Rojak Union, 囉喏聯盟, Orh Luak Tribe, 蠔煎眾, Wok Hei Sect, 鑊氣幫, Curry Puff Order, 咖喱卜團, Prata Tribe, 煎餅族, Chendol School, 煎蕊派, Chilli Baby, 辣椒仔, Garlic Guard, 蒜頭衛兵, Lemongrass Swordsman, 香茅劍客, Riceball Baby, 飯團寶寶, Vermicelli Sprite, 米粉精靈, Egg Guard, 蛋蛋守衛, Shrimp Hopper, 蝦仔跳跳, Coconut Jelly, 椰漿啫喱, Oily Rice Chick, 油飯雞仔, Rice Peck, 米粒啄擊, Oily Rice Heal, 油飯治癒, Silky Chicken Warrior, 滑雞武者, Poached Blade, 白斬刀法, Ginger Splash, 薑蓉飛濺, Hainan Chicken God, 海南雞神, Golden Rice Storm, 黃金飯暴, Chilli Sauce Cannon, 辣椒醬炮, Little Laksa, 叻沙仔, Broth Splash, 湯底潑濺, Coconut Shield, 椰漿護盾, Laksa Warrior, 叻沙武士, Shell Claw, 蝦殼鉗擊, Spicy Surge, 辣浪翻騰, Laksa Dragon Xinyan, 叻沙龍·辛焱, Spice Inferno, 香料烈焰, Dragon Noodle Whip, 龍鬚麵鞭, Bak Kut Cub, 肉骨仔, Rib Bonk, 排骨敲擊, Herbal Sip, 藥膳補湯, Bak Kut Warrior, 骨茶武士, Youtiao Strike, 油條重擊, Pepper Guard, 胡椒鐵壁, Bak Kut Grandmaster, 骨茶宗師, Garlic Meteor, 蒜頭流星, Claypot Slam, 砂鍋猛擊, Tutu Sprite, 嘟嘟糕精, Coconut Puff, 椰絲噴發, Steam Veil, 蒸氣面紗, Lapis Queen, 九層糕后, Layer Slice, 分層切擊, Sticky Trap, 黏糕陷阱, Pastry Sovereign, 糕點女王, Gula Melaka Burst, 椰糖爆漿, Royal Decree, 女王詔令, Kaya Blob, 咖央仔, Jam Splat, 醬汁飛濺, Pandan Breeze, 斑蘭清風, Kaya Samurai, 咖央武士, Toast Hammer, 吐司重錘, Butter Slick, 牛油滑步, Kaya Dragon Phantom, 咖央聖龍·幻火, Phantom Flame, 翡翠幻火, Soft Egg Orb, 半熟蛋彈, Chilli Crablet, 辣蟹仔, Bubble Spit, 泡泡醬沫, Mantou Recovery, 饅頭回氣, Crab Claw Warrior, 辣蟹武士, Claw Crush, 巨鉗粉碎, Sauce Whirl, 醬濤翻滾, Chilli Crab King Jiangtao, 辣椒蟹王·醬濤, Chilli Tsunami, 辣醬海嘯, Golden Mantou Barrage, 金饅頭連炮, Satay Skewerling, 沙嗲仔, Skewer Jab, 竹籤突刺, Ketupat Rest, 馬來米糕休整, Satay Warrior, 沙嗲武士, Charcoal Grill, 炭火串燒, Triple Skewer, 三串連擊, Satay Flame Emperor Tanhun, 沙嗲炎帝·炭魂, Hundred Skewer Storm, 百串燎原, Peanut Sauce Flood, 花生醬洪流, Kopi Bean, 咖啡仔, Bean Toss, 咖啡豆投擲, Kopi Sip, 提神一啖, Kopi Sock Warrior, 咖啡武士, Sock Swing, 咖啡袋重甩, Steam Scald, 滾水燙擊, Kopi O Emperor Yenong, 咖啡烏皇·夜濃, Black Gold Waterfall, 黑金瀑布, Caffeine Rush, 咖啡因狂熱, Radish Cubie, 菜頭仔, Cube Tumble, 粿粒翻滾, Radish Juice, 菜頭甜汁, Carrot Cake Warrior, 菜頭粿武士, Griddle Press, 鐵板煎壓, Egg Crust Slam, 蛋香脆擊, Black & White Cake King Shuangjian, 黑白粿王·雙煎, Black & White Duet, 黑白雙煎, Sweet Sauce Quake, 甜醬地震, Rojak Tot, 囉喏仔, Pineapple Jab, 菠蘿刺擊, Peanut Dust, 花生碎療癒, Rojak Warrior, 囉喏武士, Haeko Whip, 蝦膏黑鞭, Jicama Shield Bash, 沙葛盾擊, Rojak King Baiwei, 囉喏王·百味, Hundred Flavour Vortex, 百味漩渦, Black Sauce Deluge, 黑醬傾盆, Little Orh Luak, 蠔煎仔, Starch Flick, 粉漿彈射, Egg Blanket, 蛋被治癒, Omelette Warrior, 蠔煎武者, Sizzle Flip, 鑊氣翻面, Oyster Pearl Shot, 珍珠蠔彈, Oyster Immortal Yinwu, 蠔煎仙·銀霧, Tidal Omelette, 蛋海狂潮, Vinegar Mist, 酸醋銀霧, Kway Teow Kid, 粿條仔, Flat Noodle Lash, 粿條抽擊, Lard Crisp Boost, 豬油渣滋補, Kway Teow Warrior, 粿條武士, Wok Toss, 拋鑊翻炒, Cockle Bomb, 血蚶炸彈, Wok Hei God Jiaoxiang, 鑊氣神·焦香, Wok Hei Blast, 鑊氣爆發, Dark Soy Tide, 黑甜醬浪, Curry Puffling, 咖喱卜仔, Crust Flick, 酥皮碎擊, Potato Cushion, 薯仔軟墊, Curry Puff Warrior, 咖喱卜武士, Spiral Crust Cutter, 螺旋酥皮刃, Curry Burst, 咖喱噴發, Golden Puff Sovereign Sujin, 咖喱卜尊·酥金, Thousand Layer Blades, 千層酥刃, Molten Curry Cannon, 熔岩咖喱炮, Prata Pup, 煎餅仔, Dough Slap, 麵團拍打, Ghee Shine, 酥油滋潤, Prata Warrior, 煎餅武士, Flip Spin Throw, 拋餅迴旋, Crispy Fold Strike, 摺疊脆擊, Prata Sky Elephant Yunceng, 飛餅神象·雲層, Sky Prata Cyclone, 飛天餅旋風, Curry Dip Flood, 咖喱蘸海, Chendol Jelly, 煎蕊仔, Jelly Wiggle, 綠蕊蠕彈, Coconut Milk Bath, 椰奶浴, Chendol Warrior, 煎蕊武士, Shaved Ice Flurry, 刨冰亂舞, Jelly Whip, 綠蕊長鞭, Chendol Snow Queen Cuibing, 煎蕊雪后·翠冰, Emerald Blizzard, 翡翠暴雪, Red Bean Meteor, 紅豆流星雨, Fiery Temper, 火爆脾氣, Antibacterial Shield, 抗菌護盾, Lemongrass Sword Dance, 香茅劍舞, Sticky Rice Bind, 糯米黏著, Vermicelli Wrap, 米粉纏繞, Yolk Guard, 蛋黃守護, Bubble Shot, 水泡射擊, Coconut Heal, 椰香治癒",
+  "family": {
+    "seriesId": "nasi-lemak-squad",
+    "element": "earth",
+    "flavor": "spicy",
+    "foodOrigin": {
+      "en": "Nasi Lemak",
+      "zh": "椰漿飯"
+    },
+    "evolutionItemId": "nasi-lemak-squad-essence",
+    "evolutionItem": {
+      "id": "nasi-lemak-squad-essence",
+      "name": {
+        "en": "Nasi Lemak Essence",
+        "zh": "椰漿飯精華"
+      },
+      "description": {
+        "en": "Concentrated essence of Nasi Lemak, fuel for evolution.",
+        "zh": "濃縮嘅椰漿飯精華，進化嘅燃料。"
+      },
+      "icon": "star"
+    },
+    "stages": [
+      {
+        "id": "nasi-lemak-tot",
+        "stage": 1,
+        "name": {
+          "en": "Nasi Lemak Tot",
+          "zh": "椰漿飯仔"
+        },
+        "element": "earth",
+        "flavor": "spicy",
+        "rarity": "common",
+        "foodOrigin": {
+          "en": "Nasi Lemak",
+          "zh": "椰漿飯"
+        },
+        "description": {
+          "en": "A tiny, fragrant lump of coconut rice wrapped snugly in a fresh banana leaf diaper. It toddles around with a single crispy anchovy on its head, spreading a gentle aroma of sweet pandan.",
+          "zh": "一個散發著椰香的小米飯團，裹在溫馨的芭蕉葉尿布中。它頭上戴著一條香脆的江魚仔，走起路來搖搖晃晃，散發出淡淡的斑蘭清香。"
+        },
+        "theme": "Chibi coconut rice baby wrapped in a banana leaf diaper with an anchovy hair clip.",
+        "skillIdeas": [
+          "Pandan Fragrance",
+          "Bilis Headbutt"
+        ]
+      },
+      {
+        "id": "nasi-lemak-scout",
+        "stage": 2,
+        "name": {
+          "en": "Nasi Lemak Scout",
+          "zh": "椰漿飯小兵"
+        },
+        "element": "earth",
+        "flavor": "spicy",
+        "rarity": "rare",
+        "foodOrigin": {
+          "en": "Nasi Lemak",
+          "zh": "椰漿飯"
+        },
+        "description": {
+          "en": "Outfitted for backyard adventures, this chubby rice spirit wears a hard-boiled egg slice as a protective helmet and carries a crisp cucumber shield. It is beginning to master the warm, fiery kick of sweet sambal.",
+          "zh": "裝備齊全的胖嘟嘟冒險小兵，戴著半顆水煮蛋做成的頭盔，手持一片清脆的小黃瓜盾牌。它已經開始學會掌控參巴辣椒醬的溫暖熱力。"
+        },
+        "theme": "Chubby rice warrior with an egg-slice helmet, cucumber shield, and a smear of sambal paint.",
+        "skillIdeas": [
+          "Cucumber Block",
+          "Sambal Splash"
+        ]
+      },
+      {
+        "id": "nasi-lemak-general",
+        "stage": 3,
+        "name": {
+          "en": "Nasi Lemak General",
+          "zh": "椰漿飯大將軍"
+        },
+        "element": "earth",
+        "flavor": "spicy",
+        "rarity": "epic",
+        "foodOrigin": {
+          "en": "Nasi Lemak",
+          "zh": "椰漿飯"
+        },
+        "description": {
+          "en": "The grand defender of the morning markets, draped in a majestic, flowing banana leaf cape. It wields a mighty golden-fried chicken wing as a sword and commands the deep, rich volcano of savory-sweet sambal.",
+          "zh": "晨間巴剎與熟食中心的偉大捍衛者，身披威武的芭蕉葉斗篷。它手握一隻金黃酥脆的炸雞翅神劍，能召喚出濃郁香辣的參巴火山狂潮。"
+        },
+        "theme": "Majestic chibi general with a flowing banana leaf cape, golden chicken wing sword, and glowing red sambal markings.",
+        "skillIdeas": [
+          "Crispy Wing Slasher",
+          "Sambal Volcano",
+          "Fragrant Rice Fortress"
+        ]
+      }
+    ]
+  },
+  "concept": {
+    "name": {
+      "en": "Nasi Lemak Tot",
+      "zh": "椰漿飯仔"
+    },
+    "seriesId": "nasi-lemak-squad",
+    "stage": 1,
+    "element": "earth",
+    "flavor": "spicy",
+    "rarity": "common",
+    "foodOrigin": {
+      "en": "Nasi Lemak",
+      "zh": "椰漿飯"
+    },
+    "description": {
+      "en": "A tiny, fragrant lump of coconut rice wrapped snugly in a fresh banana leaf diaper. It toddles around with a single crispy anchovy on its head, spreading a gentle aroma of sweet pandan.",
+      "zh": "一個散發著椰香的小米飯團，裹在溫馨的芭蕉葉尿布中。它頭上戴著一條香脆的江魚仔，走起路來搖搖晃晃，散發出淡淡的斑蘭清香。"
+    },
+    "theme": "Chibi coconut rice baby wrapped in a banana leaf diaper with an anchovy hair clip.",
+    "skillIdeas": [
+      "Pandan Fragrance",
+      "Bilis Headbutt"
+    ]
+  },
+  "poolStatus": {
+    "total": 4,
+    "usable": 4,
+    "low": false,
+    "exhausted": false,
+    "note": null
+  },
+  "finalizeByStage": {
+    "nasi-lemak-tot": {
+      "modelUrl": "/models/nasi-lemak-tot.glb",
+      "animated": false,
+      "rigLite": false,
+      "modelYaw": -1.5707963267948966,
+      "modelHeightM": 0.3,
+      "static": true
+    },
+    "nasi-lemak-scout": {
+      "modelUrl": "/models/nasi-lemak-scout.glb",
+      "animated": true,
+      "rigLite": true,
+      "modelYaw": -1.5707963267948966,
+      "modelHeightM": 0.3,
+      "needsYawVerification": true
+    },
+    "nasi-lemak-general": {
+      "modelUrl": "/models/nasi-lemak-general.glb",
+      "animated": true,
+      "rigLite": true,
+      "modelYaw": -1.5707963267948966,
+      "modelHeightM": 0.3,
+      "needsYawVerification": true
+    }
+  },
+  "finalize": {
+    "modelUrl": null,
+    "animated": false,
+    "rigLite": true,
+    "modelYaw": -1.5707963267948966,
+    "modelHeightM": 0.3,
+    "needsYawVerification": true,
+    "mock": true
+  },
+  "skillsByStage": {
+    "nasi-lemak-tot": [
+      {
+        "id": "nasi-lemak-tot-skill-1",
+        "name": {
+          "en": "Pandan Whiff",
+          "zh": "斑蘭飄香"
+        },
+        "description": {
+          "en": "Releases a sweet, soothing aroma of coconut and pandan that disorients opponents while dealing light damage.",
+          "zh": "釋放出香甜誘人的椰香斑蘭氣味，迷惑對手並造成輕微傷害。"
+        },
+        "power": 1,
+        "cooldown": 0
+      },
+      {
+        "id": "nasi-lemak-tot-skill-2",
+        "name": {
+          "en": "Bilis Bonk",
+          "zh": "脆炸江魚撞"
+        },
+        "description": {
+          "en": "Charges forward with a crunchy, hard-hitting headbutt powered by a dried anchovy.",
+          "zh": "以爽脆堅硬的江魚仔奮力向前一撞，痛擊前方敵人。"
+        },
+        "power": 1.4,
+        "cooldown": 2
+      }
+    ],
+    "nasi-lemak-scout": [
+      {
+        "id": "nasi-lemak-scout-skill-1",
+        "name": {
+          "en": "Cucumber Shield Bash",
+          "zh": "青瓜爽脆盾"
+        },
+        "description": {
+          "en": "Slams enemies with a cool, thick cucumber slice that also dampens incoming attacks.",
+          "zh": "用清涼厚實的青瓜片猛擊對手，同時抵擋迎面而來的攻勢。"
+        },
+        "power": 1.1,
+        "cooldown": 0
+      },
+      {
+        "id": "nasi-lemak-scout-skill-2",
+        "name": {
+          "en": "Sambal Splash",
+          "zh": "參巴辣醬擊"
+        },
+        "description": {
+          "en": "Splashes spicy, aromatic sambal chili to inflict continuous burning damage on foes.",
+          "zh": "潑灑香辣惹味的參巴辣椒醬，對敵人造成持續的灼燒傷害。"
+        },
+        "power": 1.7,
+        "cooldown": 2
+      }
+    ],
+    "nasi-lemak-general": [
+      {
+        "id": "nasi-lemak-general-skill-1",
+        "name": {
+          "en": "Golden Wing Slasher",
+          "zh": "酥脆炸雞斬"
+        },
+        "description": {
+          "en": "Slashes through enemy lines with razor-sharp, golden-fried chicken wing blades.",
+          "zh": "揮舞利如刀刃的金黃酥脆炸雞翼，無情地橫掃敵陣。"
+        },
+        "power": 1.2,
+        "cooldown": 0
+      },
+      {
+        "id": "nasi-lemak-general-skill-2",
+        "name": {
+          "en": "Volcanic Sambal Eruption",
+          "zh": "參巴火山爆"
+        },
+        "description": {
+          "en": "Unleashes a devastating geyser of fiery sambal chili that scorches the entire battlefield.",
+          "zh": "引爆火山般的烈焰參巴醬，用極致的辛辣火舌吞噬戰場。"
+        },
+        "power": 2,
+        "cooldown": 3
+      }
+    ]
+  },
+  "skills": [
+    {
+      "id": "nasi-lemak-tot-skill-1",
+      "name": {
+        "en": "Pandan Whiff",
+        "zh": "斑蘭飄香"
+      },
+      "description": {
+        "en": "Releases a sweet, soothing aroma of coconut and pandan that disorients opponents while dealing light damage.",
+        "zh": "釋放出香甜誘人的椰香斑蘭氣味，迷惑對手並造成輕微傷害。"
+      },
+      "power": 1,
+      "cooldown": 0
+    },
+    {
+      "id": "nasi-lemak-tot-skill-2",
+      "name": {
+        "en": "Bilis Bonk",
+        "zh": "脆炸江魚撞"
+      },
+      "description": {
+        "en": "Charges forward with a crunchy, hard-hitting headbutt powered by a dried anchovy.",
+        "zh": "以爽脆堅硬的江魚仔奮力向前一撞，痛擊前方敵人。"
+      },
+      "power": 1.4,
+      "cooldown": 2
+    }
+  ],
+  "speciesList": [
+    {
+      "id": "nasi-lemak-tot",
+      "seriesId": "nasi-lemak-squad",
+      "stage": 1,
+      "name": {
+        "en": "Nasi Lemak Tot",
+        "zh": "椰漿飯仔"
+      },
+      "element": "earth",
+      "flavor": "spicy",
+      "rarity": "common",
+      "foodOrigin": {
+        "en": "Nasi Lemak",
+        "zh": "椰漿飯"
+      },
+      "description": {
+        "en": "A tiny, fragrant lump of coconut rice wrapped snugly in a fresh banana leaf diaper. It toddles around with a single crispy anchovy on its head, spreading a gentle aroma of sweet pandan.",
+        "zh": "一個散發著椰香的小米飯團，裹在溫馨的芭蕉葉尿布中。它頭上戴著一條香脆的江魚仔，走起路來搖搖晃晃，散發出淡淡的斑蘭清香。"
+      },
+      "baseStats": {
+        "hp": 45,
+        "attack": 13,
+        "defense": 10,
+        "speed": 14
+      },
+      "skills": [
+        {
+          "id": "nasi-lemak-tot-skill-1",
+          "name": {
+            "en": "Pandan Whiff",
+            "zh": "斑蘭飄香"
+          },
+          "description": {
+            "en": "Releases a sweet, soothing aroma of coconut and pandan that disorients opponents while dealing light damage.",
+            "zh": "釋放出香甜誘人的椰香斑蘭氣味，迷惑對手並造成輕微傷害。"
+          },
+          "power": 1,
+          "cooldown": 0
+        },
+        {
+          "id": "nasi-lemak-tot-skill-2",
+          "name": {
+            "en": "Bilis Bonk",
+            "zh": "脆炸江魚撞"
+          },
+          "description": {
+            "en": "Charges forward with a crunchy, hard-hitting headbutt powered by a dried anchovy.",
+            "zh": "以爽脆堅硬的江魚仔奮力向前一撞，痛擊前方敵人。"
+          },
+          "power": 1.4,
+          "cooldown": 2
+        }
+      ],
+      "evolvesTo": "nasi-lemak-scout",
+      "evolutionRequirement": {
+        "items": {
+          "nasi-lemak-squad-essence": 5
+        },
+        "checkinCentres": 2
+      },
+      "modelUrl": "/models/nasi-lemak-tot.glb",
+      "modelHeightM": 0.3,
+      "modelYaw": -1.5707963267948966
+    },
+    {
+      "id": "nasi-lemak-scout",
+      "seriesId": "nasi-lemak-squad",
+      "stage": 2,
+      "name": {
+        "en": "Nasi Lemak Scout",
+        "zh": "椰漿飯小兵"
+      },
+      "element": "earth",
+      "flavor": "spicy",
+      "rarity": "rare",
+      "foodOrigin": {
+        "en": "Nasi Lemak",
+        "zh": "椰漿飯"
+      },
+      "description": {
+        "en": "Outfitted for backyard adventures, this chubby rice spirit wears a hard-boiled egg slice as a protective helmet and carries a crisp cucumber shield. It is beginning to master the warm, fiery kick of sweet sambal.",
+        "zh": "裝備齊全的胖嘟嘟冒險小兵，戴著半顆水煮蛋做成的頭盔，手持一片清脆的小黃瓜盾牌。它已經開始學會掌控參巴辣椒醬的溫暖熱力。"
+      },
+      "baseStats": {
+        "hp": 72,
+        "attack": 22,
+        "defense": 18,
+        "speed": 20
+      },
+      "skills": [
+        {
+          "id": "nasi-lemak-scout-skill-1",
+          "name": {
+            "en": "Cucumber Shield Bash",
+            "zh": "青瓜爽脆盾"
+          },
+          "description": {
+            "en": "Slams enemies with a cool, thick cucumber slice that also dampens incoming attacks.",
+            "zh": "用清涼厚實的青瓜片猛擊對手，同時抵擋迎面而來的攻勢。"
+          },
+          "power": 1.1,
+          "cooldown": 0
+        },
+        {
+          "id": "nasi-lemak-scout-skill-2",
+          "name": {
+            "en": "Sambal Splash",
+            "zh": "參巴辣醬擊"
+          },
+          "description": {
+            "en": "Splashes spicy, aromatic sambal chili to inflict continuous burning damage on foes.",
+            "zh": "潑灑香辣惹味的參巴辣椒醬，對敵人造成持續的灼燒傷害。"
+          },
+          "power": 1.7,
+          "cooldown": 2
+        }
+      ],
+      "evolvesTo": "nasi-lemak-general",
+      "evolutionRequirement": {
+        "items": {
+          "nasi-lemak-squad-essence": 10
+        },
+        "checkinCentres": 5
+      },
+      "modelUrl": "/models/nasi-lemak-scout.glb",
+      "modelHeightM": 0.3,
+      "animated": true,
+      "rigLite": true,
+      "modelYaw": -1.5707963267948966
+    },
+    {
+      "id": "nasi-lemak-general",
+      "seriesId": "nasi-lemak-squad",
+      "stage": 3,
+      "name": {
+        "en": "Nasi Lemak General",
+        "zh": "椰漿飯大將軍"
+      },
+      "element": "earth",
+      "flavor": "spicy",
+      "rarity": "epic",
+      "foodOrigin": {
+        "en": "Nasi Lemak",
+        "zh": "椰漿飯"
+      },
+      "description": {
+        "en": "The grand defender of the morning markets, draped in a majestic, flowing banana leaf cape. It wields a mighty golden-fried chicken wing as a sword and commands the deep, rich volcano of savory-sweet sambal.",
+        "zh": "晨間巴剎與熟食中心的偉大捍衛者，身披威武的芭蕉葉斗篷。它手握一隻金黃酥脆的炸雞翅神劍，能召喚出濃郁香辣的參巴火山狂潮。"
+      },
+      "baseStats": {
+        "hp": 102,
+        "attack": 34,
+        "defense": 28,
+        "speed": 26
+      },
+      "skills": [
+        {
+          "id": "nasi-lemak-general-skill-1",
+          "name": {
+            "en": "Golden Wing Slasher",
+            "zh": "酥脆炸雞斬"
+          },
+          "description": {
+            "en": "Slashes through enemy lines with razor-sharp, golden-fried chicken wing blades.",
+            "zh": "揮舞利如刀刃的金黃酥脆炸雞翼，無情地橫掃敵陣。"
+          },
+          "power": 1.2,
+          "cooldown": 0
+        },
+        {
+          "id": "nasi-lemak-general-skill-2",
+          "name": {
+            "en": "Volcanic Sambal Eruption",
+            "zh": "參巴火山爆"
+          },
+          "description": {
+            "en": "Unleashes a devastating geyser of fiery sambal chili that scorches the entire battlefield.",
+            "zh": "引爆火山般的烈焰參巴醬，用極致的辛辣火舌吞噬戰場。"
+          },
+          "power": 2,
+          "cooldown": 3
+        }
+      ],
+      "evolvesTo": null,
+      "evolutionRequirement": null,
+      "modelUrl": "/models/nasi-lemak-general.glb",
+      "modelHeightM": 0.3,
+      "animated": true,
+      "rigLite": true,
+      "modelYaw": -1.5707963267948966
+    }
+  ],
+  "species": {
+    "id": "nasi-lemak-tot",
+    "seriesId": "nasi-lemak-squad",
+    "stage": 1,
+    "name": {
+      "en": "Nasi Lemak Tot",
+      "zh": "椰漿飯仔"
+    },
+    "element": "earth",
+    "flavor": "spicy",
+    "rarity": "common",
+    "foodOrigin": {
+      "en": "Nasi Lemak",
+      "zh": "椰漿飯"
+    },
+    "description": {
+      "en": "A tiny, fragrant lump of coconut rice wrapped snugly in a fresh banana leaf diaper. It toddles around with a single crispy anchovy on its head, spreading a gentle aroma of sweet pandan.",
+      "zh": "一個散發著椰香的小米飯團，裹在溫馨的芭蕉葉尿布中。它頭上戴著一條香脆的江魚仔，走起路來搖搖晃晃，散發出淡淡的斑蘭清香。"
+    },
+    "baseStats": {
+      "hp": 45,
+      "attack": 13,
+      "defense": 10,
+      "speed": 14
+    },
+    "skills": [
+      {
+        "id": "nasi-lemak-tot-skill-1",
+        "name": {
+          "en": "Pandan Whiff",
+          "zh": "斑蘭飄香"
+        },
+        "description": {
+          "en": "Releases a sweet, soothing aroma of coconut and pandan that disorients opponents while dealing light damage.",
+          "zh": "釋放出香甜誘人的椰香斑蘭氣味，迷惑對手並造成輕微傷害。"
+        },
+        "power": 1,
+        "cooldown": 0
+      },
+      {
+        "id": "nasi-lemak-tot-skill-2",
+        "name": {
+          "en": "Bilis Bonk",
+          "zh": "脆炸江魚撞"
+        },
+        "description": {
+          "en": "Charges forward with a crunchy, hard-hitting headbutt powered by a dried anchovy.",
+          "zh": "以爽脆堅硬的江魚仔奮力向前一撞，痛擊前方敵人。"
+        },
+        "power": 1.4,
+        "cooldown": 2
+      }
+    ],
+    "evolvesTo": "nasi-lemak-scout",
+    "evolutionRequirement": {
+      "items": {
+        "nasi-lemak-squad-essence": 5
+      },
+      "checkinCentres": 2
+    },
+    "modelUrl": "/models/nasi-lemak-tot.glb",
+    "modelHeightM": 0.3,
+    "modelYaw": -1.5707963267948966
+  },
+  "evolutionItemId": "nasi-lemak-squad-essence",
+  "evolutionItem": {
+    "id": "nasi-lemak-squad-essence",
+    "name": {
+      "en": "Nasi Lemak Essence",
+      "zh": "椰漿飯精華"
+    },
+    "description": {
+      "en": "Concentrated essence of Nasi Lemak, fuel for evolution.",
+      "zh": "濃縮嘅椰漿飯精華，進化嘅燃料。"
+    },
+    "icon": "star"
+  },
+  "decision": {
+    "verdict": "approve",
+    "reason": "pilot 保留：真技能＋靜態 tot＋動畫 scout/general",
+    "by": "manual",
+    "at": "2026-07-19T19:39:20.048Z"
+  },
+  "telegram": {
+    "awaitingReason": false
+  }
+}

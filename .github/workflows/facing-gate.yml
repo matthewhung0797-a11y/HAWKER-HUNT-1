@@ -1,0 +1,107 @@
+# Facing 硬閘 A/B/C
+# A 靜態：每次 PR／push 必跑
+# B/C：掂到面向敏感檔（或手動）先起 dev server 跑 golden
+name: facing-gate
+
+on:
+  pull_request:
+    branches: [master, main]
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "static | diff | golden-sample | golden-all"
+        required: false
+        default: "diff"
+
+concurrency:
+  group: facing-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static:
+    runs-on: ubuntu-latest
+    outputs:
+      need_visual: ${{ steps.sens.outputs.run }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install deps
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+        run: npm ci || npm install
+      - name: Gate A — static
+        run: node scripts/check-facing-static.mjs
+      - name: Detect facing-sensitive diff
+        id: sens
+        run: |
+          RUN=0
+          MODE="${{ github.event.inputs.mode || '' }}"
+          if [ "$MODE" = "golden-sample" ] || [ "$MODE" = "golden-all" ] || [ "$MODE" = "diff" ]; then
+            RUN=1
+          fi
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch origin "${{ github.base_ref }}" --depth=1 || true
+            FILES=$(git diff --name-only "origin/${{ github.base_ref }}"...HEAD 2>/dev/null || true)
+            echo "diff files:"
+            echo "$FILES"
+            if echo "$FILES" | grep -E '^(src/content/species\.ts|src/app/battle/page\.tsx|src/components/three/SpiritModel\.tsx|public/models/|scripts/lib/facing-battle-lock\.json|test-fixtures/facing-golden/)' >/dev/null; then
+              RUN=1
+            fi
+          fi
+          if [ "$MODE" = "static" ]; then RUN=0; fi
+          echo "run=$RUN" >> "$GITHUB_OUTPUT"
+          echo "need_visual=$RUN"
+
+  visual:
+    needs: static
+    if: needs.static.outputs.need_visual == '1'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install deps + Playwright Chromium
+        run: |
+          npm ci || npm install
+          npx playwright install chromium --with-deps
+      - name: Start Next.js
+        run: |
+          npm run dev -- -p 3000 &
+          for i in $(seq 1 90); do
+            if curl -sf http://127.0.0.1:3000/battle >/dev/null; then echo ready; exit 0; fi
+            sleep 2
+          done
+          echo "dev server 起唔到"; exit 1
+      - name: Gate B/C — golden
+        env:
+          DIAG_BASE: http://localhost:3000
+        run: |
+          MODE="${{ github.event.inputs.mode || 'diff' }}"
+          if [ "$MODE" = "golden-all" ]; then
+            node scripts/check-facing-golden.mjs --all
+          elif [ "$MODE" = "golden-sample" ]; then
+            node scripts/check-facing-golden.mjs
+          else
+            git fetch origin "${{ github.base_ref || 'master' }}" --depth=1 || true
+            node scripts/check-facing-diff.mjs --base "origin/${{ github.base_ref || 'master' }}"
+          fi
+      - name: Upload golden-run artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: facing-golden-run
+          path: |
+            test-shots/facing-golden-run/
+            test-fixtures/facing-golden/last-run.json
+          if-no-files-found: ignore

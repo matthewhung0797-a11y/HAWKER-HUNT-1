@@ -1,0 +1,92 @@
+# 系統一 — AI 自動修 bug（開 PR，唔直接 deploy）
+# 觸發：incident（repository_dispatch: ai-fix）或手動填 incident 內容。
+# 安全原則：AI 只可以「開一個 PR」俾你（或 Bugbot）審，永遠唔會直接改 production。
+# rollback 先止血、AI 後補真正修復——兩者分工。未設 CURSOR_API_KEY 就 graceful skip。
+name: ai-fix
+
+on:
+  workflow_dispatch:
+    inputs:
+      incident:
+        description: "Incident 描述（錯誤訊息／stack／重現步驟）"
+        required: true
+  repository_dispatch:
+    types: [ai-fix]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: ai-fix
+  cancel-in-progress: false
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    env:
+      CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      INCIDENT: ${{ github.event.inputs.incident || github.event.client_payload.incident }}
+    steps:
+      - name: Guard — need CURSOR_API_KEY
+        if: env.CURSOR_API_KEY == ''
+        run: |
+          echo "CURSOR_API_KEY 未設定，略過 AI 修復（可手動處理）。"
+          node scripts/ops/notify-telegram.mjs "ℹ️ 收到 incident 但未設 CURSOR_API_KEY，AI 自動修復未啟用。" || true
+          exit 0
+
+      - uses: actions/checkout@v4
+        if: env.CURSOR_API_KEY != ''
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        if: env.CURSOR_API_KEY != ''
+        with:
+          node-version: 20
+
+      - name: Install deps
+        if: env.CURSOR_API_KEY != ''
+        run: npm ci || npm install
+
+      - name: Install Cursor CLI
+        if: env.CURSOR_API_KEY != ''
+        run: curl https://cursor.com/install -fsS | bash
+
+      - name: Run AI fix (edits on a new branch)
+        if: env.CURSOR_API_KEY != ''
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          BRANCH="ai-fix/${{ github.run_id }}"
+          git config user.name "hawker-hunt-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          cursor-agent -p "你係 Hawker Hunt 嘅維護工程師。以下係一單 production incident，請做最小、對症嘅修復，唔好改無關嘅嘢，並保持既有風格。修完請確保 \`npm run lint\` 同 \`npm run build\` 過到。Incident：
+          $INCIDENT" --output-format text --force || true
+          echo "BRANCH=$BRANCH" >> "$GITHUB_ENV"
+
+      - name: Open PR if there are changes
+        if: env.CURSOR_API_KEY != ''
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            node scripts/ops/notify-telegram.mjs "🤖 AI 睇完 incident 但未有把握改動，未開 PR，需要你睇睇。" || true
+            exit 0
+          fi
+          git add -A
+          git commit -m "fix: AI 自動修復 incident (#${{ github.run_id }})"
+          git push origin "$BRANCH"
+          PR_URL=$(gh pr create --draft \
+            --title "🤖 AI 修復：incident #${{ github.run_id }}" \
+            --body "自動生成嘅修復草案，**未 deploy**。請 review（或等 Bugbot）後先合併。
+
+          ## Incident
+          \`\`\`
+          $INCIDENT
+          \`\`\`" \
+            --head "$BRANCH" 2>&1) || true
+          node scripts/ops/notify-telegram.mjs "🤖 *AI 已開修復 PR（草案，未 deploy）*
+          $PR_URL
+          請 review 後決定合併。" || true

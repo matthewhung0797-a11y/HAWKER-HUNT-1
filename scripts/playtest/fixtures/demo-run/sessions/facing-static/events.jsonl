@@ -1,0 +1,2 @@
+{"at":"2026-08-01T07:07:30.000Z","personaId":"facing-static","type":"step","stepId":"facing.static","ok":false,"ms":800,"reason":"facing:static exit 1（示範：現有 species 缺 lock／rigLite）"}
+{"at":"2026-08-01T07:07:30.100Z","personaId":"facing-static","type":"facing_report","stepId":"facing.report","ok":false,"exitCode":1,"sample":["示範失敗條目"]}

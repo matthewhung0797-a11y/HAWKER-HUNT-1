@@ -1,0 +1,11 @@
+{
+  "id": "demo-run",
+  "suite": "core-loop",
+  "personas": ["newbie", "clumsy", "speedrun", "completionist", "battler"],
+  "base": "http://localhost:3000",
+  "createdAt": "2026-08-01T07:00:00.000Z",
+  "finishedAt": "2026-08-01T07:08:00.000Z",
+  "status": "done",
+  "schemaVersion": 1,
+  "demo": true
+}

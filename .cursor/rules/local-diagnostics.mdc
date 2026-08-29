@@ -1,0 +1,37 @@
+---
+description: 用 Playwright 喺本機診斷／截圖驗證呢個 Next 16 (Turbopack) app 嘅坑同 QA 掛鈎模式
+globs: scripts/**/*.mjs
+alwaysApply: false
+---
+
+# 本機診斷（Playwright + Next dev）
+
+寫 `scripts/diag-*.mjs` 用 Playwright 自動驗證前，記住呢啲已知坑（都係踩過先知）：
+
+## Next dev server
+
+- **一定用 `http://localhost:<port>`，唔好用 `127.0.0.1`**。Next dev 會當 `127.0.0.1` 係跨域，封住 `/_next` dev 資源 → client JS 唔 hydrate → 掣撳唔郁、`window` 掛鈎唔存在（頁面睇落正常但係死嘅）。
+- Next dev **只准開一個 instance**；殘留／卡死嘅 server 會霸住 port 兼搞爛 HMR。先 `Get-NetTCPConnection -State Listen`（或 fetch 測 timeout）搵返活嘅 port；必要時 `taskkill /PID <pid> /F` 清乾淨再開一個 `next dev -p <port>`。
+- `page.goto(url, { waitUntil: "domcontentloaded" })`——`networkidle` 因為 HMR websocket 永遠唔會 settle。
+- 有 WebGL / react-three-fiber canvas：launch chromium 要加 `args: ["--enable-unsafe-swiftshader"]`。
+
+## 撳掣
+
+- 動畫掣（例如 `.struggle-shake`）用 `.click()` 會因為「唔穩定」而 timeout。改用 `locator.dispatchEvent("pointerdown")`（呢個 app 好多掣係 `onPointerDown`），即時觸發唔使等 actionability。
+
+## QA 掛鈎模式（保留，靠 query param 收起）
+
+驗證難拎嘅內部狀態時，加只喺 debug/QA param 下先掛嘅掛鈎，玩家永遠唔會撞到：
+
+```tsx
+// capture/page.tsx 例子
+const lsForce = params.get("ls");        // 強制結果：?ls=charge|dash|escape
+const modeForce = params.get("mode");    // 強制模式：?mode=3d|gyro|static
+useEffect(() => {
+  if (!lsForce && !debugOn) return;      // 淨係 QA param 下先暴露
+  window.__cap = () => ({ phase, grip: gripRef.current, /* … */ });
+}, [/* … */]);
+```
+
+- 腳本 selector 用 `data-testid`（ASCII，唔會撞編碼問題），唔好靠中文 button name。
+- 睇 `scripts/diag-laststand.mjs` 做完整示範（`toStruggle` / `mashUntil` / `pollUntil(window.__cap())`）。

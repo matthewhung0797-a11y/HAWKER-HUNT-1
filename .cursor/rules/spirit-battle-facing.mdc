@@ -1,0 +1,76 @@
+---
+description: 切磋寵物面向鎖定——非必要唔准改 modelYaw；新精靈必須校準＋facing-lock
+alwaysApply: true
+---
+
+# 切磋面向鎖定（Battle Facing Lock）
+
+切磋面向係核心體驗。**除咗用戶明確要求改面向／換 GLB 後必須重校**，唔准郁任何寵物嘅面向相關設定。
+
+詳細流程見 `.cursor/skills/spirit-3d-models/SKILL.md`（facing-lock workflow）。
+
+## 正確畫面（鐵律）
+
+| 位 | 必須 |
+|---|---|
+| **玩家** | 背向鏡頭、軀幹對敵（以軀幹為準，唔好跟頭） |
+| **敵位** | 面向玩家／鏡頭——以**胸口寶石／眼睛／喙**為準 |
+
+- 大尾／大翼（咖央、沙爹）正面都似「背」——唔好靠翼／尾剪影判
+- **同一 `modelYaw` 必須兩邊啱**（battle `lookAt` 已對稱）
+
+## 禁止（冇用戶明確叫改面向就唔好做）
+
+- 改 `src/content/species.ts` 嘅 `modelYaw`（含「順手調一檔試試」）
+- 刪改 `// facing-lock: …` 註解
+- 加 `enemyYawFlip`／敵位專用 `+π`／按 side 分支改 yaw
+- 改 `src/app/battle/page.tsx` 嘅 `lookAt`／`PLAYER_POS`／`ENEMY_POS` 去遷就單隻面向
+- 為修 battle 面向而改 showcase（進化／自拍）嘅固定 yaw offset——showcase 用 `lookAt(camera)`
+
+## Tripo rig 必配 `rigLite`
+
+GLB 有 `tripo::Root` 而且 `animated: true` → **必須** `rigLite: true`（啟用 `stripRoot`）。
+漏咗會令 idle 根骨旋轉搶走 battle `lookAt`，畫面長期「側身」——調 `modelYaw` 救唔到。
+Meshy `Hips` 全套 rig **唔好**加 `rigLite`。
+
+## 何時先可以改 `modelYaw`
+
+只喺以下情況，而且**必須走完整校準**先寫入：
+
+1. 用戶明確要求改面向；或
+2. 換咗 `public/models/<id>.glb`／重跑 finalize／rig（舊 lock 失效）
+
+```bash
+$env:DIAG_BASE="http://localhost:3000"
+node scripts/diag-facing-calibrate.mjs <id>
+# Read test-shots/facing-cal/：玩家背＋同 lab 敵位正面
+# 寫 test-shots/facing-cal/decisions.json 後：
+node scripts/apply-facing-lock.mjs
+node scripts/diag-facing-audit.mjs <id>
+```
+
+寫入後必須有：`// facing-lock: YYYY-MM-DD player-back enemy-face`。
+
+## 新生成／管線出寵物（嚴格標準）
+
+凡新增 GLB 精靈（手寫或 `scripts/pipeline/*`）：
+
+1. Pipeline 預設 yaw **只係起點**（Tripo/static 試 `-π/2`；Meshy-from-Tripo 試 `+π/2`）——**唔算驗過**
+2. Publish／merge 前必須 `diag-facing-calibrate`（或至少 audit 玩家＋敵位）＋ Read **目視**兩邊
+3. 通過後先用 `apply-facing-lock`（或手寫同等註解）落 `facing-lock`
+4. **冇 facing-lock 唔好當完成**；唔好只跑舊 `diag-yaw-sweep` 就收工
+
+有效 `modelYaw` 只有：`0`｜`Math.PI / 2`｜`-Math.PI / 2`｜`Math.PI`。
+
+## 硬閘 A / B / C（必須遵守）
+
+| 閘 | 指令 | 作用 |
+|---|---|---|
+| **A 靜態** | `npm run facing:static` | `facing-lock`、Tripo→`rigLite`、禁 `enemyYawFlip`、battle 幾何鎖 |
+| **B 差異** | `npm run facing:diff` | 掂到敏感檔先觸發 C |
+| **C 視覺** | `npm run facing:golden` | 同 `test-fixtures/facing-golden/` 比對 |
+
+- CI：`.github/workflows/facing-gate.yml`（PR 必跑 A；敏感 diff 跑 B/C）
+- 產／更新 baseline（要 `:3000`）：`npm run facing:golden:write`（抽樣）或 `facing:golden:write:all`
+- 緊急跳過：`FACING_SKIP=1`；改 battle 站位／鏡頭：`FACING_ALLOW_BATTLE_UNLOCK=1` 並同步改 `scripts/lib/facing-battle-lock.json`＋重產 golden
+- battle 幾何真相：`scripts/lib/facing-battle-lock.json`

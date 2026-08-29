@@ -1,0 +1,63 @@
+id,seriesId,name_zh,name_en,stage,model_file,model_ok,art_file,art_ok
+bkt-cub,bak-kut-teh,"肉骨仔","Bak Kut Cub",1,bkt-cub.glb,true,bkt-cub.webp,true
+bkt-warrior,bak-kut-teh,"骨茶武士","Bak Kut Warrior",2,bkt-warrior.glb,true,bkt-warrior.webp,true
+bkt-grandmaster,bak-kut-teh,"骨茶宗師","Bak Kut Grandmaster",3,bkt-grandmaster.glb,true,bkt-grandmaster.webp,true
+radish-cubie,chai-tow-kway,"菜頭仔","Radish Cubie",1,radish-cubie.glb,true,radish-cubie.webp,true
+carrot-cake-warrior,chai-tow-kway,"菜頭粿武士","Carrot Cake Warrior",2,carrot-cake-warrior.glb,true,carrot-cake-warrior.webp,true
+black-white-cake-king,chai-tow-kway,"黑白粿王","Black & White Cake King",3,black-white-cake-king.glb,true,black-white-cake-king.webp,true
+kway-teow-kid,char-kway-teow,"粿條仔","Kway Teow Kid",1,kway-teow-kid.glb,true,kway-teow-kid.webp,true
+kway-teow-warrior,char-kway-teow,"粿條武士","Kway Teow Warrior",2,kway-teow-warrior.glb,true,kway-teow-warrior.webp,true
+wok-hei-god,char-kway-teow,"鑊氣神","Wok Hei God",3,wok-hei-god.glb,true,wok-hei-god.webp,true
+chendol-jelly,chendol,"煎蕊仔","Chendol Jelly",1,chendol-jelly.glb,true,chendol-jelly.webp,true
+chendol-warrior,chendol,"煎蕊武士","Chendol Warrior",2,chendol-warrior.glb,true,chendol-warrior.webp,true
+chendol-snow-queen,chendol,"煎蕊雪后","Chendol Snow Queen",3,chendol-snow-queen.glb,true,chendol-snow-queen.webp,true
+oily-rice-chick,chicken-rice,"油飯雞仔","Oily Rice Chick",1,oily-rice-chick.glb,true,oily-rice-chick.webp,true
+silky-chicken-warrior,chicken-rice,"滑雞武者","Silky Chicken Warrior",2,silky-chicken-warrior.glb,true,silky-chicken-warrior.webp,true
+hainan-chicken-god,chicken-rice,"海南雞神","Hainan Chicken God",3,hainan-chicken-god.glb,true,hainan-chicken-god.webp,true
+chilli-baby,chilli-baby,"辣椒仔","Chilli Baby",1,chilli-baby.glb,true,chilli-baby.webp,true
+chilli-crablet,chilli-crab,"辣蟹仔","Chilli Crablet",1,chilli-crablet.glb,true,chilli-crablet.webp,true
+crab-claw-warrior,chilli-crab,"辣蟹武士","Crab Claw Warrior",2,crab-claw-warrior.glb,true,crab-claw-warrior.webp,true
+chilli-crab-king,chilli-crab,"辣椒蟹王","Chilli Crab King",3,chilli-crab-king.glb,true,chilli-crab-king.webp,true
+chwee-hamlet,chwee-kueh-hamster,"水粿鼠仔","Chwee Hamlet",1,chwee-hamlet.glb,true,chwee-hamlet.webp,true
+chwee-sentry,chwee-kueh-hamster,"水粿精兵","Chwee Sentry",2,chwee-sentry.glb,true,chwee-sentry.webp,true
+chwee-shogun,chwee-kueh-hamster,"水粿大將","Chwee Shogun",3,chwee-shogun.glb,true,chwee-shogun.webp,true
+coconut-jelly,coconut-jelly,"椰漿啫喱","Coconut Jelly",1,coconut-jelly.glb,true,coconut-jelly.webp,true
+curry-puffling,curry-puff,"咖喱卜仔","Curry Puffling",1,curry-puffling.glb,true,curry-puffling.webp,true
+curry-puff-warrior,curry-puff,"咖喱卜武士","Curry Puff Warrior",2,curry-puff-warrior.glb,true,curry-puff-warrior.webp,true
+golden-puff-sovereign,curry-puff,"咖喱卜尊","Golden Puff Sovereign",3,golden-puff-sovereign.glb,true,golden-puff-sovereign.webp,true
+egg-guard,egg-guard,"蛋蛋守衛","Egg Guard",1,egg-guard.glb,true,egg-guard.webp,true
+garlic-guard,garlic-guard,"蒜頭衛兵","Garlic Guard",1,garlic-guard.glb,true,garlic-guard.webp,true
+kaya-blob,kaya,"咖央仔","Kaya Blob",1,kaya-blob.glb,true,kaya-blob.webp,true
+kaya-warrior,kaya,"咖央武士","Kaya Samurai",2,kaya-warrior.glb,true,kaya-warrior.webp,true
+kaya-dragon,kaya,"咖央聖龍","Kaya Dragon",3,kaya-dragon.glb,true,kaya-dragon.webp,true
+kopi-bean,kopi,"咖啡仔","Kopi Bean",1,kopi-bean.glb,true,kopi-bean.webp,true
+kopi-sock-warrior,kopi,"咖啡武士","Kopi Sock Warrior",2,kopi-sock-warrior.glb,true,kopi-sock-warrior.webp,true
+kopi-o-emperor,kopi,"咖啡烏皇","Kopi O Emperor",3,kopi-o-emperor.glb,true,kopi-o-emperor.webp,true
+tutu-sprite,kueh,"嘟嘟糕精","Tutu Sprite",1,tutu-sprite.glb,true,tutu-sprite.webp,true
+lapis-queen,kueh,"九層糕后","Lapis Queen",2,lapis-queen.glb,true,lapis-queen.webp,true
+pastry-queen,kueh,"糕點女王","Pastry Sovereign",3,pastry-queen.glb,true,pastry-queen.webp,true
+little-laksa,laksa,"叻沙仔","Little Laksa",1,little-laksa.glb,true,little-laksa.webp,true
+laksa-warrior,laksa,"叻沙武士","Laksa Warrior",2,laksa-warrior.glb,true,laksa-warrior.webp,true
+laksa-dragon,laksa,"叻沙龍","Laksa Dragon",3,laksa-dragon.glb,true,laksa-dragon.webp,true
+lemongrass-swordsman,lemongrass-swordsman,"香茅劍客","Lemongrass Swordsman",1,lemongrass-swordsman.glb,true,lemongrass-swordsman.webp,true
+nasi-lemak-tot,nasi-lemak-squad,"椰漿飯仔","Nasi Lemak Tot",1,nasi-lemak-tot.glb,true,nasi-lemak-tot.webp,true
+nasi-lemak-scout,nasi-lemak-squad,"椰漿飯小兵","Nasi Lemak Scout",2,nasi-lemak-scout.glb,true,nasi-lemak-scout.webp,true
+nasi-lemak-general,nasi-lemak-squad,"椰漿飯大將軍","Nasi Lemak General",3,nasi-lemak-general.glb,true,nasi-lemak-general.webp,true
+otah-tot,otak-otak-clan,"烏達小龍","Otah Tot",1,otah-tot.glb,true,otah-tot.webp,true
+otah-swashbuckler,otak-otak-clan,"烏達劍客","Otah Swashbuckler",2,otah-swashbuckler.glb,true,otah-swashbuckler.webp,true
+otah-pyrolord-chong,otak-otak-clan,"烏達炎領","Otah Pyrolord",3,otah-pyrolord-chong.glb,true,otah-pyrolord-chong.webp,true
+little-orh-luak,oyster-omelette,"蠔煎仔","Little Orh Luak",1,little-orh-luak.glb,true,little-orh-luak.webp,true
+omelette-warrior,oyster-omelette,"蠔煎武者","Omelette Warrior",2,omelette-warrior.glb,true,omelette-warrior.webp,true
+oyster-immortal,oyster-omelette,"蠔煎仙","Oyster Immortal",3,oyster-immortal.glb,true,oyster-immortal.webp,true
+prata-pup,prata,"煎餅仔","Prata Pup",1,prata-pup.glb,true,prata-pup.webp,true
+prata-warrior,prata,"煎餅武士","Prata Warrior",2,prata-warrior.glb,true,prata-warrior.webp,true
+prata-sky-elephant,prata,"飛餅神象","Prata Sky Elephant",3,prata-sky-elephant.glb,true,prata-sky-elephant.webp,true
+riceball-baby,riceball-baby,"飯團寶寶","Riceball Baby",1,riceball-baby.glb,true,riceball-baby.webp,true
+rojak-tot,rojak,"囉喏仔","Rojak Tot",1,rojak-tot.glb,true,rojak-tot.webp,true
+rojak-warrior,rojak,"囉喏武士","Rojak Warrior",2,rojak-warrior.glb,true,rojak-warrior.webp,true
+rojak-king,rojak,"囉喏王","Rojak King",3,rojak-king.glb,true,rojak-king.webp,true
+satay-skewerling,satay,"沙嗲仔","Satay Skewerling",1,satay-skewerling.glb,true,satay-skewerling.webp,true
+satay-warrior,satay,"沙嗲武士","Satay Warrior",2,satay-warrior.glb,true,satay-warrior.webp,true
+satay-flame-emperor,satay,"沙嗲炎帝","Satay Flame Emperor",3,satay-flame-emperor.glb,true,satay-flame-emperor.webp,true
+shrimp-hopper,shrimp-hopper,"蝦仔跳跳","Shrimp Hopper",1,shrimp-hopper.glb,true,shrimp-hopper.webp,true
+vermicelli-sprite,vermicelli-sprite,"米粉精靈","Vermicelli Sprite",1,vermicelli-sprite.glb,true,vermicelli-sprite.webp,true

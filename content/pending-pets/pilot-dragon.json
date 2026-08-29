@@ -1,0 +1,639 @@
+{
+  "id": "pilot-dragon",
+  "createdAt": "2026-07-20T05:41:29.462Z",
+  "updatedAt": "2026-07-20T07:32:31.893Z",
+  "status": "approved",
+  "artifacts": {
+    "artByStage": {
+      "otah-tot": "public/spirits/full/otah-tot.webp",
+      "otah-swashbuckler": "public/spirits/full/otah-swashbuckler.webp",
+      "otah-pyrolord-chong": "public/spirits/full/otah-pyrolord-chong.webp"
+    },
+    "art": "public/spirits/full/otah-tot.webp",
+    "model3dByStage": {
+      "otah-tot": "model-pipeline/gen/tripo/otah-tot.glb",
+      "otah-swashbuckler": "model-pipeline/gen/tripo/otah-swashbuckler.glb",
+      "otah-pyrolord-chong": "model-pipeline/gen/tripo/otah-pyrolord-chong.glb"
+    },
+    "model3d": "model-pipeline/gen/tripo/otah-tot.glb",
+    "riggedByStage": {
+      "otah-tot": "model-pipeline/gen/anim/otah-tot",
+      "otah-swashbuckler": "model-pipeline/gen/anim/otah-swashbuckler",
+      "otah-pyrolord-chong": "model-pipeline/gen/anim/otah-pyrolord-chong"
+    },
+    "rigModeByStage": {
+      "otah-tot": "meshy",
+      "otah-swashbuckler": "meshy",
+      "otah-pyrolord-chong": "tripo"
+    },
+    "rigged": "model-pipeline/gen/anim/otah-tot",
+    "finalByStage": {
+      "otah-tot": "public/models/otah-tot.glb",
+      "otah-swashbuckler": "public/models/otah-swashbuckler.glb",
+      "otah-pyrolord-chong": "public/models/otah-pyrolord-chong.glb"
+    },
+    "final": "public/models/otah-tot.glb"
+  },
+  "manifest": {
+    "concept": {
+      "status": "done",
+      "mode": "gemini",
+      "detail": "LLM family=otak-otak-clan",
+      "at": "2026-07-20T05:41:49.702Z"
+    },
+    "art": {
+      "status": "done",
+      "mode": "gemini",
+      "detail": "3/3 階真圖",
+      "at": "2026-07-20T05:42:57.753Z"
+    },
+    "model3d": {
+      "status": "done",
+      "mode": "real",
+      "detail": "3/3 階真生成",
+      "at": "2026-07-20T06:33:54.926Z"
+    },
+    "rig": {
+      "status": "done",
+      "mode": "real",
+      "detail": "3/3 階真 rig（Meshy 3／Tripo 0）",
+      "at": "2026-07-20T06:36:30.985Z"
+    },
+    "finalize": {
+      "status": "done",
+      "mode": "real",
+      "detail": "3/3 階真 finalize",
+      "at": "2026-07-20T06:39:36.828Z"
+    },
+    "skills": {
+      "status": "done",
+      "mode": "gemini",
+      "detail": "6 skills / 3 階",
+      "at": "2026-07-20T06:39:48.719Z"
+    },
+    "draft": {
+      "status": "done",
+      "detail": "三階 species 已組裝（otah-tot → otah-swashbuckler → otah-pyrolord-chong）",
+      "at": "2026-07-20T06:39:48.720Z"
+    }
+  },
+  "bodyPlanOverride": "dragon-kin",
+  "conceptPrompt": "Invent ONE brand-new Singapore/Malaysian hawker-food spirit FAMILY for the game Hawker Hunt.\nIt must be a real or highly plausible hawker dish, turned into a cute collectible monster family of 3 evolution stages.\nDesign goals: every dish must be UNIQUE (no collision with existing pets); may resemble the style but never be identical.\nSPECIES FORM for this whole family (all 3 stages share it, but grow up): an upright bipedal DRAGON-person: horned reptilian head, scaled humanoid body, a tail held clear behind the legs, small folded wings tucked to the SIDES (not over the arms). Stage 1 may be a rounder baby version, but stages 2–3 MUST be describable as an upright bipedal figure with arms/legs/claws clearly separate from the body (this is required so the 2D art can be auto-rigged into an animated 3D model). Write each stage's theme so an artist would naturally draw that upright, limbs-apart pose.\nNo specific direction — free creative choice.\n\nReturn JSON with: seriesId (ascii kebab-case, unique), foodOrigin {en,zh}, element (one of metal/wood/water/fire/earth), flavor (one of bitter/sour/salty/sweet/spicy per 五行五味), and stages: an array of EXACTLY 3 objects each { id (ascii kebab-case, unique per stage), stage (1|2|3), name{en,zh}, description{en,zh}, theme, skillIdeas[] }.\nKeep every stage consistent with this art DNA: Chibi anthropomorphic Singapore hawker-food creature mascot, big expressive cartoon eyes, rounded soft chunky body, thick painterly cartoon shading (not flat vector, not realistic), warm friendly collectible-monster design, full body head-to-toe, standing, slight 3/4 front view facing camera, cohesive with a unified collectible set of food spirits.\n\n\nDO NOT duplicate any of these already-used dishes or names (you MAY be stylistically similar, but the dish, the name and the id MUST be distinct and unique):\nDishes: Hainanese Chicken Rice, 海南雞飯, Laksa, 叻沙, Bak Kut Teh, 肉骨茶, Kueh Lapis, 九層糕, Kaya Toast, 咖椰吐司, Chilli Crab, 辣椒蟹, Satay, 沙嗲, Kopi O, 咖啡烏, Chai Tow Kway, 菜頭粿, Rojak, 囉喏, Oyster Omelette, 蠔煎, Char Kway Teow, 炒粿條, Curry Puff, 咖喱卜, Roti Prata, 印度煎餅, Chendol, 煎蕊, Chilli Padi, 辣椒, Garlic, 蒜頭, Lemongrass, 香茅, Rice Ball, 飯團, Rice Vermicelli, 米粉, Egg, 雞蛋, Fresh Shrimp, 鮮蝦, Coconut Milk, 椰漿, Kueh Tutu, 嘟嘟糕, Nasi Lemak, 椰漿飯\nNames: Chicken Rice Alliance, 雞飯聯盟, Noodle Clan, 麵食家族, Bak Kut Teh Order, 肉骨茶系, Kueh Dynasty, 糕點系, Kaya Legion, 咖椰系, Chilli Crab Gang, 辣蟹幫, Satay Legion, 沙嗲軍團, Kopi Society, 咖啡烏會, Carrot Cake Clan, 菜頭粿門, Rojak Union, 囉喏聯盟, Orh Luak Tribe, 蠔煎眾, Wok Hei Sect, 鑊氣幫, Curry Puff Order, 咖喱卜團, Prata Tribe, 煎餅族, Chendol School, 煎蕊派, Chilli Baby, 辣椒仔, Garlic Guard, 蒜頭衛兵, Lemongrass Swordsman, 香茅劍客, Riceball Baby, 飯團寶寶, Vermicelli Sprite, 米粉精靈, Egg Guard, 蛋蛋守衛, Shrimp Hopper, 蝦仔跳跳, Coconut Jelly, 椰漿啫喱, Oily Rice Chick, 油飯雞仔, Rice Peck, 米粒啄擊, Oily Rice Heal, 油飯治癒, Silky Chicken Warrior, 滑雞武者, Poached Blade, 白斬刀法, Ginger Splash, 薑蓉飛濺, Hainan Chicken God, 海南雞神, Golden Rice Storm, 黃金飯暴, Chilli Sauce Cannon, 辣椒醬炮, Little Laksa, 叻沙仔, Broth Splash, 湯底潑濺, Coconut Shield, 椰漿護盾, Laksa Warrior, 叻沙武士, Shell Claw, 蝦殼鉗擊, Spicy Surge, 辣浪翻騰, Laksa Dragon Xinyan, 叻沙龍·辛焱, Spice Inferno, 香料烈焰, Dragon Noodle Whip, 龍鬚麵鞭, Bak Kut Cub, 肉骨仔, Rib Bonk, 排骨敲擊, Herbal Sip, 藥膳補湯, Bak Kut Warrior, 骨茶武士, Youtiao Strike, 油條重擊, Pepper Guard, 胡椒鐵壁, Bak Kut Grandmaster, 骨茶宗師, Garlic Meteor, 蒜頭流星, Claypot Slam, 砂鍋猛擊, Tutu Sprite, 嘟嘟糕精, Coconut Puff, 椰絲噴發, Steam Veil, 蒸氣面紗, Lapis Queen, 九層糕后, Layer Slice, 分層切擊, Sticky Trap, 黏糕陷阱, Pastry Sovereign, 糕點女王, Gula Melaka Burst, 椰糖爆漿, Royal Decree, 女王詔令, Kaya Blob, 咖央仔, Jam Splat, 醬汁飛濺, Pandan Breeze, 斑蘭清風, Kaya Samurai, 咖央武士, Toast Hammer, 吐司重錘, Butter Slick, 牛油滑步, Kaya Dragon Phantom, 咖央聖龍·幻火, Phantom Flame, 翡翠幻火, Soft Egg Orb, 半熟蛋彈, Chilli Crablet, 辣蟹仔, Bubble Spit, 泡泡醬沫, Mantou Recovery, 饅頭回氣, Crab Claw Warrior, 辣蟹武士, Claw Crush, 巨鉗粉碎, Sauce Whirl, 醬濤翻滾, Chilli Crab King Jiangtao, 辣椒蟹王·醬濤, Chilli Tsunami, 辣醬海嘯, Golden Mantou Barrage, 金饅頭連炮, Satay Skewerling, 沙嗲仔, Skewer Jab, 竹籤突刺, Ketupat Rest, 馬來米糕休整, Satay Warrior, 沙嗲武士, Charcoal Grill, 炭火串燒, Triple Skewer, 三串連擊, Satay Flame Emperor Tanhun, 沙嗲炎帝·炭魂, Hundred Skewer Storm, 百串燎原, Peanut Sauce Flood, 花生醬洪流, Kopi Bean, 咖啡仔, Bean Toss, 咖啡豆投擲, Kopi Sip, 提神一啖, Kopi Sock Warrior, 咖啡武士, Sock Swing, 咖啡袋重甩, Steam Scald, 滾水燙擊, Kopi O Emperor Yenong, 咖啡烏皇·夜濃, Black Gold Waterfall, 黑金瀑布, Caffeine Rush, 咖啡因狂熱, Radish Cubie, 菜頭仔, Cube Tumble, 粿粒翻滾, Radish Juice, 菜頭甜汁, Carrot Cake Warrior, 菜頭粿武士, Griddle Press, 鐵板煎壓, Egg Crust Slam, 蛋香脆擊, Black & White Cake King Shuangjian, 黑白粿王·雙煎, Black & White Duet, 黑白雙煎, Sweet Sauce Quake, 甜醬地震, Rojak Tot, 囉喏仔, Pineapple Jab, 菠蘿刺擊, Peanut Dust, 花生碎療癒, Rojak Warrior, 囉喏武士, Haeko Whip, 蝦膏黑鞭, Jicama Shield Bash, 沙葛盾擊, Rojak King Baiwei, 囉喏王·百味, Hundred Flavour Vortex, 百味漩渦, Black Sauce Deluge, 黑醬傾盆, Little Orh Luak, 蠔煎仔, Starch Flick, 粉漿彈射, Egg Blanket, 蛋被治癒, Omelette Warrior, 蠔煎武者, Sizzle Flip, 鑊氣翻面, Oyster Pearl Shot, 珍珠蠔彈, Oyster Immortal Yinwu, 蠔煎仙·銀霧, Tidal Omelette, 蛋海狂潮, Vinegar Mist, 酸醋銀霧, Kway Teow Kid, 粿條仔, Flat Noodle Lash, 粿條抽擊, Lard Crisp Boost, 豬油渣滋補, Kway Teow Warrior, 粿條武士, Wok Toss, 拋鑊翻炒, Cockle Bomb, 血蚶炸彈, Wok Hei God Jiaoxiang, 鑊氣神·焦香, Wok Hei Blast, 鑊氣爆發, Dark Soy Tide, 黑甜醬浪, Curry Puffling, 咖喱卜仔, Crust Flick, 酥皮碎擊, Potato Cushion, 薯仔軟墊, Curry Puff Warrior, 咖喱卜武士, Spiral Crust Cutter, 螺旋酥皮刃, Curry Burst, 咖喱噴發, Golden Puff Sovereign Sujin, 咖喱卜尊·酥金, Thousand Layer Blades, 千層酥刃, Molten Curry Cannon, 熔岩咖喱炮, Prata Pup, 煎餅仔, Dough Slap, 麵團拍打, Ghee Shine, 酥油滋潤, Prata Warrior, 煎餅武士, Flip Spin Throw, 拋餅迴旋, Crispy Fold Strike, 摺疊脆擊, Prata Sky Elephant Yunceng, 飛餅神象·雲層, Sky Prata Cyclone, 飛天餅旋風, Curry Dip Flood, 咖喱蘸海, Chendol Jelly, 煎蕊仔, Jelly Wiggle, 綠蕊蠕彈, Coconut Milk Bath, 椰奶浴, Chendol Warrior, 煎蕊武士, Shaved Ice Flurry, 刨冰亂舞, Jelly Whip, 綠蕊長鞭, Chendol Snow Queen Cuibing, 煎蕊雪后·翠冰, Emerald Blizzard, 翡翠暴雪, Red Bean Meteor, 紅豆流星雨, Fiery Temper, 火爆脾氣, Antibacterial Shield, 抗菌護盾, Lemongrass Sword Dance, 香茅劍舞, Sticky Rice Bind, 糯米黏著, Vermicelli Wrap, 米粉纏繞, Yolk Guard, 蛋黃守護, Bubble Shot, 水泡射擊, Coconut Heal, 椰香治癒, Nasi Lemak Tot, 椰漿飯仔, Pandan Whiff, 斑蘭飄香, Bilis Bonk, 脆炸江魚撞, Nasi Lemak Scout, 椰漿飯小兵, Cucumber Shield Bash, 青瓜爽脆盾, Sambal Splash, 參巴辣醬擊, Nasi Lemak General, 椰漿飯大將軍, Golden Wing Slasher, 酥脆炸雞斬, Volcanic Sambal Eruption, 參巴火山爆",
+  "family": {
+    "seriesId": "otak-otak-clan",
+    "element": "fire",
+    "flavor": "spicy",
+    "foodOrigin": {
+      "en": "Otak-Otak",
+      "zh": "烏達"
+    },
+    "evolutionItemId": "otak-otak-clan-essence",
+    "evolutionItem": {
+      "id": "otak-otak-clan-essence",
+      "name": {
+        "en": "Otak-Otak Essence",
+        "zh": "烏達精華"
+      },
+      "description": {
+        "en": "Concentrated essence of Otak-Otak, fuel for evolution.",
+        "zh": "濃縮嘅烏達精華，進化嘅燃料。"
+      },
+      "icon": "star"
+    },
+    "stages": [
+      {
+        "id": "otah-tot",
+        "stage": 1,
+        "name": {
+          "en": "Otah Tot",
+          "zh": "烏達小龍"
+        },
+        "element": "fire",
+        "flavor": "spicy",
+        "rarity": "common",
+        "foodOrigin": {
+          "en": "Otak-Otak",
+          "zh": "烏達"
+        },
+        "description": {
+          "en": "A freshly wrapped baby spirit born from aromatic, spiced fish paste. It loves to roll around in warm charcoal ash to keep its banana-leaf wrapper toasted and fragrant.",
+          "zh": "誕生於芳香辛辣魚肉泥中的新鮮幼體精靈。它最愛在溫熱的炭灰中打滾，好讓身上的香蕉葉外衣保持微焦與芬芳。"
+        },
+        "theme": "A cute, chubby baby dragon-person standing upright, wearing a half-peeled green banana leaf like a diaper wrap. Its scales are a soft, warm orange-pink, with tiny lemongrass-like horns on its head. Its small claws are held out to the sides, with tiny charred banana-leaf wings folded snugly against its ribs, and a plump tail pointing straight back.",
+        "skillIdeas": [
+          "Fragrant Puff",
+          "Spicy Fish Nibble"
+        ],
+        "bodyPlan": "dragon-kin"
+      },
+      {
+        "id": "otah-swashbuckler",
+        "stage": 2,
+        "name": {
+          "en": "Otah Swashbuckler",
+          "zh": "烏達劍客"
+        },
+        "element": "fire",
+        "flavor": "spicy",
+        "rarity": "rare",
+        "foodOrigin": {
+          "en": "Otak-Otak",
+          "zh": "烏達"
+        },
+        "description": {
+          "en": "Steeped in rich coconut milk and wild spices, this dragon has learned the art of charcoal grilling. Its skin is perfectly toasted, releasing a mouth-watering aroma whenever it swings its claws.",
+          "zh": "浸潤了濃郁椰漿與野生香料，這隻龍人已掌握了炭火燒烤的奧秘。它那烤得恰到好處的皮膚在揮舞雙爪時，會散發出令人垂涎的香氣。"
+        },
+        "theme": "An upright bipedal dragon warrior with toasted, dark-orange fish-paste scales and charcoal grill marks. It wears a protective vest of woven green banana leaves secured with wooden toothpicks. Its claws are held apart from its body in a confident combat stance, with sturdy folded leaf-wings tucked at its sides and its long tail sweeping the ground behind its legs.",
+        "skillIdeas": [
+          "Toothpick Pierce",
+          "Smoky Grill Wave",
+          "Rich Santan Barrier"
+        ],
+        "bodyPlan": "dragon-kin"
+      },
+      {
+        "id": "otah-pyrolord-chong",
+        "stage": 3,
+        "name": {
+          "en": "Otah Pyrolord Chong",
+          "zh": "烏達炎領·炙香"
+        },
+        "element": "fire",
+        "flavor": "spicy",
+        "rarity": "epic",
+        "foodOrigin": {
+          "en": "Otak-Otak",
+          "zh": "烏達"
+        },
+        "description": {
+          "en": "The absolute master of the grill, Otah Pyrolord Chong commands the sacred flames of the charcoal pit. It can unleash a torrent of spicy, aromatic heat that perfectly cooks anything in its path.",
+          "zh": "炭火烤爐的絕對主宰，烏達炎領掌控著神聖的炭坑烈焰。它能釋放出混雜著香料與高溫的熱浪，將前方的對手完美「炙烤」。"
+        },
+        "theme": "A majestic bipedal dragon king standing in a powerful, open-armed pose with claws fully separated from its body. It features grand horns shaped like singed coconut leaf ribs and glowing orange scales with masterfully charred grates. A magnificent cape of scorched banana leaves drapes behind its back, accented by small, fiercely folded wings tucked close to its sides.",
+        "skillIdeas": [
+          "Spiced Fish-Paste Torrent",
+          "Charcoal Ember Storm",
+          "Banana Leaf Fire-Wall"
+        ],
+        "bodyPlan": "dragon-kin"
+      }
+    ],
+    "bodyPlan": "dragon-kin"
+  },
+  "concept": {
+    "name": {
+      "en": "Otah Tot",
+      "zh": "烏達小龍"
+    },
+    "seriesId": "otak-otak-clan",
+    "stage": 1,
+    "element": "fire",
+    "flavor": "spicy",
+    "rarity": "common",
+    "foodOrigin": {
+      "en": "Otak-Otak",
+      "zh": "烏達"
+    },
+    "description": {
+      "en": "A freshly wrapped baby spirit born from aromatic, spiced fish paste. It loves to roll around in warm charcoal ash to keep its banana-leaf wrapper toasted and fragrant.",
+      "zh": "誕生於芳香辛辣魚肉泥中的新鮮幼體精靈。它最愛在溫熱的炭灰中打滾，好讓身上的香蕉葉外衣保持微焦與芬芳。"
+    },
+    "theme": "A cute, chubby baby dragon-person standing upright, wearing a half-peeled green banana leaf like a diaper wrap. Its scales are a soft, warm orange-pink, with tiny lemongrass-like horns on its head. Its small claws are held out to the sides, with tiny charred banana-leaf wings folded snugly against its ribs, and a plump tail pointing straight back.",
+    "skillIdeas": [
+      "Fragrant Puff",
+      "Spicy Fish Nibble"
+    ]
+  },
+  "poolStatus": {
+    "total": 4,
+    "usable": 3,
+    "low": false,
+    "exhausted": false,
+    "note": null
+  },
+  "finalizeByStage": {
+    "otah-tot": {
+      "modelUrl": "/models/otah-tot.glb",
+      "animated": true,
+      "modelYaw": 1.5707963267948966,
+      "modelHeightM": 0.3,
+      "needsYawVerification": true
+    },
+    "otah-swashbuckler": {
+      "modelUrl": "/models/otah-swashbuckler.glb",
+      "animated": true,
+      "modelYaw": 1.5707963267948966,
+      "modelHeightM": 0.5,
+      "needsYawVerification": true
+    },
+    "otah-pyrolord-chong": {
+      "modelUrl": "/models/otah-pyrolord-chong.glb",
+      "animated": true,
+      "rigLite": true,
+      "modelYaw": -1.5707963267948966,
+      "modelHeightM": 0.65,
+      "needsYawVerification": true
+    }
+  },
+  "finalize": {
+    "modelUrl": "/models/otah-tot.glb",
+    "animated": true,
+    "modelYaw": 1.5707963267948966,
+    "modelHeightM": 0.3,
+    "needsYawVerification": true
+  },
+  "skillsByStage": {
+    "otah-tot": [
+      {
+        "id": "otah-tot-skill-1",
+        "name": {
+          "en": "Lemongrass Smoke Puff",
+          "zh": "香茅蕉葉煙"
+        },
+        "description": {
+          "en": "Releases a puff of aromatic coconut and lemongrass smoke to blind and burn the enemy.",
+          "zh": "吐出帶有椰香與香茅氣味的濃煙，燻眼並灼傷敵人。"
+        },
+        "power": 1,
+        "cooldown": 0
+      },
+      {
+        "id": "otah-tot-skill-2",
+        "name": {
+          "en": "Chili Paste Nibble",
+          "zh": "辣味魚蓉咬"
+        },
+        "description": {
+          "en": "Snaps at the enemy with spicy, chili-infused fish paste that leaves a lingering sting.",
+          "zh": "用混入辣椒的魚蓉輕咬敵人，造成持續的刺痛。"
+        },
+        "power": 1.4,
+        "cooldown": 2
+      }
+    ],
+    "otah-swashbuckler": [
+      {
+        "id": "otah-swashbuckler-skill-1",
+        "name": {
+          "en": "Bamboo Skewer Thrust",
+          "zh": "竹籤連環刺"
+        },
+        "description": {
+          "en": "Thrusts forward with sharp bamboo skewers, piercing defenses with spicy heat.",
+          "zh": "用鋒利的竹籤向前猛刺，以辛辣的熱力穿透敵方防禦。"
+        },
+        "power": 1.1,
+        "cooldown": 0
+      },
+      {
+        "id": "otah-swashbuckler-skill-2",
+        "name": {
+          "en": "Charcoal Grill Wave",
+          "zh": "炭香燒烤熱浪"
+        },
+        "description": {
+          "en": "Unleashes a wave of intense heat and smoky aroma from the charcoal grill.",
+          "zh": "釋放出一股來自炭火烤爐的熾熱高溫與濃郁煙燻香氣。"
+        },
+        "power": 1.7,
+        "cooldown": 2
+      }
+    ],
+    "otah-pyrolord-chong": [
+      {
+        "id": "otah-pyrolord-chong-skill-1",
+        "name": {
+          "en": "Sambal Otah Torrent",
+          "zh": "烈焰參巴魚漿潮"
+        },
+        "description": {
+          "en": "Deluges the battlefield in a boiling torrent of spicy, sambal-infused fish paste.",
+          "zh": "向戰場傾瀉滾燙而辛辣的參巴魚漿洪流，吞噬所有敵人。"
+        },
+        "power": 1.2,
+        "cooldown": 0
+      },
+      {
+        "id": "otah-pyrolord-chong-skill-2",
+        "name": {
+          "en": "Charcoal Ember Storm",
+          "zh": "椰殼炭火烈焰風暴"
+        },
+        "description": {
+          "en": "Summons a raging storm of burning coconut-shell charcoal embers to incinerate everything.",
+          "zh": "召喚狂暴的椰殼炭火餘燼風暴，將一切燃燒殆盡。"
+        },
+        "power": 2,
+        "cooldown": 3
+      }
+    ]
+  },
+  "skills": [
+    {
+      "id": "otah-tot-skill-1",
+      "name": {
+        "en": "Lemongrass Smoke Puff",
+        "zh": "香茅蕉葉煙"
+      },
+      "description": {
+        "en": "Releases a puff of aromatic coconut and lemongrass smoke to blind and burn the enemy.",
+        "zh": "吐出帶有椰香與香茅氣味的濃煙，燻眼並灼傷敵人。"
+      },
+      "power": 1,
+      "cooldown": 0
+    },
+    {
+      "id": "otah-tot-skill-2",
+      "name": {
+        "en": "Chili Paste Nibble",
+        "zh": "辣味魚蓉咬"
+      },
+      "description": {
+        "en": "Snaps at the enemy with spicy, chili-infused fish paste that leaves a lingering sting.",
+        "zh": "用混入辣椒的魚蓉輕咬敵人，造成持續的刺痛。"
+      },
+      "power": 1.4,
+      "cooldown": 2
+    }
+  ],
+  "speciesList": [
+    {
+      "id": "otah-tot",
+      "seriesId": "otak-otak-clan",
+      "stage": 1,
+      "name": {
+        "en": "Otah Tot",
+        "zh": "烏達小龍"
+      },
+      "element": "fire",
+      "flavor": "spicy",
+      "rarity": "common",
+      "foodOrigin": {
+        "en": "Otak-Otak",
+        "zh": "烏達"
+      },
+      "description": {
+        "en": "A freshly wrapped baby spirit born from aromatic, spiced fish paste. It loves to roll around in warm charcoal ash to keep its banana-leaf wrapper toasted and fragrant.",
+        "zh": "誕生於芳香辛辣魚肉泥中的新鮮幼體精靈。它最愛在溫熱的炭灰中打滾，好讓身上的香蕉葉外衣保持微焦與芬芳。"
+      },
+      "baseStats": {
+        "hp": 45,
+        "attack": 13,
+        "defense": 10,
+        "speed": 14
+      },
+      "skills": [
+        {
+          "id": "otah-tot-skill-1",
+          "name": {
+            "en": "Lemongrass Smoke Puff",
+            "zh": "香茅蕉葉煙"
+          },
+          "description": {
+            "en": "Releases a puff of aromatic coconut and lemongrass smoke to blind and burn the enemy.",
+            "zh": "吐出帶有椰香與香茅氣味的濃煙，燻眼並灼傷敵人。"
+          },
+          "power": 1,
+          "cooldown": 0
+        },
+        {
+          "id": "otah-tot-skill-2",
+          "name": {
+            "en": "Chili Paste Nibble",
+            "zh": "辣味魚蓉咬"
+          },
+          "description": {
+            "en": "Snaps at the enemy with spicy, chili-infused fish paste that leaves a lingering sting.",
+            "zh": "用混入辣椒的魚蓉輕咬敵人，造成持續的刺痛。"
+          },
+          "power": 1.4,
+          "cooldown": 2
+        }
+      ],
+      "evolvesTo": "otah-swashbuckler",
+      "evolutionRequirement": {
+        "items": {
+          "otak-otak-clan-essence": 5
+        },
+        "checkinCentres": 2
+      },
+      "modelUrl": "/models/otah-tot.glb",
+      "modelHeightM": 0.3,
+      "animated": true,
+      "modelYaw": 1.5707963267948966
+    },
+    {
+      "id": "otah-swashbuckler",
+      "seriesId": "otak-otak-clan",
+      "stage": 2,
+      "name": {
+        "en": "Otah Swashbuckler",
+        "zh": "烏達劍客"
+      },
+      "element": "fire",
+      "flavor": "spicy",
+      "rarity": "rare",
+      "foodOrigin": {
+        "en": "Otak-Otak",
+        "zh": "烏達"
+      },
+      "description": {
+        "en": "Steeped in rich coconut milk and wild spices, this dragon has learned the art of charcoal grilling. Its skin is perfectly toasted, releasing a mouth-watering aroma whenever it swings its claws.",
+        "zh": "浸潤了濃郁椰漿與野生香料，這隻龍人已掌握了炭火燒烤的奧秘。它那烤得恰到好處的皮膚在揮舞雙爪時，會散發出令人垂涎的香氣。"
+      },
+      "baseStats": {
+        "hp": 72,
+        "attack": 22,
+        "defense": 18,
+        "speed": 20
+      },
+      "skills": [
+        {
+          "id": "otah-swashbuckler-skill-1",
+          "name": {
+            "en": "Bamboo Skewer Thrust",
+            "zh": "竹籤連環刺"
+          },
+          "description": {
+            "en": "Thrusts forward with sharp bamboo skewers, piercing defenses with spicy heat.",
+            "zh": "用鋒利的竹籤向前猛刺，以辛辣的熱力穿透敵方防禦。"
+          },
+          "power": 1.1,
+          "cooldown": 0
+        },
+        {
+          "id": "otah-swashbuckler-skill-2",
+          "name": {
+            "en": "Charcoal Grill Wave",
+            "zh": "炭香燒烤熱浪"
+          },
+          "description": {
+            "en": "Unleashes a wave of intense heat and smoky aroma from the charcoal grill.",
+            "zh": "釋放出一股來自炭火烤爐的熾熱高溫與濃郁煙燻香氣。"
+          },
+          "power": 1.7,
+          "cooldown": 2
+        }
+      ],
+      "evolvesTo": "otah-pyrolord-chong",
+      "evolutionRequirement": {
+        "items": {
+          "otak-otak-clan-essence": 10
+        },
+        "checkinCentres": 5
+      },
+      "modelUrl": "/models/otah-swashbuckler.glb",
+      "modelHeightM": 0.5,
+      "animated": true,
+      "modelYaw": 1.5707963267948966
+    },
+    {
+      "id": "otah-pyrolord-chong",
+      "seriesId": "otak-otak-clan",
+      "stage": 3,
+      "name": {
+        "en": "Otah Pyrolord Chong",
+        "zh": "烏達炎領·炙香"
+      },
+      "element": "fire",
+      "flavor": "spicy",
+      "rarity": "epic",
+      "foodOrigin": {
+        "en": "Otak-Otak",
+        "zh": "烏達"
+      },
+      "description": {
+        "en": "The absolute master of the grill, Otah Pyrolord Chong commands the sacred flames of the charcoal pit. It can unleash a torrent of spicy, aromatic heat that perfectly cooks anything in its path.",
+        "zh": "炭火烤爐的絕對主宰，烏達炎領掌控著神聖的炭坑烈焰。它能釋放出混雜著香料與高溫的熱浪，將前方的對手完美「炙烤」。"
+      },
+      "baseStats": {
+        "hp": 102,
+        "attack": 34,
+        "defense": 28,
+        "speed": 26
+      },
+      "skills": [
+        {
+          "id": "otah-pyrolord-chong-skill-1",
+          "name": {
+            "en": "Sambal Otah Torrent",
+            "zh": "烈焰參巴魚漿潮"
+          },
+          "description": {
+            "en": "Deluges the battlefield in a boiling torrent of spicy, sambal-infused fish paste.",
+            "zh": "向戰場傾瀉滾燙而辛辣的參巴魚漿洪流，吞噬所有敵人。"
+          },
+          "power": 1.2,
+          "cooldown": 0
+        },
+        {
+          "id": "otah-pyrolord-chong-skill-2",
+          "name": {
+            "en": "Charcoal Ember Storm",
+            "zh": "椰殼炭火烈焰風暴"
+          },
+          "description": {
+            "en": "Summons a raging storm of burning coconut-shell charcoal embers to incinerate everything.",
+            "zh": "召喚狂暴的椰殼炭火餘燼風暴，將一切燃燒殆盡。"
+          },
+          "power": 2,
+          "cooldown": 3
+        }
+      ],
+      "evolvesTo": null,
+      "evolutionRequirement": null,
+      "modelUrl": "/models/otah-pyrolord-chong.glb",
+      "modelHeightM": 0.65,
+      "animated": true,
+      "rigLite": true,
+      "modelYaw": -1.5707963267948966
+    }
+  ],
+  "species": {
+    "id": "otah-tot",
+    "seriesId": "otak-otak-clan",
+    "stage": 1,
+    "name": {
+      "en": "Otah Tot",
+      "zh": "烏達小龍"
+    },
+    "element": "fire",
+    "flavor": "spicy",
+    "rarity": "common",
+    "foodOrigin": {
+      "en": "Otak-Otak",
+      "zh": "烏達"
+    },
+    "description": {
+      "en": "A freshly wrapped baby spirit born from aromatic, spiced fish paste. It loves to roll around in warm charcoal ash to keep its banana-leaf wrapper toasted and fragrant.",
+      "zh": "誕生於芳香辛辣魚肉泥中的新鮮幼體精靈。它最愛在溫熱的炭灰中打滾，好讓身上的香蕉葉外衣保持微焦與芬芳。"
+    },
+    "baseStats": {
+      "hp": 45,
+      "attack": 13,
+      "defense": 10,
+      "speed": 14
+    },
+    "skills": [
+      {
+        "id": "otah-tot-skill-1",
+        "name": {
+          "en": "Lemongrass Smoke Puff",
+          "zh": "香茅蕉葉煙"
+        },
+        "description": {
+          "en": "Releases a puff of aromatic coconut and lemongrass smoke to blind and burn the enemy.",
+          "zh": "吐出帶有椰香與香茅氣味的濃煙，燻眼並灼傷敵人。"
+        },
+        "power": 1,
+        "cooldown": 0
+      },
+      {
+        "id": "otah-tot-skill-2",
+        "name": {
+          "en": "Chili Paste Nibble",
+          "zh": "辣味魚蓉咬"
+        },
+        "description": {
+          "en": "Snaps at the enemy with spicy, chili-infused fish paste that leaves a lingering sting.",
+          "zh": "用混入辣椒的魚蓉輕咬敵人，造成持續的刺痛。"
+        },
+        "power": 1.4,
+        "cooldown": 2
+      }
+    ],
+    "evolvesTo": "otah-swashbuckler",
+    "evolutionRequirement": {
+      "items": {
+        "otak-otak-clan-essence": 5
+      },
+      "checkinCentres": 2
+    },
+    "modelUrl": "/models/otah-tot.glb",
+    "modelHeightM": 0.3,
+    "animated": true,
+    "modelYaw": 1.5707963267948966
+  },
+  "evolutionItemId": "otak-otak-clan-essence",
+  "evolutionItem": {
+    "id": "otak-otak-clan-essence",
+    "name": {
+      "en": "Otak-Otak Essence",
+      "zh": "烏達精華"
+    },
+    "description": {
+      "en": "Concentrated essence of Otak-Otak, fuel for evolution.",
+      "zh": "濃縮嘅烏達精華，進化嘅燃料。"
+    },
+    "icon": "star"
+  },
+  "decision": {
+    "verdict": "approve",
+    "by": "manual",
+    "at": "2026-07-20T07:32:31.890Z"
+  },
+  "telegram": {
+    "awaitingReason": false
+  }
+}

@@ -1,0 +1,198 @@
+# 系統二 — 自動出寵物（分段：concept-art → 睇圖 → from-3d → 最終審批）
+#
+# 呢個 workflow 只負責生成、開／更新 PR 同通知；最終 approve 先由 pet-publish.yml 合併。
+name: pet-pipeline
+
+on:
+  schedule:
+    - cron: "0 2 * * 1" # 每週一一條龍出 catalogue
+  repository_dispatch:
+    types: [pet-generate]
+  workflow_dispatch:
+    inputs:
+      job_id:
+        description: "指定 pet_jobs UUID（concept-art 必填）"
+        required: false
+      draft_id:
+        description: "續跑用 draft id（from-3d 必填）"
+        required: false
+      kind:
+        description: "工單類型：catalogue 或 commission"
+        required: false
+        default: "catalogue"
+      phase:
+        description: "concept-art | from-3d | full"
+        required: false
+        default: "concept-art"
+      instructions:
+        description: "今次出寵物嘅方向（可留空）"
+        required: false
+      live:
+        description: "true = 真生成；false = dry-run mock"
+        required: false
+        default: "false"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: pet-pipeline
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      MESHY_API_KEY: ${{ secrets.MESHY_API_KEY }}
+      TRIPO_API_KEY: ${{ secrets.TRIPO_API_KEY }}
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      JOB_ID: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.jobId || inputs.job_id }}
+      DRAFT_ID: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.draftId || inputs.draft_id }}
+      KIND: ${{ github.event_name == 'schedule' && 'catalogue' || github.event_name == 'repository_dispatch' && github.event.client_payload.kind || inputs.kind }}
+      PHASE: ${{ github.event_name == 'schedule' && 'full' || github.event_name == 'repository_dispatch' && github.event.client_payload.phase || inputs.phase || 'concept-art' }}
+      INSTRUCTIONS: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.instructions || inputs.instructions }}
+      LIVE_REQUESTED: ${{ github.event_name == 'schedule' && 'true' || github.event_name == 'repository_dispatch' && github.event.client_payload.live || inputs.live }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          # supabase-js 2.110+ 要 Node 22 原生 WebSocket，唔係會 claim job 失敗
+          node-version: 22
+          cache: npm
+
+      - name: Install deps
+        env:
+          # pipeline 唔使瀏覽器；唔 skip 會喺 npm 卡 Playwright 下載
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+        run: |
+          npm ci || npm install
+          # npm 可能改 package-lock；還原免阻擋之後 checkout 寵物分支
+          git restore package-lock.json 2>/dev/null || git checkout -- package-lock.json || true
+
+      - name: Resolve pet id / checkout branch
+        run: |
+          PHASE_EFF="${PHASE:-concept-art}"
+          echo "PHASE_EFF=$PHASE_EFF" >> "$GITHUB_ENV"
+          if [ "$PHASE_EFF" = "from-3d" ]; then
+            if [ -z "$DRAFT_ID" ]; then
+              echo "from-3d 需要 draftId"
+              exit 1
+            fi
+            echo "PET_ID=$DRAFT_ID" >> "$GITHUB_ENV"
+            BRANCH="auto-pet/$DRAFT_ID"
+            git restore package-lock.json 2>/dev/null || true
+            git fetch origin "$BRANCH" || true
+            if git show-ref --verify --quiet "refs/remotes/origin/$BRANCH"; then
+              git checkout -B "$BRANCH" "origin/$BRANCH"
+              # 寵物分支可能舊過 master（腳本／硬閘修復）——合併先跑，唔好用過期 gen-3d
+              git fetch origin master
+              git -c user.name="hawker-hunt-bot" -c user.email="bot@users.noreply.github.com" \
+                merge origin/master -m "chore: sync master into $BRANCH before from-3d"
+            else
+              echo "搵唔到分支 $BRANCH（concept-art 要先成功開過 PR）"
+              exit 1
+            fi
+          else
+            echo "PET_ID=auto-$(date +%Y%m%d)-$(openssl rand -hex 2)" >> "$GITHUB_ENV"
+          fi
+
+      - name: Generate pet draft
+        run: |
+          ARGS=(--id="$PET_ID" --no-approve "--phase=$PHASE_EFF")
+          if [ -n "$JOB_ID" ] && [ "$PHASE_EFF" != "from-3d" ]; then ARGS+=("--job=$JOB_ID"); fi
+          if [ -n "$KIND" ] && [ "$PHASE_EFF" != "from-3d" ]; then ARGS+=("--kind=$KIND"); fi
+
+          # 2D 只要 Gemini；3D 有 Meshy 或 Tripo；full 有任何生成 key 就照 live graceful 跑。
+          WANT_LIVE=0
+          if [ "$LIVE_REQUESTED" = "true" ]; then
+            if [ "$PHASE_EFF" = "concept-art" ] && [ -n "$GEMINI_API_KEY" ]; then WANT_LIVE=1; fi
+            if [ "$PHASE_EFF" = "from-3d" ] && [ -n "$MESHY_API_KEY$TRIPO_API_KEY" ]; then WANT_LIVE=1; fi
+            if [ "$PHASE_EFF" = "full" ] && [ -n "$GEMINI_API_KEY$MESHY_API_KEY$TRIPO_API_KEY" ]; then WANT_LIVE=1; fi
+          fi
+          if [ "$WANT_LIVE" = "1" ]; then
+            ARGS+=("--live")
+            echo "🔴 LIVE phase=$PHASE_EFF"
+          else
+            echo "🟢 dry-run mock（phase=$PHASE_EFF）"
+          fi
+          if [ -n "$INSTRUCTIONS" ]; then ARGS+=("--instructions=$INSTRUCTIONS"); fi
+          node scripts/pipeline/run.mjs "${ARGS[@]}"
+
+          STATUS=$(node -p "require('./content/pending-pets/$PET_ID.json').status")
+          echo "DRAFT_STATUS=$STATUS" >> "$GITHUB_ENV"
+          # needs-3d-retry = 假 3D，唔開「待最終審批」PR（仍可 upload artifact 排查）
+          if [ "$STATUS" = "awaiting-art-review" ] || [ "$STATUS" = "awaiting-approval" ]; then
+            echo "COMMIT_OK=1" >> "$GITHUB_ENV"
+          else
+            echo "ℹ️ status=$STATUS，唔開／唔更新 PR"
+            if [ "$STATUS" = "needs-3d-retry" ]; then
+              echo "❌ 真 3D 未齊，拒絕假待審"
+              exit 1
+            fi
+          fi
+
+      # 最終待審：自動截玩家＋敵位四檔 yaw，上傳 Storage；後台揀 yaw（唔改現有精靈 species.ts）
+      - name: Facing calibrate shots (awaiting-approval)
+        if: env.DRAFT_STATUS == 'awaiting-approval'
+        run: |
+          npx playwright install chromium --with-deps
+          npm run dev -- -p 3000 &
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:3000 >/dev/null; then echo "dev ready"; break; fi
+            sleep 2
+          done
+          curl -sf http://localhost:3000 >/dev/null || { echo "dev server 起唔到"; exit 1; }
+          DIAG_BASE=http://localhost:3000 node scripts/pipeline/facing-cal-shots.mjs "$PET_ID"
+          # 停 dev（best-effort）
+          pkill -f "next dev" || true
+
+      - name: Commit draft + assets and open/update PR
+        if: env.COMMIT_OK == '1'
+        run: |
+          git config user.name "hawker-hunt-bot"
+          git config user.email "bot@users.noreply.github.com"
+          BRANCH="auto-pet/$PET_ID"
+          git checkout -B "$BRANCH"
+          git add "content/pending-pets/$PET_ID.json" public/spirits public/models || true
+          if git diff --cached --quiet; then
+            echo "冇新改動可 commit"
+          else
+            if [ "$DRAFT_STATUS" = "awaiting-art-review" ]; then
+              git commit -m "feat(pet): art review $PET_ID (concept+art only)"
+            else
+              git commit -m "feat(pet): draft $PET_ID (pending 後台 approval)"
+            fi
+            git push -u origin "$BRANCH"
+          fi
+
+          if [ "$DRAFT_STATUS" = "awaiting-art-review" ]; then
+            TITLE="🎨 auto pet art: $PET_ID（等睇立繪）"
+            BODY="概念＋立繪已完成（未做 3D）。請去後台「待睇立繪」睇圖；滿意再撳「繼續 3D」。"
+          else
+            TITLE="🍜 auto pet: $PET_ID（等後台審批）"
+            BODY="3D／技能已完成。請去後台揀面向 yaw（玩家背／敵位面）再最終批准；approve → publish。"
+          fi
+          # repo 預設分支係 master（唔係 main）
+          gh pr create --base master --head "$BRANCH" --title "$TITLE" --body "$BODY" \
+            || gh pr edit "$BRANCH" --title "$TITLE" --body "$BODY" \
+            || echo "PR 已存在或更新唔到，繼續。"
+
+      - name: Notify art review / approval
+        if: env.COMMIT_OK == '1'
+        run: node scripts/pipeline/request-approval.mjs "$PET_ID" || echo "通知 skip"
+
+      - name: Upload pending draft(s)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pending-pets
+          path: content/pending-pets/
+          if-no-files-found: ignore

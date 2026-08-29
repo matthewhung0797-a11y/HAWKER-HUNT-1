@@ -1,0 +1,7 @@
+{
+  "label": "切磋優先",
+  "status": "done",
+  "durationMs": 80000,
+  "path": "battle-first",
+  "notes": ["facing 僅截圖抽樣；硬閘請跑 npm run facing:static / facing:golden"]
+}

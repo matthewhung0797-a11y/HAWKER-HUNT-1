@@ -1,0 +1,117 @@
+# 系統二 — 按 approve 自動出街（雲端完成，唔使你部電腦開機）
+#
+# 觸發：後台 approve/reject → GitHub repository_dispatch。
+#   pet-approved → checkout auto-pet/<id> 分支 → set-decision approve → publish --commit
+#                  （append species.ts / centres.ts / items.ts）→ tsc 閘 → 合併落 master
+#                  → Vercel 偵測 master push 自動部署上線。
+#   pet-rejected → 關閉 PR + 刪分支。
+#
+# 安全閘：publish 只接受「已批准」draft；合併前一定跑 tsc，唔過就唔合併並通知營運。
+# DB status=published 只喺 merge 成功後先寫，避免圖鑑同看板不一致。
+name: pet-publish
+
+on:
+  repository_dispatch:
+    types: [pet-approved, pet-rejected]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: pet-publish-${{ github.event.client_payload.id }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      PET_ID: ${{ github.event.client_payload.id }}
+      BRANCH: auto-pet/${{ github.event.client_payload.id }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          # 同 pet-pipeline：supabase-js 要 Node 22 原生 WebSocket
+          node-version: 22
+          cache: npm
+      - name: Install deps
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+        run: |
+          npm ci || npm install
+          # npm 可能改 package-lock；還原免阻擋之後 checkout 寵物分支
+          git restore package-lock.json 2>/dev/null || git checkout -- package-lock.json || true
+
+      # ── 否決：關 PR + 刪分支 ──
+      - name: Reject — close PR & delete branch
+        if: github.event.action == 'pet-rejected'
+        run: |
+          gh pr close "$BRANCH" --delete-branch --comment "❌ 喺後台否決咗，自動關閉。" || echo "冇 PR 可關（可能已關）。"
+          node scripts/ops/notify-telegram.mjs "🚫 已否決並關閉 PR：\`$PET_ID\`" || true
+
+      # ── 批准：checkout 分支 → 批准 → publish --commit → tsc 閘 → push → 合併 master ──
+      - name: Approve — checkout pet branch
+        if: github.event.action == 'pet-approved'
+        run: |
+          git restore package-lock.json 2>/dev/null || true
+          git fetch origin "$BRANCH"
+          git checkout -B "$BRANCH" "origin/$BRANCH"
+          # 分支可能舊過 master（publish hydrate／硬閘）——合併先跑
+          git fetch origin master
+          git -c user.name="hawker-hunt-bot" -c user.email="bot@users.noreply.github.com" \
+            merge origin/master -m "chore: sync master into $BRANCH before publish"
+
+      - name: Approve — set-decision + publish (append species.ts) + tsc gate
+        if: github.event.action == 'pet-approved'
+        env:
+          PET_PIPELINE_DEFER_PUBLISHED: "1"
+        run: |
+          node scripts/pipeline/set-decision.mjs "$PET_ID" approve "後台 approve"
+          PET_PIPELINE_COMMIT=1 node scripts/pipeline/publish.mjs "$PET_ID" --commit
+          if [ -f jf-openhuninn.ttf ]; then
+            node scripts/build-font.mjs || echo "⚠️ 字型子集重建失敗，繼續用現有字型檔"
+          else
+            echo "ℹ️ 冇 jf-openhuninn.ttf，略過字型子集重建"
+          fi
+          echo "── tsc 閘 ──"
+          npx tsc --noEmit
+          echo "── facing 靜態閘（A：只查今次 draft 三階）──"
+          node scripts/check-facing-static.mjs --draft="$PET_ID"
+
+      - name: Approve — commit & push branch
+        if: github.event.action == 'pet-approved'
+        run: |
+          git config user.name "hawker-hunt-bot"
+          git config user.email "bot@users.noreply.github.com"
+          # 唔好把 install 弄髒嘅 lock 一齊 commit
+          git restore package-lock.json 2>/dev/null || true
+          git add -A
+          git reset HEAD -- package-lock.json 2>/dev/null || true
+          git commit -m "feat(pet): publish $PET_ID (approved via 後台)" || echo "冇改動可 commit"
+          git push origin "$BRANCH"
+
+      - name: Approve — ensure PR + merge to master（Vercel 會自動部署）
+        if: github.event.action == 'pet-approved'
+        run: |
+          gh pr create --base master --head "$BRANCH" \
+            --title "feat(pet): publish $PET_ID" \
+            --body "後台批准自動出街。合併後 Vercel 部署，圖鑑先會見得到。" \
+            || echo "PR 已存在，繼續 merge"
+          gh pr merge "$BRANCH" --squash --delete-branch --admin
+          node scripts/pipeline/set-pet-status.mjs "$PET_ID" published
+          node scripts/ops/notify-telegram.mjs "🎉 *$PET_ID* 已上線！已合併落 master，Vercel 部署緊（約 2–3 分鐘）。" || true
+
+      # ── 任何一步失敗 → 報警；DB 唔好留假 published ──
+      - name: Notify on failure
+        if: failure() && github.event.action == 'pet-approved'
+        run: |
+          node scripts/pipeline/set-pet-status.mjs "$PET_ID" approved || true
+          node scripts/ops/notify-telegram.mjs "⚠️ *$PET_ID* 自動出街失敗（可能 tsc 唔過、PR 或衝突）。狀態已改返 approved，請睇 GitHub Actions log／後台重試上線。" || true
