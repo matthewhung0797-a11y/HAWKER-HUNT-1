@@ -92,6 +92,37 @@ function claimedKey(m: { id: string; period: "daily" | "once" }): string {
   return m.period === "daily" ? `hh-mclaim-${getTodayKey()}-${m.id}` : `hh-mclaim-once-${m.id}`;
 }
 
+// 每日抽選數：後台 active 每日任務池中隨機抽幾多個出嚟做「今日任務」
+const DAILY_PICK_COUNT = 3;
+
+/**
+ * 後台每日任務池 → 每日隨機抽 3 個（當日鎖定：同一天內容固定，跨日重抽）。
+ * 抽選結果存 localStorage（hh-mdaily-pick-{todayKey}），每部機各自隨機；
+ * 舊抽選中已過期/停用的任務自動剔除並補抽，池不足 3 個則全顯示。
+ */
+function pickDailyMissions(pool: GameMission[], todayKey: string): string[] {
+  if (typeof window === "undefined") return pool.map((m) => m.id); // SSR 不抽，等 client
+  const key = `hh-mdaily-pick-${todayKey}`;
+  let picked: string[] = [];
+  try {
+    const raw = readLS(key);
+    const arr = raw ? JSON.parse(raw) : null;
+    if (Array.isArray(arr)) picked = arr.filter((x) => typeof x === "string");
+  } catch {
+    /* ignore */
+  }
+  const activeIds = new Set(pool.map((m) => m.id));
+  picked = picked.filter((id) => activeIds.has(id)); // 剔除已落架嘅舊抽選
+  const remaining = pool.filter((m) => !picked.includes(m.id));
+  const need = Math.max(0, Math.min(DAILY_PICK_COUNT, pool.length) - picked.length);
+  if (need > 0) {
+    const shuffled = [...remaining].sort(() => Math.random() - 0.5);
+    picked = [...picked, ...shuffled.slice(0, need).map((m) => m.id)];
+    writeLS(key, JSON.stringify(picked));
+  }
+  return picked;
+}
+
 function goalDescription(m: GameMission, locale: "zh" | "en"): string {
   const n = m.target;
   if (locale === "en") {
@@ -265,8 +296,15 @@ export function useMissions() {
   }, [dbMissions, todayKey]);
 
   const usingDb = (dbMissions?.length ?? 0) > 0;
+  // 後台每日任務池隨機抽 3（當日固定；池 ≤3 全顯示）。一次性任務不受影響。
+  const dailyPick = useMemo(() => {
+    if (!usingDb) return new Set<string>();
+    return new Set(pickDailyMissions(dbMissions!.filter((m) => m.period === "daily"), todayKey));
+  }, [dbMissions, todayKey, usingDb]);
   return {
-    dailyMissions: usingDb ? dbAsMissions.filter((m) => m.type === "daily") : updatedLegacy,
+    dailyMissions: usingDb
+      ? dbAsMissions.filter((m) => m.type === "daily" && dailyPick.has(m.id))
+      : updatedLegacy,
     specialMissions: usingDb ? dbAsMissions.filter((m) => m.type === "special") : [],
     claimMission,
   };
