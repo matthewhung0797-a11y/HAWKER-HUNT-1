@@ -101,29 +101,32 @@ const HOLD_TOL_H_MULT = 0.65;
 
 /**
  * 最後關頭：basic 冇 cfg＝唔觸發。
- * stage1 淨得衝屏撞，唔閃走（dashChance/escape = 0）。
- * stage2 escape 基礎好低——戲在反抗，唔係走甩。
+ * 衝屏撞和閃走獨立判定，先判閃走再判衝屏撞，機率獨立計算。
  */
 type LastStandCfg = {
-  /** 觸發門檻（grip） */
-  grip: number;
-  /** 基礎觸發機率 */
-  trigger: number;
-  /** 觸發時揀「閃走(B)」而唔係「衝屏撞(A)」嘅機率 */
+  /** 閃走觸發門檻（grip） */
+  dashGrip: number;
+  /** 閃走觸發機率 */
   dashChance: number;
+  /** 衝屏撞觸發門檻（grip） */
+  chargeGrip: number;
+  /** 衝屏撞觸發機率 */
+  chargeChance: number;
   /** 事件後 grip 掉幾多 */
   gripDrop: number;
   /** 閃走時「真逃走」基礎機率（0 = 唔會走甩） */
   escape: number;
   /** 逃走反應窗（毫秒） */
   escapeWindowMs: number;
+  /** 最大觸發次數 */
+  maxTriggers: number;
 };
 const LAST_STAND_CFG: Record<CaptureDiff, LastStandCfg | undefined> = {
   basic: undefined,
-  // 1 階：可衝屏撞反抗；完全唔閃走／唔真逃走
-  stage1: { grip: 76, trigger: 0.35, dashChance: 0, gripDrop: 22, escape: 0, escapeWindowMs: 0 },
-  // 約一半場次有戲；掉 20 仍可追返。escape ~3% 起
-  stage2: { grip: 72, trigger: 0.5, dashChance: 0.55, gripDrop: 20, escape: 0.03, escapeWindowMs: 1400 },
+  // stage1：閃走 grip≥70 60% 觸發1次；衝屏撞 grip≥80 30% 觸發1次
+  stage1: { dashGrip: 70, dashChance: 0.60, chargeGrip: 80, chargeChance: 0.30, gripDrop: 22, escape: 0, escapeWindowMs: 0, maxTriggers: 1 },
+  // stage2：閃走 grip≥72 80% 觸發2次；衝屏撞 grip≥82 30% 只觸發1次（chargeMax 硬限）
+  stage2: { dashGrip: 72, dashChance: 0.80, chargeGrip: 82, chargeChance: 0.30, gripDrop: 20, escape: 0.03, escapeWindowMs: 1400, maxTriggers: 2 },
 };
 
 /** level 對流失／逃走嘅加成（相對該階「最低野生等級」） */
@@ -145,8 +148,8 @@ const CHARGE_OUT_MS = 360;
 const LAST_STAND_CALM_MULT = 0.5;
 const LAST_STAND_PET_CUT = 0.15;
 
-/** 閃光變異機率（1/50） */
-const SHINY_RATE = 0.02;
+/** 閃光變異機率（已停用） */
+const SHINY_RATE = 0;
 /** 縮圈由呢個倍數縮到 MIN；1.0 = 貼住紅圈（甜蜜點） */
 const RING_MAX = 2.3;
 const RING_MIN = 0.55;
@@ -728,16 +731,13 @@ function WanderingSpirit({
     onTrack({ x, y, inFront, onScreen, h: hPx });
   });
 
+  // 捕捉頁所有動作只用 idle/walk：attack/hit/victory/skill 都降級為 idle
   const finalAnim: SpiritAnim =
-    ai.current.special === "charge"
-      ? "attack"
-      : ai.current.special === "dash"
+    ai.current.special === "dash"
+      ? "walk"
+      : moving
         ? "walk"
-        : anim === "hit"
-          ? "hit"
-          : frozen
-            ? "idle"
-            : (emote ?? (moving ? "walk" : "idle"));
+        : "idle";
 
   return (
     <>
@@ -748,6 +748,7 @@ function WanderingSpirit({
           timeScale={finalAnim === "walk" ? walkTs : 1}
           shadow={false}
           shiny={shiny}
+          faceCamera={speciesId === "chilli-baby" || speciesId === "nasi-lemak-tot" ? 0 : true}
           onClipEnd={() => {
             if (ai.current.mode === "emote") {
               setEmote(null);
@@ -1022,7 +1023,7 @@ function CaptureInner() {
   // 閃光變異 roll（client-only 避免 hydration mismatch；?shiny=1 測試用）
   const [shiny, setShiny] = useState(false);
   useEffect(() => {
-    setShiny(params.get("shiny") === "1" || Math.random() < SHINY_RATE);
+    setShiny(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -1039,8 +1040,10 @@ function CaptureInner() {
   const frenzyRef = useRef(false);
 
   // ── 最後關頭（衝屏撞 / 閃走 / 逃走）──
-  /** 每回合搏鬥只觸發一次 */
-  const lastStandDoneRef = useRef(false);
+  /** stage1 觸發1次，stage2 觸發2次——衝屏撞和閃走各自獨立配額 */
+  const lastStandCountRef = useRef(0);
+  const chargeCountRef = useRef(0);
+  const lastStandMaxRef = useRef(1);
   /** cutscene 進行中：暫停流失、封住重複觸發 */
   const lastStandActiveRef = useRef(false);
   const pauseDrainRef = useRef(false);
@@ -1193,8 +1196,9 @@ function CaptureInner() {
   // 精靈間唔中「狂暴」爆發：流失加倍＋狂撳效果減半，要頂住個波先推得郁。
   useEffect(() => {
     if (phase !== "struggle" || !speciesId) return;
-    // 入搏鬥：重置最後關頭狀態（每回合一次）
-    lastStandDoneRef.current = false;
+    // 入搏鬥：重置最後關頭狀態（maxTriggers 由 cfg 控制，衝屏撞和閃走各自計數）
+    lastStandCountRef.current = 0;
+    chargeCountRef.current = 0;
     lastStandActiveRef.current = false;
     pauseDrainRef.current = false;
     const drain = GRIP_DRAIN[diff] + levelDrainBonus(diff, wildLevel);
@@ -1264,7 +1268,8 @@ function CaptureInner() {
           resolveChaseCaught(); // 博命追逐：撳中即解
         } else {
           within = true;
-          const per = frenzyRef.current ? GRIP_PER_TAP * FRENZY_TAP_MULT : GRIP_PER_TAP;
+          const tierPer = TIER_GRIP[selectedTierRef.current] ?? GRIP_PER_TAP;
+          const per = frenzyRef.current ? tierPer * FRENZY_TAP_MULT : tierPer;
           const want = per * newTaps;
           const give = Math.max(0, Math.min(want, capNow - tapGainUsed)); // 超過每秒上限嘅撳唔再計
           if (give > 0) {
@@ -1369,10 +1374,26 @@ function CaptureInner() {
   const chopsticks = useGameStore((s) => s.items["chopsticks"] ?? 0);
   const [needChopsticks, setNeedChopsticks] = useState(false);
 
+  // 筷子層級選擇
+  const CHOPSTICK_TIERS = [
+    { id: "wooden", name: { en: "Wooden", zh: "木筷" }, mult: 1, gripPer: 7 },
+    { id: "copper", name: { en: "Copper", zh: "銅筷" }, mult: 1.25, gripPer: 9 },
+    { id: "silver", name: { en: "Silver", zh: "銀筷" }, mult: 1.5, gripPer: 11 },
+    { id: "golden", name: { en: "Golden", zh: "金筷" }, mult: 2, gripPer: 14 },
+  ] as const;
+  const [selectedTier, setSelectedTier] = useState<string>("wooden");
+  const selectedTierRef = useRef("wooden");
+  selectedTierRef.current = selectedTier;
+  const allChopsticks = useGameStore((s) => s.items);
+
+  // 筷子層級 → 搏鬥每次撳補充嘅夾實度
+  const TIER_GRIP: Record<string, number> = { wooden: 7, copper: 9, silver: 11, golden: 14 };
+
   const startAiming = useCallback(async () => {
     sfxTap();
     // 0 筷：攔截入場，引導打卡（搏鬥開始先扣，呢度淨係閘）
-    if ((useGameStore.getState().items["chopsticks"] ?? 0) < 1) {
+    const tierKey = selectedTier === "wooden" ? "chopsticks" : `chopsticks_${selectedTier}`;
+    if ((useGameStore.getState().items[tierKey] ?? 0) < 1) {
       setNeedChopsticks(true);
       return;
     }
@@ -1582,7 +1603,7 @@ function CaptureInner() {
       return;
     }
     // 夾中：開始搏鬥扣 1 筷（失敗唔退）；唔夠就當夾空機會耗盡
-    if (!useGameStore.getState().spendChopstick()) {
+    if (!useGameStore.getState().spendChopstick(selectedTier === "wooden" ? undefined : selectedTier)) {
       setNeedChopsticks(true);
       setFailReason("miss");
       setTimeout(() => setPinch("open"), 450);
@@ -1632,15 +1653,13 @@ function CaptureInner() {
       (1 - LAST_STAND_PET_CUT * petRef.current);
     const escaping =
       forceEscape ?? (cfg.escape > 0 && Math.random() < escapeP);
-    // 可轉身模式（AR 陀螺儀／SLAM／3D 拖屏環繞）用大幅閃走，玩家要擰身追返；
-    // static（無相機控制嘅保底）先收窄，確保精靈仍留喺畫面夾得返
-    const canTurn = arMode === "gyro" || arMode === "slam" || arMode === "3d";
-    const mag = canTurn ? (escaping ? 120 : 70) : escaping ? 12 : 9;
+    // 所有模式都用大幅閃走（±90度），玩家要擰身追返
+    const mag = escaping ? 90 : 70;
     const yawDeg = (Math.random() < 0.5 ? -1 : 1) * mag;
     lastKindRef.current = escaping ? "dash-escape" : "dash-flee";
     pendingDashRef.current = { escaping, cfg };
     fxKey.current += 1;
-    setDashFx({ key: fxKey.current, yawDeg, far: canTurn && escaping });
+    setDashFx({ key: fxKey.current, yawDeg, far: escaping });
     setStreakKey((k) => k + 1);
     showBubble(escaping ? "bubblesEscapeTele" : "bubblesFlee");
     sfxEscape();
@@ -1701,24 +1720,62 @@ function CaptureInner() {
   function maybeLastStand() {
     const cfg = LAST_STAND_CFG[diff];
     if (!cfg) return;
-    if (lastStandDoneRef.current || lastStandActiveRef.current) return;
-    if (gripRef.current < cfg.grip) return;
-    lastStandDoneRef.current = true; // 一回合 roll 一次，roll 唔中都唔會再嚟
+    if (lastStandActiveRef.current) return;
+
     const force = lsForce;
-    if (!force) {
-      const p =
-        cfg.trigger *
-        (calmRef.current ? LAST_STAND_CALM_MULT : 1) *
-        (1 - LAST_STAND_PET_CUT * petRef.current);
-      if (Math.random() >= p) return;
+    const grip = gripRef.current;
+    const calmMult = calmRef.current ? LAST_STAND_CALM_MULT : 1;
+    const petCut = 1 - LAST_STAND_PET_CUT * petRef.current;
+    /** 兩機制完全獨立：各自有 maxTriggers 配額（lastStandCountRef = 閃走、chargeCountRef = 衝屏撞） */
+
+    // 衝屏撞（grip ≥ chargeGrip，獨立判定，到達門檻立即擲骰；每場戰鬥最多 1 次）
+    if (force === "charge") {
+      if (chargeCountRef.current < 1) {
+        chargeCountRef.current++;
+        lastStandActiveRef.current = true;
+        pauseDrainRef.current = true;
+        startCharge(cfg);
+      }
+      return;
     }
-    lastStandActiveRef.current = true;
-    pauseDrainRef.current = true;
-    if (force === "charge") startCharge(cfg);
-    else if (force === "dash") startDash(cfg, false);
-    else if (force === "escape") startDash(cfg, true);
-    else if (Math.random() < cfg.dashChance) startDash(cfg);
-    else startCharge(cfg);
+    if (!force && chargeCountRef.current < 1 && grip >= cfg.chargeGrip) {
+      const chargeP = cfg.chargeChance * calmMult * petCut;
+      if (Math.random() < chargeP) {
+        chargeCountRef.current++;
+        lastStandActiveRef.current = true;
+        pauseDrainRef.current = true;
+        startCharge(cfg);
+      }
+    }
+
+    // 閃走（grip ≥ dashGrip，獨立判定，到達門檻立即擲骰；觸發咗衝屏撞都要繼續判）
+    if (force === "dash") {
+      if (lastStandCountRef.current < cfg.maxTriggers && !lastStandActiveRef.current) {
+        lastStandCountRef.current++;
+        lastStandActiveRef.current = true;
+        pauseDrainRef.current = true;
+        startDash(cfg, false);
+      }
+      return;
+    }
+    if (force === "escape") {
+      if (lastStandCountRef.current < cfg.maxTriggers && !lastStandActiveRef.current) {
+        lastStandCountRef.current++;
+        lastStandActiveRef.current = true;
+        pauseDrainRef.current = true;
+        startDash(cfg, true);
+      }
+      return;
+    }
+    if (!force && lastStandCountRef.current < cfg.maxTriggers && grip >= cfg.dashGrip && !lastStandActiveRef.current) {
+      const dashP = cfg.dashChance * calmMult * petCut;
+      if (Math.random() < dashP) {
+        lastStandCountRef.current++;
+        lastStandActiveRef.current = true;
+        pauseDrainRef.current = true;
+        startDash(cfg, false);
+      }
+    }
   }
 
   /** 搏鬥「按住追蹤」：指尖座標寫入 ref（raf loop 只讀 ref 計夾實度）；
@@ -2157,9 +2214,6 @@ function CaptureInner() {
             <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-black text-white">
               Lv.{wildLevel}
             </span>
-            <span className="rounded-full bg-gold px-2 py-0.5 text-[10px] font-black text-ink">
-              {t(`rarity.${species.rarity}`)}
-            </span>
             <UIIcon name={ELEMENT_INFO[species.element].icon} size={16} />
           </div>
           {shiny && (
@@ -2361,6 +2415,38 @@ function CaptureInner() {
         </div>
       )}
 
+      {/* intro + aiming：筷子選擇器 */}
+      {(phase === "intro" || phase === "aiming") && (
+        <div className="absolute right-3 flex flex-col gap-2" style={{ zIndex: 9998, top: "150px" }}>
+          {CHOPSTICK_TIERS.map((tier) => {
+            const tierKey = tier.id === "wooden" ? "chopsticks" : `chopsticks_${tier.id}`;
+            const tierCount = allChopsticks[tierKey] ?? 0;
+            const imgSrc = `/ui/chopstick-${tier.id}.png`;
+            return (
+              <button
+                key={tier.id}
+                onClick={(e) => { e.stopPropagation(); setSelectedTier(tier.id); }}
+                onPointerDown={(e) => { e.stopPropagation(); }}
+                className={`flex flex-col items-center gap-0.5 rounded-xl p-1.5 transition-all ${
+                  selectedTier === tier.id
+                    ? "ring-2 ring-gold scale-110 bg-white/80"
+                    : "opacity-50 bg-white/40"
+                }`}
+                style={{ touchAction: "manipulation" }}
+              >
+                <img
+                  src={imgSrc}
+                  alt={tier.name[locale]}
+                  style={{ width: 36, height: 36 }}
+                  draggable={false}
+                />
+                <span style={{ fontSize: "11px", fontWeight: 900, color: "#4a2c14" }}>×{tierCount}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+
       {/* intro：開始畫面 */}
       {phase === "intro" && (
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-end gap-4 bg-gradient-to-t from-black/70 via-transparent pb-16">
@@ -2368,7 +2454,11 @@ function CaptureInner() {
             {t("onboarding.step3Body")}
           </p>
           <p className="flex items-center gap-1.5 rounded-full bg-black/55 px-4 py-1.5 text-sm font-bold text-white">
-            <UIIcon name="chopsticks" size={18} /> {t("capture.chopsticksLeft", { count: chopsticks })}
+            <img src={`/ui/chopstick-${selectedTier}.png`} alt="" style={{ width: 18, height: 18 }} draggable={false} />
+            {(() => {
+              const tk = selectedTier === "wooden" ? "chopsticks" : `chopsticks_${selectedTier}`;
+              return allChopsticks[tk] ?? 0;
+            })()}
           </p>
           <button
             onClick={startAiming}
@@ -2572,7 +2662,7 @@ function CaptureInner() {
             ))}
           </div>
 
-          <h1 className="mt-auto text-4xl font-black text-gold-light drop-shadow-[0_0_20px_rgba(232,200,96,0.7)]">
+          <h1 className="mt-auto text-[clamp(28px,8vw,42px)] font-black text-gold-light drop-shadow-[0_0_20px_rgba(232,200,96,0.7)]">
             {t("capture.success")}
           </h1>
           {shiny && (
@@ -2582,7 +2672,8 @@ function CaptureInner() {
           )}
 
           {/* 以前 h-72＋0.85m 歸一化，煎蕊仔呢類矮肥寵會頂到標題同資料卡；收細到 h-52＋0.55m */}
-          <div className="flex h-52 w-52 items-center justify-center">
+          {/* 自適應：以視窗高度為上限，細機唔會擠爆、大機保持最大 208px */}
+          <div className="flex aspect-square w-[min(208px,32dvh)] items-center justify-center">
             {webglOk && species.modelUrl ? (
               <Canvas camera={{ fov: 45, position: [0, 0.35, 1.35] }} gl={{ alpha: true }}>
                 <ambientLight intensity={1.2} />
@@ -2593,7 +2684,7 @@ function CaptureInner() {
                     position={[0, -0.28, 0]}
                     scale={0.55 / (species.modelHeightM ?? 0.5)}
                   >
-                    <SpiritModel speciesId={speciesId} spin shiny={shiny} />
+                    <SpiritModel speciesId={speciesId} spin shiny={shiny} faceCamera={speciesId === "chilli-baby" || speciesId === "nasi-lemak-tot" ? 0 : true} />
                   </group>
                 </Suspense>
               </Canvas>
@@ -2603,7 +2694,7 @@ function CaptureInner() {
                 <img
                   src={`/spirits/full/${speciesId}.webp`}
                   alt=""
-                  className="h-44 w-auto drop-shadow-[0_12px_18px_rgba(0,0,0,0.6)]"
+                  className="h-[min(176px,26dvh)] w-auto max-w-full object-contain drop-shadow-[0_12px_18px_rgba(0,0,0,0.6)]"
                   draggable={false}
                 />
               </div>

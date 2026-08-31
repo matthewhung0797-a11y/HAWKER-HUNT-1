@@ -6,7 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { HAWKER_CENTRES } from "@/content/centres";
-import { SPECIES_MAP } from "@/content/species";
+import { SPECIES, SPECIES_MAP } from "@/content/species";
 import type { HawkerCentre } from "@/content/types";
 import { distanceM, formatDistance } from "@/lib/geo";
 import { NAUTICAL_STYLE } from "@/lib/mapStyle";
@@ -42,21 +42,20 @@ function makeMarkerElement(centre: HawkerCentre): {
   el: HTMLButtonElement;
 } {
   const wrap = document.createElement("div");
-  wrap.style.cssText = "width:52px;height:62px;overflow:visible";
+  wrap.style.cssText = "width:80px;height:90px;overflow:visible";
   const scaler = document.createElement("div");
   scaler.style.cssText = "width:100%;height:100%;overflow:visible";
   const el = document.createElement("button");
   el.className = "marker-bob";
   el.style.cssText =
-    "position:relative;width:52px;height:52px;border-radius:9999px;border:3px solid #c9a227;background:#F2E7CF;cursor:pointer;box-shadow:0 4px 10px rgba(74,44,20,.45);padding:0;overflow:visible";
+    "position:relative;width:80px;height:80px;border-radius:9999px;border:3px solid #c9a227;background:#F2E7CF;cursor:pointer;box-shadow:0 4px 10px rgba(74,44,20,.45);padding:0;overflow:visible";
   el.style.animationDelay = `${-(Math.random() * 3).toFixed(2)}s`;
   const img = document.createElement("img");
-  img.src = spiritFullArtUrl(centre.featuredSpeciesId);
+  img.src = "/ui/hawker-stall-icon.png";
   img.alt = "";
   img.draggable = false;
-  // contain 而唔係 cover：徽章都要見到成隻精靈（cover 會裁走頭頂同腳）
   img.style.cssText =
-    "width:88%;height:88%;margin:6%;border-radius:9999px;object-fit:contain;pointer-events:none";
+    "width:100%;height:100%;border-radius:9999px;object-fit:cover;pointer-events:none";
   const tip = document.createElement("span");
   tip.style.cssText =
     "position:absolute;left:50%;bottom:-9px;margin-left:-7px;width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:10px solid #c9a227";
@@ -94,6 +93,8 @@ type Wanderer = {
   pressed: boolean;
   /** 係咪已 snap 落真實道路（idle 後一次過分配） */
   onRoad: boolean;
+  /** 海上/山上精靈：永久隱藏（isOnLand 過濾） */
+  hidden: boolean;
 };
 
 /**
@@ -187,12 +188,24 @@ function roadsNear(map: maplibregl.Map, base: [number, number], maxMeters = 220)
   return lines;
 }
 
+/** 檢查座標是否在陸地上（非水面）——查 vector tiles 的 water 層 */
+function isOnLand(map: maplibregl.Map, lng: number, lat: number): boolean {
+  try {
+    const p = map.project([lng, lat]);
+    const feats = map.queryRenderedFeatures([p.x, p.y], { layers: ["water"] });
+    // 有 water feature = 在水面/海上
+    return feats.length === 0;
+  } catch {
+    return true; // 查不到時假設是陸地
+  }
+}
+
 function makeWanderer(
   map: maplibregl.Map,
   speciesId: string,
   base: [number, number],
   title: string,
-  onCatch: (speciesId: string) => void
+  onCatch: (speciesId: string, spiritPos: [number, number]) => void
 ): Wanderer {
   const root = document.createElement("div");
   // 注意：唔可以喺度落 position:relative——會蓋過 maplibre 嘅 .maplibregl-marker{position:absolute}，
@@ -200,14 +213,15 @@ function makeWanderer(
   // opacity 亦唔可以落喺 root：maplibre 每幀都會覆寫 marker element 嘅 style.opacity（cover-fade 功能），
   // 所以顯示／收埋要落喺內層 scaler。
   // root 保持 pointer-events:none（唔加 transform／position）；可撳目標落喺內層 bob（唔違反 marker 鐵律）。
-  root.style.cssText = "width:56px;height:56px;pointer-events:none;overflow:visible";
+  root.style.cssText = "width:52px;height:52px;pointer-events:none;overflow:visible";
   const scaler = document.createElement("div");
+  // transform-origin 底部中央：縮放時腳部（root 底邊）保持貼地
   scaler.style.cssText =
-    "position:absolute;inset:0;overflow:visible";
+    "position:absolute;inset:0;overflow:visible;transform-origin:50% 100%";
   const shadow = document.createElement("div");
   shadow.className = "spirit-shadow";
   shadow.style.cssText =
-    "position:absolute;bottom:-2px;left:15px;width:26px;height:8px;border-radius:9999px;background:rgba(74,44,20,.4)";
+    "position:absolute;bottom:0;left:13px;width:26px;height:8px;border-radius:9999px;background:rgba(74,44,20,.4)";
   const bob = document.createElement("div");
   bob.className = "spirit-bob";
   bob.style.cssText = "position:absolute;inset:0;overflow:visible;pointer-events:none";
@@ -218,8 +232,9 @@ function makeWanderer(
   img.src = `/spirits/full/${speciesId}.webp`;
   img.alt = "";
   img.draggable = false;
+  // 52px root 內，img 52px 填滿，object-position:bottom 令腳部貼底
   img.style.cssText =
-    "position:absolute;top:5px;left:5px;width:46px;height:46px;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(74,44,20,.35))";
+    "position:absolute;bottom:0;left:0;width:52px;height:52px;object-fit:contain;object-position:bottom;filter:drop-shadow(0 2px 3px rgba(74,44,20,.35))";
   bob.appendChild(img);
   scaler.append(shadow, bob);
   root.appendChild(scaler);
@@ -231,7 +246,7 @@ function makeWanderer(
   root.appendChild(hit);
 
   const start = randomNear(base, 60);
-  const marker = new maplibregl.Marker({ element: root, anchor: "center" }).setLngLat(start).addTo(map);
+  const marker = new maplibregl.Marker({ element: root, anchor: "bottom" }).setLngLat(start).addTo(map);
   const wanderer: Wanderer = {
     marker,
     root,
@@ -249,6 +264,7 @@ function makeWanderer(
     restUntil: performance.now() + Math.random() * 1500,
     pressed: false,
     onRoad: false,
+    hidden: false,
   };
 
   // 自判 tap：唔靠合成 click（精靈會郁，手指微動就令 click 落空）。
@@ -278,7 +294,7 @@ function makeWanderer(
     release();
     if (wasTap) {
       e.stopPropagation();
-      onCatch(speciesId);
+      onCatch(speciesId, wanderer.pos);
     }
   });
   hit.addEventListener("pointercancel", release);
@@ -313,6 +329,7 @@ export default function MapPage() {
   const watchdogRebuilds = useRef(0);
   // 初始值固定 true 避免 SSR/client hydration mismatch（isMuted 讀 localStorage），mount 後先同步真值
   const [soundOn, setSoundOn] = useState(true);
+  const [toast, setToast] = useState<string | null>(null);
 
   // 地圖主題音樂（autoplay 被拒會等首次手勢自動開始）
   // 兩邊 mute key 任一為靜音就當關聲，並寫齊兩邊（修舊版不同步）
@@ -340,7 +357,7 @@ export default function MapPage() {
         style: NAUTICAL_STYLE,
         // 開場遠景平視 → load 後電影式飛入傾斜 3D 視角
         center: SG_CENTER,
-        zoom: 11.2,
+        zoom: 14,
         pitch: 0,
         bearing: -30,
         maxPitch: 0,
@@ -402,7 +419,7 @@ export default function MapPage() {
     map.once("load", () => {
       map.flyTo({
         center: playerPosRef.current ?? INTRO_TARGET,
-        zoom: 15.05,
+        zoom: 14,
         pitch: 0,
         bearing: -12,
         duration: 3200,
@@ -431,47 +448,69 @@ export default function MapPage() {
         .addTo(map);
     }
 
-    // 野生精靈遊走：每個據點隨機抽 1–2 隻 spawn pool 精靈喺附近漫步
-    // （每次入地圖見到唔同精靈，圖鑑擴充後世界感更強）
+    // 野生精靈生成：每個據點 1 公里內 10 隻（海上/山上會被 isOnLand 過濾）
     const wanderers: Wanderer[] = [];
+    const SPAWN_RADIUS_M = 1000;
+
+    const basicSpirits = SPECIES.filter((s) => s.rarity === "basic" && s.stage === 1).map((s) => s.id);
+
     for (const centre of HAWKER_CENTRES) {
-      // 撳遊走精靈 → 入捕捉頁捉佢（帶埋所屬據點，捕獲地正確）
-      const catchWild = (sid: string) => {
-        sfxTap();
-        router.push(`/capture?species=${sid}&centre=${centre.id}`);
-      };
-      // 只出一階「普通貨色」（stage 1；進化形留返打／進化），易捉又夠世界感。
-      // pool 過濾後如果空（理論上唔會）就退返原 pool 保底。
-      const basics = centre.spawnPool.filter((id) => SPECIES_MAP[id]?.stage === 1);
-      const source = basics.length ? basics : centre.spawnPool;
-      const shuffled = [...source].sort(() => Math.random() - 0.5);
-      // 每個據點 3–5 隻；pool 唔夠就循環補（容許同種多隻，捉多啲）
-      const count = 3 + Math.floor(Math.random() * 3);
-      for (let i = 0; i < count; i++) {
-        const speciesId = shuffled[i % shuffled.length];
+      const checkedIn = store.todayCheckinCount(centre.id) > 0;
+
+      // 構建該據點的生成池：基礎原料 + 一階系列
+      const stage1Pool = centre.spawnPool
+        .map((id) => SPECIES_MAP[id])
+        .filter((sp) => sp && sp.stage === 1 && sp.rarity !== "basic")
+        .map((sp) => sp.id);
+      const pool = [...basicSpirits, ...stage1Pool];
+
+      // 打卡後加入二階精靈
+      const stage2Pool = checkedIn
+        ? SPECIES.filter((sp) => {
+            if (sp.stage !== 2) return false;
+            return centre.spawnPool.some((poolId) => {
+              const poolSp = SPECIES_MAP[poolId];
+              return poolSp && poolSp.evolvesTo === sp.id;
+            });
+          }).map((sp) => sp.id)
+        : [];
+      const fullPool = [...pool, ...stage2Pool];
+
+      if (fullPool.length === 0) continue;
+
+      // 每據點 10 隻
+      for (let i = 0; i < 10; i++) {
+        const speciesId = fullPool[Math.floor(Math.random() * fullPool.length)];
         const sp = SPECIES_MAP[speciesId];
-        const title = sp ? `${sp.name[locale]} · ${t("map.catchIt")}` : t("map.catchIt");
-        wanderers.push(makeWanderer(map, speciesId, [centre.lng, centre.lat], title, catchWild));
+        if (!sp) continue;
+        const title = `${sp.name[locale]} · ${t("map.catchIt")}`;
+        const base = randomNear([centre.lng, centre.lat], SPAWN_RADIUS_M);
+        const catchWild = (sid: string, spiritPos: [number, number]) => {
+          if (playerPosRef.current) {
+            const dist = distanceM(playerPosRef.current[1], playerPosRef.current[0], spiritPos[1], spiritPos[0]);
+            if (dist > 500) {
+              sfxTap();
+              setToast(`太遠了！距離 ${Math.round(dist)} 米，需在 500 米內才能捕捉`);
+              return;
+            }
+          }
+          sfxTap();
+          router.push(`/capture?species=${sid}&centre=${centre.id}`);
+        };
+        wanderers.push(makeWanderer(map, speciesId, base, title, catchWild));
       }
     }
 
     // ── 主角 avatar：全身小雞企喺地圖上（有「自我」嘅第一身感）──
     const avatarRoot = document.createElement("div");
     // 同 wanderer 一樣：唔落 position，留返俾 maplibre .maplibregl-marker{position:absolute} 控制
-    avatarRoot.style.cssText = "width:80px;height:80px;pointer-events:none;overflow:visible;z-index:5";
+    avatarRoot.style.cssText = "width:160px;height:160px;pointer-events:none;overflow:visible;z-index:5";
     const avatarScaler = document.createElement("div");
-    avatarScaler.style.cssText = "position:absolute;inset:0;overflow:visible";
-    const avatarRadar = document.createElement("div");
-    avatarRadar.className = "player-radar";
-    avatarRadar.style.cssText =
-      "position:absolute;bottom:2px;left:8px;width:64px;height:34px;border-radius:9999px;background:radial-gradient(ellipse, rgba(245,166,35,.45) 0%, rgba(245,166,35,0) 70%)";
-    const avatarRing = document.createElement("div");
-    avatarRing.style.cssText =
-      "position:absolute;bottom:6px;left:20px;width:40px;height:14px;border-radius:9999px;border:2.5px solid rgba(245,166,35,.85);background:rgba(245,166,35,.22)";
+    avatarScaler.style.cssText = "position:absolute;inset:0;overflow:visible;transform-origin:50% 100%";
     const avatarShadow = document.createElement("div");
     avatarShadow.className = "spirit-shadow";
     avatarShadow.style.cssText =
-      "position:absolute;bottom:2px;left:25px;width:30px;height:9px;border-radius:9999px;background:rgba(74,44,20,.45)";
+      "position:absolute;bottom:4px;left:50px;width:60px;height:18px;border-radius:9999px;background:rgba(74,44,20,.45)";
     const avatarBob = document.createElement("div");
     avatarBob.className = "spirit-bob";
     avatarBob.style.cssText = "position:absolute;inset:0;overflow:visible";
@@ -480,15 +519,15 @@ export default function MapPage() {
     avatarImg.alt = "";
     avatarImg.draggable = false;
     avatarImg.style.cssText =
-      "position:absolute;top:11px;left:11px;width:58px;height:58px;object-fit:contain;filter:drop-shadow(0 3px 4px rgba(74,44,20,.4))";
+      "position:absolute;bottom:0;left:50%;width:116px;height:116px;margin-left:-58px;object-fit:contain;object-position:bottom;filter:drop-shadow(0 3px 4px rgba(74,44,20,.4))";
     avatarBob.appendChild(avatarImg);
-    avatarScaler.append(avatarRadar, avatarRing, avatarShadow, avatarBob);
+    avatarScaler.append(avatarShadow, avatarBob);
     avatarRoot.appendChild(avatarScaler);
     playerScalerRef.current = avatarScaler;
     playerImgRef.current = avatarImg;
     // 未有 GPS 之前主角先企喺開場目的地（等佢一開始就喺畫面度）
     playerAnim.current.cur = [INTRO_TARGET[0], INTRO_TARGET[1]];
-    playerMarkerRef.current = new maplibregl.Marker({ element: avatarRoot, anchor: "center" })
+    playerMarkerRef.current = new maplibregl.Marker({ element: avatarRoot, anchor: "bottom" })
       .setLngLat(INTRO_TARGET)
       .addTo(map);
 
@@ -577,6 +616,14 @@ export default function MapPage() {
       let anyOk = false;
       for (const w of wanderers) {
         if (w.onRoad) continue;
+        // 陸地檢查：海上/水面的精靈永久隱藏
+        if (!isOnLand(map, w.base[0], w.base[1])) {
+          w.onRoad = true; // 標記為已處理，不再重試
+          w.hidden = true; // 永久隱藏標記
+          w.scaler.style.opacity = "0";
+          w.hit.style.pointerEvents = "none";
+          continue;
+        }
         const key = `${w.base[0]},${w.base[1]}`;
         const cand = nearbyRoads(w.base);
         if (!cand.length) continue;
@@ -640,18 +687,25 @@ export default function MapPage() {
       }
     }, 1500);
 
-    // marker 可見性同步：只用 opacity 控制顯示，唔寫 transform
+    // marker 同步：可見性 + 按 zoom 縮放（與地圖比例同步）
+    // zoom 14（2km）時：精靈 = 0.5×（原大小的50%）、定位標記 = 1.0×（avatar root 已加大）
+    const BASE_ZOOM = 14;
+    const worldScale = (z: number, min = 0.15, max = 4): number =>
+      Math.min(max, Math.max(min, Math.pow(2, z - BASE_ZOOM)));
     const syncWorldScale = () => {
       const zoom = map.getZoom();
-      const visible = zoom >= 13;
+      const sp = worldScale(zoom);
+      const visible = zoom >= 12;
       for (const w of wanderers) {
+        if (w.hidden) continue; // 海上精靈保持隱藏
         w.scaler.style.opacity = visible ? "1" : "0";
+        w.scaler.style.transform = `scale(${(sp * 0.5).toFixed(3)})`;
         w.hit.style.pointerEvents = visible ? "auto" : "none";
       }
-      for (const s of badgeScalers) s.style.opacity = visible ? "1" : "0";
-      playerScalerRef.current?.style.setProperty("opacity", visible ? "1" : "0");
+      // 據點圖示固定大小（80px），不跟地圖縮放
+      const ps = playerScalerRef.current;
+      if (ps) ps.style.transform = `scale(${worldScale(zoom, 0.25, 2).toFixed(3)})`;
     };
-    map.on("zoom", syncWorldScale);
     map.on("zoomend", syncWorldScale);
     syncWorldScale();
 
@@ -1023,6 +1077,14 @@ export default function MapPage() {
       )}
 
       <div className="h-20" />
+      {toast && (
+        <div
+          className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-ink/95 px-6 py-4 text-center text-sm font-bold text-parchment-light shadow-xl"
+          onClick={() => setToast(null)}
+        >
+          {toast}
+        </div>
+      )}
       <BottomNav />
     </main>
   );

@@ -6,6 +6,7 @@ import { useGLTF, useAnimations } from "@react-three/drei";
 import * as THREE from "three";
 import { clone as cloneSkinned } from "three/examples/jsm/utils/SkeletonUtils.js";
 import { SPECIES_MAP } from "@/content/species";
+import type { Species } from "@/content/types";
 
 export type SpiritAnim =
   | "idle"
@@ -235,6 +236,7 @@ export default function SpiritModel({
   shadow = true,
   shiny = false,
   flashKey = 0,
+  faceCamera = false,
   onClipEnd,
 }: {
   speciesId: string;
@@ -250,19 +252,24 @@ export default function SpiritModel({
   shiny?: boolean;
   /** 受擊白閃觸發 key（戰鬥命中手感用；唔傳就無效果） */
   flashKey?: number;
+  /** 圖鑑/捕捉展示用：傳入角度（弧度）覆蓋 modelYaw 朝向鏡頭；true = 預設 -π/2 */
+  faceCamera?: boolean | number;
   onClipEnd?: () => void;
 }) {
   const catalog = SPECIES_MAP[speciesId];
+  const faceYaw = faceCamera === true ? -Math.PI / 2 : faceCamera === false ? undefined : faceCamera;
   const species = preview?.modelUrl
     ? {
         id: speciesId,
         modelUrl: preview.modelUrl,
         modelHeightM: preview.modelHeightM ?? catalog?.modelHeightM ?? 0.5,
-        modelYaw: preview.modelYaw ?? 0,
+        modelYaw: faceYaw ?? preview.modelYaw ?? 0,
         animated: preview.animated ?? catalog?.animated,
         rigLite: preview.rigLite ?? catalog?.rigLite,
       }
-    : catalog;
+    : catalog
+      ? { ...catalog, modelYaw: faceYaw ?? catalog.modelYaw ?? 0 }
+      : catalog;
   const groupRef = useRef<THREE.Group>(null);
   const [hitT, setHitT] = useState(0);
   // 程序化出擊：靜態／弱 rig（rigLite）冇大幅 root motion，攻擊會好硬——補一個
@@ -362,11 +369,15 @@ export default function SpiritModel({
 
   if (!species) return null;
 
+  // 如果有 animUrls，根據 anim 選擇對應的 GLB；冇對應動作就 fallback 到 idle 再到 modelUrl
+  const animUrls = (species as Species & { animUrls?: Record<string, string> }).animUrls;
+  const glbUrl = animUrls?.[anim] ?? animUrls?.["idle"] ?? species.modelUrl;
+
   return (
     <group ref={groupRef}>
-      {species.modelUrl ? (
+      {glbUrl ? (
         <GlbSpirit
-          url={species.modelUrl}
+          url={glbUrl}
           heightM={species.modelHeightM}
           anim={anim}
           timeScale={timeScale}

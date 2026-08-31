@@ -6,7 +6,6 @@ import DevConsole from "@/components/DevConsole";
 import GlobalPressFx from "@/components/GlobalPressFx";
 import AnalyticsInit from "@/components/AnalyticsInit";
 import CloudSaveInit from "@/components/CloudSaveInit";
-import InstallPrompt from "@/components/InstallPrompt";
 import "./globals.css";
 
 const notoSansTC = Noto_Sans_TC({
@@ -92,7 +91,6 @@ export default async function RootLayout({
           <GlobalPressFx />
           <AnalyticsInit />
           <CloudSaveInit />
-          <InstallPrompt />
           <DevConsole />
         </NextIntlClientProvider>
       </body>

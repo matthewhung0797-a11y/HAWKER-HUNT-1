@@ -78,9 +78,9 @@ interface GameState {
   /** 累積打卡過幾多個唔同據點 */
   distinctCentresCheckedIn: () => number;
   /** 現有筷子數量 */
-  chopsticksCount: () => number;
+  chopsticksCount: (tier?: string) => number;
   /** 開始搏鬥扣 1 筷；唔夠就 false（失敗唔退） */
-  spendChopstick: () => boolean;
+  spendChopstick: (tier?: string) => boolean;
   /** 捕捉成功（level = 野生等級；唔傳就 Lv.1） */
   captureSpirit: (
     speciesId: string,
@@ -199,14 +199,24 @@ export const useGameStore = create<GameState>()(
 
       distinctCentresCheckedIn: () => new Set(get().checkins.map((c) => c.centreId)).size,
 
-      chopsticksCount: () => get().items["chopsticks"] ?? 0,
+      chopsticksCount: (tier?: string) => {
+        if (tier && tier !== "wooden") {
+          return get().items[`chopsticks_${tier}`] ?? 0;
+        }
+        return get().items["chopsticks"] ?? 0;
+      },
 
-      spendChopstick: () => {
-        const n = get().items["chopsticks"] ?? 0;
-        if (n < 1) return false;
-        set((s) => ({
-          items: { ...s.items, chopsticks: Math.max(0, (s.items["chopsticks"] ?? 0) - 1) },
-        }));
+      spendChopstick: (tier?: string) => {
+        const key = (tier && tier !== "wooden") ? `chopsticks_${tier}` : "chopsticks";
+        const n = get().items[key] ?? 0;
+        if (n < 1) {
+          // 唔夠高級筷就退回木筷
+          const wn = get().items["chopsticks"] ?? 0;
+          if (wn < 1) return false;
+          set((s) => ({ items: { ...s.items, chopsticks: Math.max(0, wn - 1) } }));
+          return true;
+        }
+        set((s) => ({ items: { ...s.items, [key]: Math.max(0, n - 1) } }));
         return true;
       },
 
@@ -360,6 +370,9 @@ export const useGameStore = create<GameState>()(
           }
           const items = { ...s.items };
           for (const it of ITEMS) items[it.id] = Math.max(items[it.id] ?? 0, 10);
+          items.chopsticks_copper = Math.max(items.chopsticks_copper ?? 0, 10);
+          items.chopsticks_silver = Math.max(items.chopsticks_silver ?? 0, 10);
+          items.chopsticks_golden = Math.max(items.chopsticks_golden ?? 0, 10);
           return { ownedSpirits: owned, captureCounts: counts, items };
         }),
 

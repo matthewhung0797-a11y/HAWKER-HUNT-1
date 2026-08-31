@@ -111,11 +111,11 @@ export default function DexPage() {
                 <DexGridCell key={sp.id}>
                   <Link
                     href={`/dex/${sp.id}`}
-                    className={`card-parchment flex flex-col items-center gap-1.5 p-3 ${
+                    className={`card-parchment relative flex h-[120px] w-full flex-col items-center overflow-hidden p-3 ${
                       caught ? "" : "opacity-80"
                     }`}
                   >
-                    <span className="relative">
+                    <span className="absolute left-1/2 top-4 -translate-x-1/2">
                       {/* 繼續用 640 full；離屏格由 DexGridCell 延遲掛載減首屏解碼 */}
                       <SpiritIcon speciesId={sp.id} size={64} silhouette={!caught} />
                       {shinySpecies.has(sp.id) && (
@@ -131,16 +131,8 @@ export default function DexPage() {
                           ×{count}
                         </span>
                       )}
-                      {/* 星星稀有度指示（放在精靈圖片框內底部） */}
-                      {caught && (
-                        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 flex items-center gap-0.5 rounded-full bg-black/50 px-1.5 py-0.5">
-                          {Array.from({ length: { basic: 1, common: 1, rare: 2, epic: 3, legendary: 4 }[sp.rarity] || 1 }).map((_, i) => (
-                            <span key={i} style={{ fontSize: "10px", color: "#ffd700", textShadow: "0 0 3px rgba(255,215,0,0.8)" }}>★</span>
-                          ))}
-                        </span>
-                      )}
                     </span>
-                    <span className={`text-center text-xs font-bold ${caught ? "text-ink" : "text-ink-soft"}`}>
+                    <span className={`absolute bottom-2 left-0 right-0 text-center text-xs font-bold ${caught ? "text-ink" : "text-ink-soft"}`}>
                       {caught ? sp.name[locale] : t("dex.unknown")}
                     </span>
                   </Link>

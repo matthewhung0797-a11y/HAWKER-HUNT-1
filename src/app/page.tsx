@@ -10,7 +10,7 @@ import UIIcon from "@/components/UIIcon";
 import { SPECIES_MAP } from "@/content/species";
 import { useGameStore } from "@/lib/store";
 
-const HERO_SPIRITS = ["laksa-dragon", "hainan-chicken-god", "bkt-grandmaster"];
+const HERO_SPIRITS = ["bkt-grandmaster", "laksa-dragon", "nasi-lemak-general"];
 
 export default function LandingPage() {
   const t = useTranslations();
@@ -162,8 +162,8 @@ export default function LandingPage() {
               width: "100%",
               alignItems: "flex-end",
               justifyContent: "center",
-              gap: "4px",
-              padding: "8px 12px",
+              gap: "2px",
+              padding: "8px 4px",
               flex: 1,
               minHeight: 0,
               overflow: "hidden",
@@ -184,8 +184,11 @@ export default function LandingPage() {
                   src={`/spirits/full/${id}.webp`}
                   alt={SPECIES_MAP[id].name[locale]}
                   style={{
-                    height: i === 1 ? "120px" : "96px",
+                    maxHeight: i === 1 ? "480px" : "384px",
+                    maxWidth: "100%",
                     width: "auto",
+                    height: "auto",
+                    objectFit: "contain",
                     filter: "drop-shadow(0 8px 14px rgba(0,0,0,0.6))",
                   }}
                   draggable={false}

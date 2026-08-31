@@ -254,7 +254,7 @@ function CheckinInner() {
               })}
             </span>
             <p className="text-center text-base font-black text-ink">{t("checkin.rewardsTitle")}</p>
-            {rewards.map((r, i) => {
+            {(rewards.length > 0 ? rewards : [{ itemId: "chopsticks", qty: 20 }]).map((r, i) => {
               const isChop = r.itemId === "chopsticks";
               return (
                 <div
@@ -274,6 +274,16 @@ function CheckinInner() {
                 </div>
               );
             })}
+            <div
+              className="reward-pop flex items-center gap-2 rounded-xl bg-parchment-dark/50 px-3 py-2"
+              style={{ animationDelay: `${0.2 + rewards.length * 0.18}s` }}
+            >
+              <UIIcon name="coin" size={22} />
+              <div className="min-w-0 flex-1">
+                <div className="truncate font-black">金幣 ×50</div>
+                <div className="text-[11px] font-bold text-ink-soft">打卡獎勵金幣</div>
+              </div>
+            </div>
           </div>
           <div className="flex gap-3">
             <button

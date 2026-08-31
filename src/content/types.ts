@@ -59,6 +59,8 @@ export interface Species {
   animated?: boolean;
   /** 弱 rig（Tripo 簡骨架，clip 幅度細）：程序化動畫照跑，疊喺 clip 上補生命感 */
   rigLite?: boolean;
+  /** 分動畫 GLB 路徑：key = anim name (idle/walk/attack/hit 等)，有則優先於 modelUrl */
+  animUrls?: Record<string, string>;
   /** 模型正面朝向修正（弧度）：glTF 標準正面係 +Z，Tripo 出嘅模型朝 +X 要較 -90° */
   modelYaw?: number;
 }

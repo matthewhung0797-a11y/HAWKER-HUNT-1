@@ -120,7 +120,7 @@ export default function ProfilePage() {
                 <Link
                   key={sp.uid}
                   href={`/dex/${sp.speciesId}`}
-                  className={`card-parchment relative flex w-[92px] shrink-0 flex-col items-center gap-1 p-2.5 pt-3 ${
+                  className={`card-parchment relative flex h-[140px] w-[92px] shrink-0 flex-col items-center gap-1 overflow-hidden p-2.5 pt-3 ${
                     sp.shiny ? "ring-2 ring-gold shadow-[0_0_14px_rgba(232,200,96,0.65)]" : ""
                   }`}
                 >
@@ -129,12 +129,6 @@ export default function ProfilePage() {
                       ✦
                     </span>
                   )}
-                  {/* 階段星星（進化程度一眼睇晒）—— 放在卡片內頂部 */}
-                  <span className="absolute top-1 left-1/2 -translate-x-1/2 flex items-center gap-0.5">
-                    {Array.from({ length: species.stage }, (_, i) => (
-                      <span key={i} style={{ fontSize: "10px", color: "#ffd700", lineHeight: 1, textShadow: "0 0 3px rgba(255,215,0,0.8)" }}>★</span>
-                    ))}
-                  </span>
                   <SpiritIcon speciesId={sp.speciesId} size={58} />
                   <span className="w-full truncate text-center text-[11px] font-black leading-tight text-ink">
                     {species.name[locale]}
@@ -170,25 +164,60 @@ export default function ProfilePage() {
         </div>
       </section>
 
-      {/* 我的道具 */}
+      {/* 我的道具（進化素材） */}
       <section className="mx-4 mt-4">
         <h2 className="mb-2 flex items-center gap-1.5 text-sm font-black text-ink">
           <UIIcon name="backpack" size={18} /> {t("profile.myItems")}
         </h2>
-        <div className="card-parchment flex flex-wrap gap-3 p-4">
-          {Object.entries(store.items).filter(([, q]) => q > 0).length === 0 ? (
-            <span className="text-xs text-ink-soft">—</span>
-          ) : (
-            Object.entries(store.items)
-              .filter(([, q]) => q > 0)
-              .map(([itemId, qty]) => (
-                <div key={itemId} className="flex items-center gap-1 rounded-full bg-parchment-dark/60 px-3 py-1 text-sm font-bold text-ink">
-                  <UIIcon name={ITEM_MAP[itemId]?.icon ?? "item-scroll"} size={18} />
-                  <span className="text-xs">{ITEM_MAP[itemId]?.name[locale]}</span>
-                  <span className="text-xs text-ink-soft">×{qty}</span>
-                </div>
-              ))
-          )}
+        <div className="card-parchment flex flex-wrap gap-2 p-4">
+          {(() => {
+            // 只顯示現有精靈的進化素材
+            const relevantItemIds = new Set<string>();
+            for (const sp of store.ownedSpirits) {
+              const species = SPECIES_MAP[sp.speciesId];
+              if (species?.evolutionRequirement?.items) {
+                for (const itemId of Object.keys(species.evolutionRequirement.items)) {
+                  relevantItemIds.add(itemId);
+                }
+              }
+            }
+            const materials = Object.entries(store.items)
+              .filter(([itemId, q]) => q > 0 && !itemId.includes("chopstick") && relevantItemIds.has(itemId));
+            if (materials.length === 0) {
+              return <span className="text-xs text-ink-soft">—</span>;
+            }
+            return materials.map(([itemId, qty]) => (
+              <div key={itemId} className="flex items-center gap-1 rounded-full bg-parchment-dark/60 px-3 py-1 text-sm font-bold text-ink">
+                <UIIcon name={ITEM_MAP[itemId]?.icon ?? "item-scroll"} size={18} />
+                <span className="text-xs">{ITEM_MAP[itemId]?.name?.[locale] ?? itemId}</span>
+                <span className="text-xs text-gold">×{qty}</span>
+              </div>
+            ));
+          })()}
+        </div>
+      </section>
+
+      {/* 筷子庫存 */}
+      <section className="mx-4 mt-4">
+        <h2 className="mb-2 flex items-center gap-1.5 text-sm font-black text-ink">
+          <UIIcon name="chopsticks" size={18} /> 筷子庫存
+        </h2>
+        <div className="card-parchment grid grid-cols-4 gap-2 p-4">
+          {[
+            { id: "wooden", name: { en: "Wooden", zh: "木筷" }, key: "chopsticks" },
+            { id: "copper", name: { en: "Copper", zh: "銅筷" }, key: "chopsticks_copper" },
+            { id: "silver", name: { en: "Silver", zh: "銀筷" }, key: "chopsticks_silver" },
+            { id: "golden", name: { en: "Golden", zh: "金筷" }, key: "chopsticks_golden" },
+          ].map((tier) => {
+            const count = store.items[tier.key] ?? 0;
+            return (
+              <div key={tier.id} className="flex flex-col items-center gap-1 rounded-xl bg-parchment-dark/60 p-2">
+                <img src={`/ui/chopstick-${tier.id}.png`} alt={tier.name[locale]} style={{ width: 40, height: 40 }} draggable={false} />
+                <span className="text-[11px] font-black text-ink">{tier.name[locale]}</span>
+                <span className="text-sm font-black text-gold">×{count}</span>
+              </div>
+            );
+          })}
         </div>
       </section>
 

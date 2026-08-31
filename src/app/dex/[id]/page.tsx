@@ -85,30 +85,30 @@ export default function DexDetailPage({ params }: { params: Promise<{ id: string
         <div className="w-10" />
       </header>
 
-      {/* 主視視覺：預設 3D（有模型先顯示，冇就退 2D） */}
-      <div className="relative mx-auto h-64 w-full max-w-md">
+      {/* 主視覺：3D 模型放大置中 */}
+      <div className="relative mx-auto h-72 w-full max-w-md">
         {caught ? (
           species.modelUrl && webglOk ? (
             <>
-              <Canvas camera={{ fov: 45, position: [0, 0.45, 1.4] }} gl={{ alpha: true }}>
+              <Canvas camera={{ fov: 50, position: [0, 0.3, 0.85] }} gl={{ alpha: true }}>
                 <ambientLight intensity={1.2} />
                 <directionalLight position={[2, 4, 2]} intensity={1.3} />
                 <group position={[0, -0.28, 0]}>
-                  <SpiritModel speciesId={id} shiny={isShiny} />
+                  <SpiritModel speciesId={id} shiny={isShiny} faceCamera={id === "chilli-baby" || id === "nasi-lemak-tot" ? 0 : true} />
                 </group>
-                <OrbitControls enablePan={false} enableZoom={true} minDistance={0.8} maxDistance={3} />
+                <OrbitControls enablePan={false} enableZoom={true} minDistance={0.5} maxDistance={2.5} />
               </Canvas>
               <span className="pointer-events-none absolute bottom-2 left-3 text-xs text-ink-soft">
                 🔄 360°
               </span>
             </>
           ) : (
-            <div className="relative flex h-full items-end justify-center pb-2">
+            <div className="flex h-full items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={`/spirits/full/${id}.webp`}
                 alt={species.name[locale]}
-                className="float-bob h-56 w-auto drop-shadow-[0_14px_16px_rgba(74,44,20,0.35)]"
+                className="float-bob h-64 w-auto drop-shadow-[0_14px_16px_rgba(74,44,20,0.35)]"
                 draggable={false}
                 decoding="async"
               />
@@ -116,7 +116,7 @@ export default function DexDetailPage({ params }: { params: Promise<{ id: string
           )
         ) : (
           <div className="flex h-full items-center justify-center">
-            <SpiritIcon speciesId={id} size={140} silhouette />
+            <SpiritIcon speciesId={id} size={160} silhouette />
           </div>
         )}
       </div>

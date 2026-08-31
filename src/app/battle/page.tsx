@@ -239,6 +239,7 @@ function BattleActor({
           shiny={shiny}
           timeScale={timeScale}
           flashKey={flashKey}
+          faceCamera={basePos[0] < 0 ? Math.PI * 1.5 : -Math.PI / 2}
           onClipEnd={onClipEnd}
         />
       </group>
