@@ -17,6 +17,9 @@ import GameHeader from "@/components/GameHeader";
 import ElementBadge from "@/components/ElementBadge";
 import SpiritIcon, { spiritFullArtUrl } from "@/components/SpiritIcon";
 import UIIcon from "@/components/UIIcon";
+import { MissionButton, MissionPanel, useMissions } from "@/components/MissionPanel";
+import NotificationBell from "@/components/NotificationBell";
+import { getGameConfig } from "@/lib/admin/actions";
 import { sfxTap, isMuted, setMuted } from "@/lib/sfx";
 import { playMusic, isMusicMuted, setMusicMuted } from "@/lib/music";
 
@@ -234,7 +237,7 @@ function makeWanderer(
   img.draggable = false;
   // 52px root 內，img 52px 填滿，object-position:bottom 令腳部貼底
   img.style.cssText =
-    "position:absolute;bottom:0;left:0;width:52px;height:52px;object-fit:contain;object-position:bottom;filter:drop-shadow(0 2px 3px rgba(74,44,20,.35))";
+    "position:absolute;bottom:0;left:0;width:52px;height:52px;object-fit:contain;object-position:bottom;filter:brightness(1.5) drop-shadow(0 2px 3px rgba(74,44,20,.35))";
   bob.appendChild(img);
   scaler.append(shadow, bob);
   root.appendChild(scaler);
@@ -330,6 +333,32 @@ export default function MapPage() {
   // 初始值固定 true 避免 SSR/client hydration mismatch（isMuted 讀 localStorage），mount 後先同步真值
   const [soundOn, setSoundOn] = useState(true);
   const [toast, setToast] = useState<string | null>(null);
+  const [missionOpen, setMissionOpen] = useState(false);
+  const { dailyMissions, specialMissions, claimMission } = useMissions();
+  /** 非 WebGL 降級列表模式用：後台停用嘅據點（地圖模式喺 init effect 內自行過濾） */
+  const [inactiveCentres, setInactiveCentres] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (mapFailed === null) return; // 得列表模式先需要
+    let cancelled = false;
+    getGameConfig().then(
+      (cfg) => {
+        if (cancelled) return;
+        const s = new Set(
+          Object.entries(cfg.centres)
+            .filter(([, v]) => !v.active)
+            .map(([k]) => k)
+        );
+        setInactiveCentres(s);
+      },
+      () => {
+        /* 未配置 → 顯示全部 */
+      }
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [mapFailed]);
 
   // 地圖主題音樂（autoplay 被拒會等首次手勢自動開始）
   // 兩邊 mute key 任一為靜音就當關聲，並寫齊兩邊（修舊版不同步）
@@ -429,97 +458,121 @@ export default function MapPage() {
 
     markerEls.current = {};
     const badgeScalers: HTMLDivElement[] = [];
-    for (const centre of HAWKER_CENTRES) {
-      const { wrap, scaler, el } = makeMarkerElement(centre);
-      el.addEventListener("click", (e) => {
-        e.stopPropagation();
-        sfxTap();
-        // 揀中彈跳一下
-        el.classList.remove("marker-pop");
-        void el.offsetWidth; // 重觸發動畫
-        el.classList.add("marker-pop");
-        setSelected(centre);
-        map.flyTo({ center: [centre.lng, centre.lat], zoom: 16.2, pitch: 0, duration: 1400 });
-      });
-      markerEls.current[centre.id] = el;
-      badgeScalers.push(scaler);
-      new maplibregl.Marker({ element: wrap, anchor: "center" })
-        .setLngLat([centre.lng, centre.lat])
-        .addTo(map);
-    }
-
     // 野生精靈生成：每個據點 1 公里內 10 隻（海上/山上會被 isOnLand 過濾）
     const wanderers: Wanderer[] = [];
     const SPAWN_RADIUS_M = 1000;
 
-    const basicSpirits = SPECIES.filter((s) => s.rarity === "basic" && s.stage === 1).map((s) => s.id);
+    // ── 後台覆蓋層（精靈開關/權重、據點開關/spawnPool）──
+    // async IIFE：等 config 到先落 marker／生成；後續 tick / assignRoads 閉包引用
+    // 同一個 wanderers/badgeScalers 陣列，遲啲加入一樣睇到。
+    void (async () => {
+      const cfg = await getGameConfig().catch(() => null);
+      const spiritOn = (id: string) => cfg?.spirits[id]?.active !== false;
+      const spiritWeight = (id: string) => {
+        const w = cfg?.spirits[id]?.weight ?? 1;
+        return Math.max(0, Math.min(10, Math.floor(w)));
+      };
+      const centres = HAWKER_CENTRES.filter((c) => cfg?.centres[c.id]?.active !== false);
 
-    for (const centre of HAWKER_CENTRES) {
-      const checkedIn = store.todayCheckinCount(centre.id) > 0;
-
-      // 構建該據點的生成池：基礎原料 + 一階系列
-      const stage1Pool = centre.spawnPool
-        .map((id) => SPECIES_MAP[id])
-        .filter((sp) => sp && sp.stage === 1 && sp.rarity !== "basic")
-        .map((sp) => sp.id);
-      const pool = [...basicSpirits, ...stage1Pool];
-
-      // 打卡後加入二階精靈
-      const stage2Pool = checkedIn
-        ? SPECIES.filter((sp) => {
-            if (sp.stage !== 2) return false;
-            return centre.spawnPool.some((poolId) => {
-              const poolSp = SPECIES_MAP[poolId];
-              return poolSp && poolSp.evolvesTo === sp.id;
-            });
-          }).map((sp) => sp.id)
-        : [];
-      const fullPool = [...pool, ...stage2Pool];
-
-      if (fullPool.length === 0) continue;
-
-      // 每據點 10 隻
-      for (let i = 0; i < 10; i++) {
-        const speciesId = fullPool[Math.floor(Math.random() * fullPool.length)];
-        const sp = SPECIES_MAP[speciesId];
-        if (!sp) continue;
-        const title = `${sp.name[locale]} · ${t("map.catchIt")}`;
-        const base = randomNear([centre.lng, centre.lat], SPAWN_RADIUS_M);
-        const catchWild = (sid: string, spiritPos: [number, number]) => {
-          if (playerPosRef.current) {
-            const dist = distanceM(playerPosRef.current[1], playerPosRef.current[0], spiritPos[1], spiritPos[0]);
-            if (dist > 500) {
-              sfxTap();
-              setToast(`太遠了！距離 ${Math.round(dist)} 米，需在 500 米內才能捕捉`);
-              return;
-            }
-          }
+      for (const centre of centres) {
+        const { wrap, scaler, el } = makeMarkerElement(centre);
+        el.addEventListener("click", (e) => {
+          e.stopPropagation();
           sfxTap();
-          router.push(`/capture?species=${sid}&centre=${centre.id}`);
-        };
-        wanderers.push(makeWanderer(map, speciesId, base, title, catchWild));
+          // 揀中彈跳一下
+          el.classList.remove("marker-pop");
+          void el.offsetWidth; // 重觸發動畫
+          el.classList.add("marker-pop");
+          setSelected(centre);
+          map.flyTo({ center: [centre.lng, centre.lat], zoom: 16.2, pitch: 0, duration: 1400 });
+        });
+        markerEls.current[centre.id] = el;
+        badgeScalers.push(scaler);
+        new maplibregl.Marker({ element: wrap, anchor: "center" })
+          .setLngLat([centre.lng, centre.lat])
+          .addTo(map);
       }
-    }
+
+      const basicSpirits = SPECIES.filter(
+        (s) => s.rarity === "basic" && s.stage === 1 && spiritOn(s.id)
+      ).map((s) => s.id);
+
+      for (const centre of centres) {
+        const checkedIn = store.todayCheckinCount(centre.id) > 0;
+        // 後台可覆蓋 spawnPool（null = 用 centres.ts 預設）
+        const cfgPool = cfg?.centres[centre.id]?.spawnPool ?? centre.spawnPool;
+
+        // 構建該據點的生成池：基礎原料 + 一階系列（過濾後台停用嘅精靈）
+        const stage1Pool = cfgPool
+          .map((id) => SPECIES_MAP[id])
+          .filter((sp) => sp && sp.stage === 1 && sp.rarity !== "basic" && spiritOn(sp.id))
+          .map((sp) => sp.id);
+        const pool = [...basicSpirits, ...stage1Pool];
+
+        // 打卡後加入二階精靈（跟隨覆蓋池的一階進化）
+        const stage2Pool = checkedIn
+          ? SPECIES.filter((sp) => {
+              if (sp.stage !== 2 || !spiritOn(sp.id)) return false;
+              return cfgPool.some((poolId) => {
+                const poolSp = SPECIES_MAP[poolId];
+                return poolSp && poolSp.evolvesTo === sp.id;
+              });
+            }).map((sp) => sp.id)
+          : [];
+        const fullPool = [...pool, ...stage2Pool];
+
+        if (fullPool.length === 0) continue;
+
+        // 權重：池內重複 weight 次（0 = 唔出；1 = 原本 uniform random）
+        const weighted: string[] = [];
+        for (const id of fullPool) {
+          for (let i = 0; i < spiritWeight(id); i++) weighted.push(id);
+        }
+        if (weighted.length === 0) continue;
+
+        // 每據點 10 隻
+        for (let i = 0; i < 10; i++) {
+          const speciesId = weighted[Math.floor(Math.random() * weighted.length)];
+          const sp = SPECIES_MAP[speciesId];
+          if (!sp) continue;
+          const title = `${sp.name[locale]} · ${t("map.catchIt")}`;
+          const base = randomNear([centre.lng, centre.lat], SPAWN_RADIUS_M);
+          const catchWild = (sid: string, spiritPos: [number, number]) => {
+            if (playerPosRef.current) {
+              const dist = distanceM(playerPosRef.current[1], playerPosRef.current[0], spiritPos[1], spiritPos[0]);
+              if (dist > 500) {
+                sfxTap();
+                setToast(`太遠了！距離 ${Math.round(dist)} 米，需在 500 米內才能捕捉`);
+                return;
+              }
+            }
+            sfxTap();
+            router.push(`/capture?species=${sid}&centre=${centre.id}`);
+          };
+          wanderers.push(makeWanderer(map, speciesId, base, title, catchWild));
+        }
+      }
+    })();
 
     // ── 主角 avatar：全身小雞企喺地圖上（有「自我」嘅第一身感）──
     const avatarRoot = document.createElement("div");
     // 同 wanderer 一樣：唔落 position，留返俾 maplibre .maplibregl-marker{position:absolute} 控制
-    avatarRoot.style.cssText = "width:160px;height:160px;pointer-events:none;overflow:visible;z-index:5";
+    avatarRoot.style.cssText = "width:80px;height:80px;pointer-events:none;overflow:visible;z-index:5";
     const avatarScaler = document.createElement("div");
     avatarScaler.style.cssText = "position:absolute;inset:0;overflow:visible;transform-origin:50% 100%";
     const avatarShadow = document.createElement("div");
     avatarShadow.className = "spirit-shadow";
     avatarShadow.style.cssText =
-      "position:absolute;bottom:4px;left:50px;width:60px;height:18px;border-radius:9999px;background:rgba(74,44,20,.45)";
+      "position:absolute;bottom:2px;left:25px;width:30px;height:9px;border-radius:9999px;background:rgba(74,44,20,.45)";
     const avatarBob = document.createElement("div");
     avatarBob.className = "spirit-bob";
     avatarBob.style.cssText = "position:absolute;inset:0;overflow:visible";
     const avatarImg = document.createElement("img");
-    avatarImg.src = "/spirits/full/oily-rice-chick.webp";
+    avatarImg.src = "/ui/player-avatar.png";
     avatarImg.alt = "";
     avatarImg.draggable = false;
     avatarImg.style.cssText =
-      "position:absolute;bottom:0;left:50%;width:116px;height:116px;margin-left:-58px;object-fit:contain;object-position:bottom;filter:drop-shadow(0 3px 4px rgba(74,44,20,.4))";
+      "position:absolute;bottom:0;left:50%;width:58px;height:58px;margin-left:-29px;object-fit:contain;object-position:bottom;filter:brightness(1.5) drop-shadow(0 3px 4px rgba(74,44,20,.4))";
     avatarBob.appendChild(avatarImg);
     avatarScaler.append(avatarShadow, avatarBob);
     avatarRoot.appendChild(avatarScaler);
@@ -877,7 +930,7 @@ export default function MapPage() {
                 {t("map.noWebGL")}
               </div>
               <div className="flex flex-col gap-3">
-                {HAWKER_CENTRES.map((centre) => {
+                {HAWKER_CENTRES.filter((c) => !inactiveCentres.has(c.id)).map((centre) => {
                   const d = distTo(centre);
                   const count = store.todayCheckinCount(centre.id);
                   const full = count >= centre.dailyCheckinLimit;
@@ -1086,6 +1139,17 @@ export default function MapPage() {
         </div>
       )}
       <BottomNav />
+
+      {/* 任務按鈕 + 面板 */}
+      <MissionButton onClick={() => { sfxTap(); setMissionOpen(true); }} />
+      <NotificationBell />
+      {missionOpen && (
+        <MissionPanel
+          missions={[...dailyMissions, ...specialMissions]}
+          onClose={() => setMissionOpen(false)}
+          onClaim={claimMission}
+        />
+      )}
     </main>
   );
 }

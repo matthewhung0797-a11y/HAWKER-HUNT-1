@@ -45,7 +45,7 @@ body {
 }
 
 body {
-  background: var(--parchment);
+  background: #1a1208;
   color: var(--ink);
   /* 全站統一粉圓體（子集已含全套 ASCII，中英數同一隻字）；Noto 只做缺字 fallback */
   font-family:
@@ -54,8 +54,20 @@ body {
   -webkit-tap-highlight-color: transparent;
   user-select: none;
   -webkit-user-select: none;
-  /* 熄 iOS Safari 長按圖／連結彈出「儲存影像／分享」——PWA／網頁都似原生 app */
+  /* 熄 iOS Safari 長按圖／連結／連結彈出「儲存影像／分享」——PWA／網頁都似原生 app */
   -webkit-touch-callout: none;
+}
+
+/* 9:16 遊戲框架：置中、黑色邊帶（letterbox） */
+.game-frame {
+  width: 100%;
+  max-width: calc(100dvh * 9 / 16);
+  height: 100dvh;
+  margin: 0 auto;
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--parchment);
 }
 
 /* 圖示／立繪：唔畀拖走、唔畀長按出系統相簿選單 */

@@ -94,7 +94,7 @@ export default function DexDetailPage({ params }: { params: Promise<{ id: string
                 <ambientLight intensity={1.2} />
                 <directionalLight position={[2, 4, 2]} intensity={1.3} />
                 <group position={[0, -0.28, 0]}>
-                  <SpiritModel speciesId={id} shiny={isShiny} faceCamera={id === "chilli-baby" || id === "nasi-lemak-tot" ? 0 : true} />
+                  <SpiritModel speciesId={id} shiny={isShiny} faceCamera={id === "chilli-baby" ? 0 : id === "nasi-lemak-tot" ? Math.PI / 2 : id === "nasi-lemak-scout" ? 0 : true} />
                 </group>
                 <OrbitControls enablePan={false} enableZoom={true} minDistance={0.5} maxDistance={2.5} />
               </Canvas>
@@ -109,6 +109,7 @@ export default function DexDetailPage({ params }: { params: Promise<{ id: string
                 src={`/spirits/full/${id}.webp`}
                 alt={species.name[locale]}
                 className="float-bob h-64 w-auto drop-shadow-[0_14px_16px_rgba(74,44,20,0.35)]"
+                style={{ filter: "brightness(1.5)" }}
                 draggable={false}
                 decoding="async"
               />

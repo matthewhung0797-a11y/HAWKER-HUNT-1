@@ -6,6 +6,8 @@ import DevConsole from "@/components/DevConsole";
 import GlobalPressFx from "@/components/GlobalPressFx";
 import AnalyticsInit from "@/components/AnalyticsInit";
 import CloudSaveInit from "@/components/CloudSaveInit";
+import BootstrapGate from "@/components/BootstrapGate";
+import GameFrame from "@/components/GameFrame";
 import "./globals.css";
 
 const notoSansTC = Noto_Sans_TC({
@@ -85,13 +87,16 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col paper-texture">
+      <body className="min-h-full flex flex-col">
         <NextIntlClientProvider locale={locale} messages={messages}>
-          {children}
-          <GlobalPressFx />
-          <AnalyticsInit />
-          <CloudSaveInit />
-          <DevConsole />
+          <GameFrame>
+            {children}
+            <GlobalPressFx />
+            <AnalyticsInit />
+            <CloudSaveInit />
+            <BootstrapGate />
+            <DevConsole />
+          </GameFrame>
         </NextIntlClientProvider>
       </body>
     </html>

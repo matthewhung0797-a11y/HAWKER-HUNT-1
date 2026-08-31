@@ -15,6 +15,7 @@ import BottomNav from "@/components/BottomNav";
 import LangSwitch from "@/components/LangSwitch";
 import SpiritIcon from "@/components/SpiritIcon";
 import AccountCard from "@/components/AccountCard";
+import GiftBox from "@/components/GiftBox";
 import UIIcon from "@/components/UIIcon";
 
 export default function ProfilePage() {
@@ -220,6 +221,9 @@ export default function ProfilePage() {
           })}
         </div>
       </section>
+
+      {/* 禮包（兌換碼 + 待領信箱） */}
+      <GiftBox />
 
       {/* 徽章牆 */}
       <section className="mx-4 mt-4">

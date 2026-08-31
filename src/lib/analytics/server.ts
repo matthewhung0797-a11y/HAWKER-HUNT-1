@@ -50,7 +50,7 @@ export async function insertEvents(
  * - 未配置或讀失敗 → 退回 demoSummary()，dashboard 照樣睇到設計。
  */
 export async function fetchSummary(windowDays = 14): Promise<AnalyticsSummary> {
-  if (!isSupabaseConfigured) return demoSummary(windowDays);
+  if (!isSupabaseConfigured()) return demoSummary(windowDays);
   const sb = getSupabaseAdmin();
   if (!sb) return demoSummary(windowDays);
 

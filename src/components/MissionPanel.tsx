@@ -1,13 +1,15 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { useTranslations } from "next-intl";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { useGameStore } from "@/lib/store";
-import { HAWKER_CENTRES } from "@/content/centres";
 import { SPECIES } from "@/content/species";
+import { ITEM_MAP } from "@/content/items";
+import { getActiveMissions } from "@/lib/admin/actions";
+import type { GameMission } from "@/lib/admin/types";
 
 export type MissionType = "daily" | "special";
-export type MissionGoal = "capture" | "checkin" | "catch-specific";
+export type MissionGoal = "capture" | "checkin" | "catch-specific" | "capture_unique" | "battle_win" | "evolve";
 
 export interface Mission {
   id: string;
@@ -16,18 +18,18 @@ export interface Mission {
   description: string;
   target: number;
   progress: number;
-  reward: { coins: number; diamonds: number };
+  reward: { coins: number; diamonds: number; items?: Record<string, number> };
   done: boolean;
   claimed: boolean;
 }
 
-const DAILY_MISSION_POOL: { goal: MissionGoal; desc: (n: number) => string; target: number; reward: { coins: number; diamonds: number } }[] = [
-  { goal: "capture", desc: (n) => `捕捉 ${n} 隻精靈`, target: 3, reward: { coins: 100, diamonds: 1 } },
-  { goal: "capture", desc: (n) => `捕捉 ${n} 隻精靈`, target: 5, reward: { coins: 200, diamonds: 2 } },
-  { goal: "capture", desc: (n) => `捕捉 ${n} 隻不同精靈`, target: 2, reward: { coins: 150, diamonds: 1 } },
-  { goal: "checkin", desc: (n) => `到 ${n} 個據點打卡`, target: 1, reward: { coins: 80, diamonds: 1 } },
-  { goal: "checkin", desc: (n) => `到 ${n} 個據點打卡`, target: 2, reward: { coins: 150, diamonds: 2 } },
-  { goal: "catch-specific", desc: (n) => `捕捉指定精靈 ${n} 隻`, target: 1, reward: { coins: 120, diamonds: 1 } },
+const DAILY_MISSION_POOL: { goal: MissionGoal; descZh: (n: number) => string; descEn: (n: number) => string; target: number; reward: { coins: number; diamonds: number } }[] = [
+  { goal: "capture", descZh: (n) => `捕捉 ${n} 隻精靈`, descEn: (n) => `Catch ${n} spirits`, target: 3, reward: { coins: 100, diamonds: 1 } },
+  { goal: "capture", descZh: (n) => `捕捉 ${n} 隻精靈`, descEn: (n) => `Catch ${n} spirits`, target: 5, reward: { coins: 200, diamonds: 2 } },
+  { goal: "capture", descZh: (n) => `捕捉 ${n} 隻不同精靈`, descEn: (n) => `Catch ${n} different spirits`, target: 2, reward: { coins: 150, diamonds: 1 } },
+  { goal: "checkin", descZh: (n) => `到 ${n} 個據點打卡`, descEn: (n) => `Check in at ${n} locations`, target: 1, reward: { coins: 80, diamonds: 1 } },
+  { goal: "checkin", descZh: (n) => `到 ${n} 個據點打卡`, descEn: (n) => `Check in at ${n} locations`, target: 2, reward: { coins: 150, diamonds: 2 } },
+  { goal: "catch-specific", descZh: (n) => `捕捉指定精靈 ${n} 隻`, descEn: (n) => `Catch a specific spirit ${n} times`, target: 1, reward: { coins: 120, diamonds: 1 } },
 ];
 
 function getTodayKey(): string {
@@ -35,7 +37,7 @@ function getTodayKey(): string {
   return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
 }
 
-function generateDailyMissions(): Mission[] {
+function generateDailyMissions(locale: "zh" | "en"): Mission[] {
   const pool = [...DAILY_MISSION_POOL];
   const shuffled = pool.sort(() => Math.random() - 0.5);
   const picked = shuffled.slice(0, 3);
@@ -43,7 +45,7 @@ function generateDailyMissions(): Mission[] {
     id: `daily-${getTodayKey()}-${i}`,
     type: "daily" as MissionType,
     goal: p.goal,
-    description: p.desc(p.target),
+    description: locale === "en" ? p.descEn(p.target) : p.descZh(p.target),
     target: p.target,
     progress: 0,
     reward: p.reward,
@@ -52,38 +54,166 @@ function generateDailyMissions(): Mission[] {
   }));
 }
 
+// ── DB 任務（後台「任務管理」）：每日基準值進度 + 領取標記 ──
+
+function readLS(key: string): string | null {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+function writeLS(key: string, value: string): void {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    /* ignore */
+  }
+}
+
+/** 每日任務基準：當日首見時記低現值，進度 = 現值 − 基準（真正每日重置） */
+function dailyBaseline(key: string, current: number): number {
+  const k = `hh-mbase-${key}`;
+  const raw = readLS(k);
+  const n = raw === null ? Number.NaN : Number(raw);
+  if (!Number.isFinite(n)) {
+    writeLS(k, String(current));
+    return current;
+  }
+  return n;
+}
+
+/** 一次性任務基準：任務首見時記低（唔帶日期） */
+function onceBaseline(missionId: string, current: number): number {
+  return dailyBaseline(`once-${missionId}`, current);
+}
+
+function claimedKey(m: { id: string; period: "daily" | "once" }): string {
+  return m.period === "daily" ? `hh-mclaim-${getTodayKey()}-${m.id}` : `hh-mclaim-once-${m.id}`;
+}
+
+function goalDescription(m: GameMission, locale: "zh" | "en"): string {
+  const n = m.target;
+  if (locale === "en") {
+    switch (m.goal) {
+      case "capture": return `Catch ${n} spirits`;
+      case "capture_unique": return `Catch ${n} different spirits`;
+      case "checkin": return `Check in at ${n} locations`;
+      case "battle_win": return `Win ${n} battles`;
+      case "evolve": return `Evolve ${n} spirits`;
+      default: return m.title.en || m.title.zh;
+    }
+  }
+  switch (m.goal) {
+    case "capture": return `捕捉 ${n} 隻精靈`;
+    case "capture_unique": return `捕捉 ${n} 種不同精靈`;
+    case "checkin": return `到 ${n} 個據點打卡`;
+    case "battle_win": return `切磋獲勝 ${n} 場`;
+    case "evolve": return `精靈進化 ${n} 次`;
+    default: return m.title.zh;
+  }
+}
+
 export function useMissions() {
   const store = useGameStore();
-  const [missions, setMissions] = useState<Mission[]>([]);
-  const [specialMissions, setSpecialMissions] = useState<Mission[]>([]);
+  const locale = useLocale() as "zh" | "en";
+  const t = useTranslations("mission");
+  const [dbMissions, setDbMissions] = useState<GameMission[] | null>(null);
+  const [legacyMissions, setLegacyMissions] = useState<Mission[]>([]);
+  /** bump 令領取後重新計算 claimed */
+  const [claimTick, setClaimTick] = useState(0);
 
   const todayKey = getTodayKey();
 
+  // 拉 DB 任務（未配置 Supabase / 全空 → fallback 硬編碼池）
   useEffect(() => {
-    const saved = typeof window !== "undefined" ? localStorage.getItem(`hh-missions-${todayKey}`) : null;
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        setMissions(parsed);
-      } catch {
-        setMissions(generateDailyMissions());
+    let cancelled = false;
+    getActiveMissions().then(
+      (ms) => {
+        if (!cancelled) setDbMissions(ms);
+      },
+      () => {
+        if (!cancelled) setDbMissions([]);
       }
-    } else {
-      const fresh = generateDailyMissions();
-      setMissions(fresh);
-      if (typeof window !== "undefined") {
-        localStorage.setItem(`hh-missions-${todayKey}`, JSON.stringify(fresh));
-      }
-    }
-  }, [todayKey]);
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
-  // Update progress from store data
-  const updatedMissions = useMemo(() => {
+  // legacy 每日任務（原有 localStorage 邏輯，DB 無任務時先用）
+  useEffect(() => {
+    if (dbMissions === null || dbMissions.length > 0) return;
+    let cancelled = false;
+    void Promise.resolve().then(() => {
+      if (cancelled) return;
+      const saved = typeof window !== "undefined" ? localStorage.getItem(`hh-missions-${todayKey}`) : null;
+      if (saved) {
+        try {
+          setLegacyMissions(JSON.parse(saved));
+        } catch {
+          setLegacyMissions(generateDailyMissions(locale));
+        }
+      } else {
+        const fresh = generateDailyMissions(locale);
+        setLegacyMissions(fresh);
+        if (typeof window !== "undefined") {
+          localStorage.setItem(`hh-missions-${todayKey}`, JSON.stringify(fresh));
+        }
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [dbMissions, todayKey, locale]);
+
+  // store 現值（DB 任務各 goal 用）
+  const totals = useMemo(
+    () => ({
+      capture: Object.values(store.captureCounts || {}).reduce((a: number, b: number) => a + b, 0),
+      capture_unique: Object.keys(store.captureCounts || {}).length,
+      checkin: store.checkins?.length || 0,
+      battle_win: store.battleWins || 0,
+      evolve: store.evolveCount || 0,
+    }),
+    [store.captureCounts, store.checkins, store.battleWins, store.evolveCount]
+  );
+
+  // DB 任務 → Mission（每日基準值進度；一次性 = 首見基準）
+  const dbAsMissions = useMemo<Mission[]>(() => {
+    if (!dbMissions) return [];
+    return dbMissions.map((m) => {
+      const current = totals[m.goal] ?? 0;
+      const base = m.period === "daily" ? dailyBaseline(`${todayKey}-${m.id}`, current) : onceBaseline(m.id, current);
+      const progress = Math.max(0, Math.min(m.target, current - base));
+      const claimed = readLS(claimedKey(m)) === "1";
+      return {
+        id: m.id,
+        type: m.period === "daily" ? "daily" : "special",
+        goal: m.goal,
+        description: goalDescription(m, locale),
+        target: m.target,
+        progress,
+        reward: {
+          coins: m.reward?.coins ?? 0,
+          diamonds: m.reward?.gems ?? 0,
+          items: m.reward?.items,
+        },
+        done: progress >= m.target,
+        claimed,
+      };
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dbMissions, totals, todayKey, claimTick, locale]);
+
+  // legacy 進度（原有行為：總量）
+  const updatedLegacy = useMemo(() => {
+    if (dbMissions === null || dbMissions.length > 0) return [];
     const captureCount = Object.values(store.captureCounts || {}).reduce((a: number, b: number) => a + b, 0);
     const uniqueCaptured = Object.keys(store.captureCounts || {}).length;
     const checkinCount = store.checkins?.length || 0;
 
-    return missions.map((m) => {
+    return legacyMissions.map((m) => {
       let progress = m.progress;
       if (m.goal === "capture") {
         progress = Math.min(m.target, captureCount);
@@ -94,16 +224,29 @@ export function useMissions() {
       }
       return { ...m, progress, done: progress >= m.target };
     });
-  }, [missions, store.captureCounts, store.checkins]);
+  }, [legacyMissions, dbMissions, store.captureCounts, store.checkins]);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && updatedMissions.length > 0) {
-      localStorage.setItem(`hh-missions-${todayKey}`, JSON.stringify(updatedMissions));
+    if (updatedLegacy.length > 0 && typeof window !== "undefined") {
+      localStorage.setItem(`hh-missions-${todayKey}`, JSON.stringify(updatedLegacy));
     }
-  }, [updatedMissions, todayKey]);
+  }, [updatedLegacy, todayKey]);
 
-  function claimMission(id: string) {
-    setMissions((prev) => {
+  const claimMission = useCallback((id: string) => {
+    // DB 任務
+    const dbm = (dbMissions ?? []).find((m) => m.id === id);
+    if (dbm) {
+      writeLS(claimedKey(dbm), "1");
+      useGameStore.getState().applyGift({
+        coins: dbm.reward?.coins,
+        gems: dbm.reward?.gems,
+        items: dbm.reward?.items,
+      });
+      setClaimTick((t) => t + 1);
+      return;
+    }
+    // legacy 任務
+    setLegacyMissions((prev) => {
       const updated = prev.map((m) => {
         if (m.id === id && m.done && !m.claimed) {
           useGameStore.setState((s) => ({
@@ -119,20 +262,25 @@ export function useMissions() {
       }
       return updated;
     });
-  }
+  }, [dbMissions, todayKey]);
 
-  return { dailyMissions: updatedMissions, specialMissions, claimMission };
+  const usingDb = (dbMissions?.length ?? 0) > 0;
+  return {
+    dailyMissions: usingDb ? dbAsMissions.filter((m) => m.type === "daily") : updatedLegacy,
+    specialMissions: usingDb ? dbAsMissions.filter((m) => m.type === "special") : [],
+    claimMission,
+  };
 }
 
 export function MissionButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="fixed left-3 top-1/2 z-30 flex -translate-y-1/2 flex-col items-center justify-center rounded-full border-2 border-gold bg-black/60 shadow-lg backdrop-blur-sm active:scale-90 transition-transform"
-      style={{ width: 52, height: 52, touchAction: "manipulation", left: "max(12px, calc(50vw - min(50vw, calc(50vh * 9 / 16))) + 12px)" }}
-      aria-label="任務"
+      className="flex flex-col items-center justify-center rounded-full border-2 border-gold bg-black/60 shadow-lg backdrop-blur-sm active:scale-90 transition-transform"
+      style={{ width: 52, height: 52, touchAction: "manipulation", position: "fixed", top: "50%", left: "max(0px, calc(50vw - min(50vw, calc(50vh * 9 / 16))))", zIndex: 30, transform: "translateY(-100%)" }}
+      aria-label="Missions"
     >
-      <img src="/ui/mission.png" alt="任務" style={{ width: 32, height: 32 }} draggable={false} />
+      <img src="/ui/mission.png" alt="" style={{ width: 52, height: 52 }} draggable={false} />
     </button>
   );
 }
@@ -146,7 +294,7 @@ export function MissionPanel({
   onClose: () => void;
   onClaim: (id: string) => void;
 }) {
-  const t = useTranslations();
+  const t = useTranslations("mission");
   const daily = missions.filter((m) => m.type === "daily");
   const special = missions.filter((m) => m.type === "special");
 
@@ -157,19 +305,19 @@ export function MissionPanel({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-black text-ink">任務</h2>
-          <button onClick={onClose} className="text-2xl font-bold text-ink-soft">✕</button>
+          <h2 className="text-xl text-ink" style={{ fontWeight: 400 }}>{t("title")}</h2>
+          <button onClick={onClose} className="text-2xl text-ink-soft" style={{ fontWeight: 400 }}>✕</button>
         </div>
 
         {/* 每日任務 */}
         <div className="mb-4">
-          <h3 className="mb-2 flex items-center gap-2 text-sm font-black text-ink">
-            <span className="rounded-full bg-gold px-2 py-0.5 text-xs text-ink">每日</span>
-            每日任務
+          <h3 className="mb-2 flex items-center gap-2 text-sm text-ink" style={{ fontWeight: 400 }}>
+            <span className="rounded-full bg-gold px-2 py-0.5 text-xs text-ink">{t("daily")}</span>
+            {t("dailyTitle")}
           </h3>
           <div className="flex flex-col gap-2">
             {daily.length === 0 ? (
-              <p className="text-xs text-ink-soft">暫無每日任務</p>
+              <p className="text-xs text-ink-soft">{t("noDaily")}</p>
             ) : (
               daily.map((m) => (
                 <MissionCard key={m.id} mission={m} onClaim={onClaim} />
@@ -180,13 +328,13 @@ export function MissionPanel({
 
         {/* 特別任務 */}
         <div className="mb-2">
-          <h3 className="mb-2 flex items-center gap-2 text-sm font-black text-ink">
-            <span className="rounded-full bg-chilli px-2 py-0.5 text-xs text-white">特別</span>
-            特別任務
+          <h3 className="mb-2 flex items-center gap-2 text-sm text-ink" style={{ fontWeight: 400 }}>
+            <span className="rounded-full bg-chilli px-2 py-0.5 text-xs text-white">{t("special")}</span>
+            {t("specialTitle")}
           </h3>
           <div className="flex flex-col gap-2">
             {special.length === 0 ? (
-              <p className="text-xs text-ink-soft">暫無特別任務</p>
+              <p className="text-xs text-ink-soft">{t("noSpecial")}</p>
             ) : (
               special.map((m) => (
                 <MissionCard key={m.id} mission={m} onClaim={onClaim} />
@@ -200,6 +348,8 @@ export function MissionPanel({
 }
 
 function MissionCard({ mission, onClaim }: { mission: Mission; onClaim: (id: string) => void }) {
+  const t = useTranslations("mission");
+  const locale = useLocale() as "zh" | "en";
   const pct = Math.round((mission.progress / mission.target) * 100);
   return (
     <div
@@ -212,10 +362,16 @@ function MissionCard({ mission, onClaim }: { mission: Mission; onClaim: (id: str
       }`}
     >
       <div className="flex items-center justify-between gap-2">
-        <p className="text-sm font-bold text-ink">{mission.description}</p>
-        <div className="flex shrink-0 items-center gap-1 text-xs font-black">
+        <p className="text-sm text-ink" style={{ fontWeight: 400 }}>{mission.description}</p>
+        <div className="flex shrink-0 items-center gap-1 text-xs" style={{ fontWeight: 400 }}>
           <span className="text-gold">🪙{mission.reward.coins}</span>
           <span className="text-blue-500">💎{mission.reward.diamonds}</span>
+          {mission.reward.items &&
+            Object.entries(mission.reward.items).map(([id, qty]) => (
+              <span key={id} className="text-pandan">
+                {(locale === "en" ? ITEM_MAP[id]?.name?.en : ITEM_MAP[id]?.name?.zh) ?? id}×{qty}
+              </span>
+            ))}
         </div>
       </div>
       <div className="mt-2 flex items-center gap-2">
@@ -225,18 +381,19 @@ function MissionCard({ mission, onClaim }: { mission: Mission; onClaim: (id: str
             style={{ width: `${pct}%` }}
           />
         </div>
-        <span className="text-xs font-bold text-ink-soft">
+        <span className="text-xs text-ink-soft" style={{ fontWeight: 400 }}>
           {mission.progress}/{mission.target}
         </span>
         {mission.done && !mission.claimed && (
           <button
             onClick={() => onClaim(mission.id)}
-            className="btn-gold rounded-full px-3 py-1 text-xs font-black"
+            className="btn-gold rounded-full px-3 py-1 text-xs"
+            style={{ fontWeight: 400 }}
           >
-            領取
+            {t("claim")}
           </button>
         )}
-        {mission.claimed && <span className="text-xs font-bold text-pandan">✓ 已領取</span>}
+        {mission.claimed && <span className="text-xs text-pandan" style={{ fontWeight: 400 }}>{t("claimed")}</span>}
       </div>
     </div>
   );

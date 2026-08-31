@@ -34,6 +34,10 @@ export default function SpiritIcon({
       }}
     >
       {/* 圖鑑精靈圖片：置中 + contain 顯示整隻 + 調亮 5 倍 */}
+      {/* 個別精靈亮度調整：椰漿飯小兵 0.75、叻沙龍 1.25，其他 1.5 */}
+      {/* 個別精靈亮度調整：椰漿飯小兵 0.75、叻沙龍 1.25、肉骨仔 1.75，其他 1.5 */}
+      {/* 個別精靈亮度：椰漿飯小兵 0.75、叻沙龍/骨茶武士 1.25、肉骨仔 1.75，其他 1.5 */}
+      {/* 個別精靈亮度：椰漿飯小兵/叻沙龍/骨茶武士/米粉精靈 1.25、肉骨仔 1.75，其他 1.5 */}
       <img
         src={spiritFullArtUrl(speciesId)}
         alt={silhouette ? "???" : species?.name.zh ?? speciesId}
@@ -41,7 +45,11 @@ export default function SpiritIcon({
         style={{
           filter: silhouette
             ? "brightness(0) opacity(0.45)"
-            : "none",
+            : `brightness(${
+                speciesId === "laksa-dragon" || speciesId === "bkt-warrior" || speciesId === "vermicelli-sprite" || speciesId === "nasi-lemak-scout" ? 1.25
+                : speciesId === "bkt-cub" ? 1.75
+                : 1.5
+              })`,
         }}
         draggable={false}
         loading="lazy"

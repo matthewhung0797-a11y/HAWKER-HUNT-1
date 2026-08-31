@@ -124,6 +124,23 @@
     "limitError": "今日呢個據點已打卡 3 次，聽日再嚟或者去第二個小販中心啦",
     "cooldownError": "呢個據點先啱啱打過卡，約 {minutes} 分鐘後再掃（或者去第二個小販中心）"
   },
+  "mission": {
+    "title": "任務",
+    "daily": "每日",
+    "dailyTitle": "每日任務",
+    "special": "特別",
+    "specialTitle": "特別任務",
+    "noDaily": "暫無每日任務",
+    "noSpecial": "暫無特別任務",
+    "claim": "領取",
+    "claimed": "✓ 已領取",
+    "capture": "捕捉 {n} 隻精靈",
+    "captureUnique": "捕捉 {n} 隻不同精靈",
+    "checkin": "到 {n} 個據點打卡",
+    "battleWin": "切磋獲勝 {n} 場",
+    "evolve": "精靈進化 {n} 次",
+    "catchSpecific": "捕捉指定精靈 {n} 隻"
+  },
   "capture": {
     "targeted": "TARGETED",
     "clamp": "夾！",
@@ -337,5 +354,32 @@
     "salty": "鹹",
     "spicy": "辣",
     "sweet": "甜"
+  },
+  "gifts": {
+    "title": "禮包",
+    "placeholder": "輸入兌換碼",
+    "redeemBtn": "兌換",
+    "inbox": "待領禮包",
+    "claim": "領取",
+    "redeemed": "已兌換「{title}」",
+    "claimed": "已領取「{title}」",
+    "needLogin": "登入帳號後可兌換／領取禮包",
+    "invalid": "無效的兌換碼",
+    "notOpen": "兌換碼尚未開放",
+    "expired": "兌換碼已過期",
+    "already": "你已領取過這個禮包",
+    "failed": "操作失敗，請稍後再試"
+  },
+  "sys": {
+    "maintenanceTitle": "系統維護中",
+    "maintenanceDefault": "小販們正在整理攤檔，請稍後再來！",
+    "updateTitle": "有新版本",
+    "updateBody": "此版本已不再支援，請更新至最新版本後再繼續遊玩。",
+    "updateBtn": "前往更新"
+  },
+  "notifications": {
+    "title": "通知",
+    "markAllRead": "全部標為已讀",
+    "empty": "沒有通知"
   }
 }

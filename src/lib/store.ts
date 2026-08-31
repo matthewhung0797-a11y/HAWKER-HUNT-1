@@ -62,9 +62,12 @@ interface GameState {
   counterWins: number;
   /** 進化次數 */
   evolveCount: number;
+  /** 玩家頭像精靈 ID（null = 用首隻精靈） */
+  avatarSpeciesId: string | null;
 
   // actions
   setNickname: (n: string) => void;
+  setAvatarSpecies: (id: string | null) => void;
   completeOnboarding: () => void;
   login: () => void;
   toggleDevMode: () => void;
@@ -102,6 +105,8 @@ interface GameState {
   devUnlockAll: () => void;
   addExp: (amount: number) => void;
   resetAll: () => void;
+  /** 禮包／兌換碼入帳：合併金幣／寶石／道具（後台發放或玩家兌換後套用） */
+  applyGift: (contents: { coins?: number; gems?: number; items?: Record<string, number> }) => void;
 }
 
 const EXP_PER_LEVEL = 100;
@@ -130,6 +135,7 @@ const initialState = {
   battleWins: 0,
   counterWins: 0,
   evolveCount: 0,
+  avatarSpeciesId: null as string | null,
 };
 
 export const useGameStore = create<GameState>()(
@@ -138,6 +144,7 @@ export const useGameStore = create<GameState>()(
       ...initialState,
 
       setNickname: (n) => set({ nickname: n }),
+      setAvatarSpecies: (id) => set({ avatarSpeciesId: id }),
       completeOnboarding: () => set({ onboardingDone: true }),
       login: () => set({ loggedIn: true }),
       toggleDevMode: () => set((s) => ({ devMode: !s.devMode })),
@@ -385,6 +392,21 @@ export const useGameStore = create<GameState>()(
             level += 1;
           }
           return { exp, level };
+        }),
+
+      applyGift: (contents) =>
+        set((s) => {
+          const items = { ...s.items };
+          if (contents.items) {
+            for (const [id, qty] of Object.entries(contents.items)) {
+              items[id] = (items[id] ?? 0) + qty;
+            }
+          }
+          return {
+            items,
+            coins: s.coins + (contents.coins ?? 0),
+            gems: s.gems + (contents.gems ?? 0),
+          };
         }),
 
       resetAll: () => set({ ...initialState }),

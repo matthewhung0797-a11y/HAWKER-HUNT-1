@@ -124,6 +124,23 @@
     "limitError": "Already checked in 3 times here today — come back tomorrow or try another hawker",
     "cooldownError": "Just checked in here — wait about {minutes} min (or try another hawker)"
   },
+  "mission": {
+    "title": "Missions",
+    "daily": "Daily",
+    "dailyTitle": "Daily Missions",
+    "special": "Special",
+    "specialTitle": "Special Missions",
+    "noDaily": "No daily missions",
+    "noSpecial": "No special missions",
+    "claim": "Claim",
+    "claimed": "✓ Claimed",
+    "capture": "Catch {n} spirits",
+    "captureUnique": "Catch {n} different spirits",
+    "checkin": "Check in at {n} locations",
+    "battleWin": "Win {n} battles",
+    "evolve": "Evolve {n} spirits",
+    "catchSpecific": "Catch a specific spirit {n} times"
+  },
   "capture": {
     "targeted": "TARGETED",
     "clamp": "CLAMP!",
@@ -337,5 +354,32 @@
     "salty": "Salty",
     "spicy": "Spicy",
     "sweet": "Sweet"
+  },
+  "gifts": {
+    "title": "Gifts",
+    "placeholder": "Enter redeem code",
+    "redeemBtn": "Redeem",
+    "inbox": "Pending gifts",
+    "claim": "Claim",
+    "redeemed": "Redeemed \"{title}\"",
+    "claimed": "Claimed \"{title}\"",
+    "needLogin": "Sign in to redeem or claim gifts",
+    "invalid": "Invalid code",
+    "notOpen": "Code not available yet",
+    "expired": "Code has expired",
+    "already": "You have already claimed this gift",
+    "failed": "Something went wrong, please try again later"
+  },
+  "sys": {
+    "maintenanceTitle": "Under Maintenance",
+    "maintenanceDefault": "The hawkers are setting up their stalls — please come back soon!",
+    "updateTitle": "Update Available",
+    "updateBody": "This version is no longer supported. Please update to the latest version to continue.",
+    "updateBtn": "Get the Update"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "empty": "No notifications"
   }
 }
