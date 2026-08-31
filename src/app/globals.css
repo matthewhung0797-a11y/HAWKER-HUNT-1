@@ -3,7 +3,7 @@
 /* 遊戲顯示字型：jf open 粉圓（子集化，scripts/build-font.mjs 產生） */
 @font-face {
   font-family: "openhuninn";
-  src: url("/fonts/openhuninn-subset.woff2") format("woff2");
+  src: url("/fonts/openhuninn-subset.d7d6dea5.woff2") format("woff2");
   font-weight: 400 900;
   font-display: swap;
 }

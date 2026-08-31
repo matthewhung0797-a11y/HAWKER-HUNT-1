@@ -338,6 +338,8 @@
     "myItems": "My Items",
     "settings": "Settings",
     "guest": "Guest Hunter",
+    "changeName": "Change Name",
+    "namePlaceholder": "Enter new name",
     "languageSetting": "Language",
     "resetData": "Reset Game Data"
   },

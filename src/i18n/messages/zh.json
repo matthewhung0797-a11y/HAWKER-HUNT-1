@@ -338,6 +338,8 @@
     "myItems": "我的道具",
     "settings": "設定",
     "guest": "遊客獵人",
+    "changeName": "修改名稱",
+    "namePlaceholder": "輸入新名稱",
     "languageSetting": "語言",
     "resetData": "重設遊戲數據"
   },

@@ -24,6 +24,8 @@ export default function ProfilePage() {
   const router = useRouter();
   const store = useGameStore();
   const [selectedBadge, setSelectedBadge] = useState<BadgeDef | null>(null);
+  const [editingName, setEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState("");
 
   const caughtCount = Object.keys(store.captureCounts).length;
   const dexPercent = Math.round((caughtCount / SPECIES.length) * 100);
@@ -70,6 +72,18 @@ export default function ProfilePage() {
         <div className="flex-1">
           <div className="flex items-center gap-2">
             <h1 className="text-lg font-black text-ink">{store.nickname || t("profile.guest")}</h1>
+            <button
+              onClick={() => {
+                sfxTap();
+                setNameInput(store.nickname || "");
+                setEditingName(true);
+              }}
+              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-ink/20 bg-parchment-dark/60 text-xs text-ink-soft transition active:scale-90 hover:bg-parchment-dark"
+              aria-label={t("profile.changeName")}
+              title={t("profile.changeName")}
+            >
+              ✏️
+            </button>
             {faction && (
               <span
                 className="rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
@@ -270,6 +284,47 @@ export default function ProfilePage() {
           })}
         </div>
       </section>
+
+      {/* 修改名稱 modal */}
+      {editingName && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-6" onClick={() => setEditingName(false)}>
+          <div
+            className="card-parchment w-full max-w-sm rounded-2xl border-2 border-gold/50 p-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="mb-3 text-center text-base font-black text-ink">{t("profile.changeName")}</h3>
+            <input
+              value={nameInput}
+              onChange={(e) => setNameInput(e.target.value.slice(0, 12))}
+              maxLength={12}
+              autoFocus
+              placeholder={t("profile.namePlaceholder")}
+              className="w-full rounded-xl border-2 border-ink/15 bg-parchment-dark/40 px-3 py-2.5 text-center text-base font-bold text-ink outline-none placeholder:text-ink-soft/50 focus:border-gold"
+            />
+            <div className="mt-1 text-right text-[11px] font-bold text-ink-soft">{nameInput.length}/12</div>
+            <div className="mt-3 flex gap-2">
+              <button
+                onClick={() => setEditingName(false)}
+                className="flex-1 rounded-xl bg-parchment-dark/60 py-2.5 text-sm font-bold text-ink-soft transition active:scale-95"
+              >
+                {t("common.cancel")}
+              </button>
+              <button
+                onClick={() => {
+                  const trimmed = nameInput.trim();
+                  if (!trimmed) return;
+                  store.setNickname(trimmed);
+                  setEditingName(false);
+                }}
+                disabled={!nameInput.trim()}
+                className="btn-gold flex-1 py-2.5 text-sm font-black disabled:opacity-50"
+              >
+                {t("common.confirm")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 徽章詳情 bottom sheet */}
       {selectedBadge && (
