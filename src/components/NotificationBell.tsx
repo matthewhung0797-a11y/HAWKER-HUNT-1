@@ -94,8 +94,9 @@ export default function NotificationBell() {
         className="fixed z-30 flex h-11 w-11 items-center justify-center rounded-full border-2 border-gold bg-black/60 shadow-lg backdrop-blur-sm transition-transform active:scale-90"
         style={{
           touchAction: "manipulation",
-          // 與任務按鈕同一垂直欄、貼齊排列：鈴鐺下緣 = 任務按鈕上緣（零間隙）
-          top: "calc(50% - 52px)",
+          // 與任務按鈕同一垂直欄上下排列：任務按鈕頂緣在 50vh-52px（52px 高 + translateY(-100%)），
+          // 鈴鐺（44px 高）墊在任務上方再留 8px 間隙 → top = 50vh - 52 - 8 - 44
+          top: "calc(50% - 104px)",
           left: "max(0px, calc(50vw - min(50vw, calc(50vh * 9 / 16))))",
         }}
         aria-label={t("notifications.title")}

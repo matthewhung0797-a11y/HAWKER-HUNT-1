@@ -10,6 +10,7 @@ import { ITEM_MAP } from "@/content/items";
 import { ELEMENT_INFO } from "@/content/elements";
 import { BADGES, type BadgeDef } from "@/content/badges";
 import { useGameStore, spiritExpToNext, SPIRIT_LEVEL_CAP } from "@/lib/store";
+import { validateNickname, nicknameErrorText } from "@/lib/nickname";
 import { sfxTap } from "@/lib/sfx";
 import BottomNav from "@/components/BottomNav";
 import LangSwitch from "@/components/LangSwitch";
@@ -26,6 +27,9 @@ export default function ProfilePage() {
   const [selectedBadge, setSelectedBadge] = useState<BadgeDef | null>(null);
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState("");
+  // 名稱即時驗證（敏感字／格式）；顯示中譯/英譯錯誤提示，違規時確認鈕鎖住
+  const nameErrorCode = editingName ? validateNickname(nameInput) : null;
+  const nameError = nameErrorCode ? nicknameErrorText(nameErrorCode, locale) : "";
 
   const caughtCount = Object.keys(store.captureCounts).length;
   const dexPercent = Math.round((caughtCount / SPECIES.length) * 100);
@@ -301,7 +305,14 @@ export default function ProfilePage() {
               placeholder={t("profile.namePlaceholder")}
               className="w-full rounded-xl border-2 border-ink/15 bg-parchment-dark/40 px-3 py-2.5 text-center text-base font-bold text-ink outline-none placeholder:text-ink-soft/50 focus:border-gold"
             />
-            <div className="mt-1 text-right text-[11px] font-bold text-ink-soft">{nameInput.length}/12</div>
+            <div className="mt-1 flex items-center justify-between gap-2">
+              {nameError ? (
+                <span className="text-[11px] font-bold text-chilli">{nameError}</span>
+              ) : (
+                <span />
+              )}
+              <span className="shrink-0 text-[11px] font-bold text-ink-soft">{nameInput.length}/12</span>
+            </div>
             <div className="mt-3 flex gap-2">
               <button
                 onClick={() => setEditingName(false)}
@@ -312,11 +323,11 @@ export default function ProfilePage() {
               <button
                 onClick={() => {
                   const trimmed = nameInput.trim();
-                  if (!trimmed) return;
+                  if (validateNickname(trimmed)) return; // 驗證不過（提示已即時顯示）
                   store.setNickname(trimmed);
                   setEditingName(false);
                 }}
-                disabled={!nameInput.trim()}
+                disabled={Boolean(validateNickname(nameInput))}
                 className="btn-gold flex-1 py-2.5 text-sm font-black disabled:opacity-50"
               >
                 {t("common.confirm")}
