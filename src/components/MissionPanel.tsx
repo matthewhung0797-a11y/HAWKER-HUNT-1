@@ -333,6 +333,7 @@ export function MissionPanel({
   onClaim: (id: string) => void;
 }) {
   const t = useTranslations("mission");
+  const [tab, setTab] = useState<"daily" | "special">("daily");
   const daily = missions.filter((m) => m.type === "daily");
   const special = missions.filter((m) => m.type === "special");
 
@@ -347,39 +348,69 @@ export function MissionPanel({
           <button onClick={onClose} className="text-2xl text-ink-soft" style={{ fontWeight: 400 }}>✕</button>
         </div>
 
-        {/* 每日任務 */}
-        <div className="mb-4">
-          <h3 className="mb-2 flex items-center gap-2 text-sm text-ink" style={{ fontWeight: 400 }}>
-            <span className="rounded-full bg-gold px-2 py-0.5 text-xs text-ink">{t("daily")}</span>
-            {t("dailyTitle")}
-          </h3>
-          <div className="flex flex-col gap-2">
-            {daily.length === 0 ? (
-              <p className="text-xs text-ink-soft">{t("noDaily")}</p>
-            ) : (
-              daily.map((m) => (
-                <MissionCard key={m.id} mission={m} onClaim={onClaim} />
-              ))
-            )}
-          </div>
+        {/* 分頁按鈕：每日任務 / 特別任務 */}
+        <div className="mb-4 flex gap-2">
+          <button
+            onClick={() => setTab("daily")}
+            className={`flex-1 rounded-full border-2 py-2 text-sm transition-transform active:scale-95 ${
+              tab === "daily"
+                ? "border-gold bg-gold/20 text-ink"
+                : "border-ink-soft/25 bg-white/40 text-ink-soft"
+            }`}
+            style={{ fontWeight: 400 }}
+          >
+            {t("daily")}
+          </button>
+          <button
+            onClick={() => setTab("special")}
+            className={`flex-1 rounded-full border-2 py-2 text-sm transition-transform active:scale-95 ${
+              tab === "special"
+                ? "border-chilli bg-chilli/15 text-ink"
+                : "border-ink-soft/25 bg-white/40 text-ink-soft"
+            }`}
+            style={{ fontWeight: 400 }}
+          >
+            {t("special")}
+          </button>
         </div>
 
-        {/* 特別任務 */}
-        <div className="mb-2">
-          <h3 className="mb-2 flex items-center gap-2 text-sm text-ink" style={{ fontWeight: 400 }}>
-            <span className="rounded-full bg-chilli px-2 py-0.5 text-xs text-white">{t("special")}</span>
-            {t("specialTitle")}
-          </h3>
-          <div className="flex flex-col gap-2">
-            {special.length === 0 ? (
-              <p className="text-xs text-ink-soft">{t("noSpecial")}</p>
-            ) : (
-              special.map((m) => (
-                <MissionCard key={m.id} mission={m} onClaim={onClaim} />
-              ))
-            )}
+        {/* 每日任務 */}
+        {tab === "daily" && (
+          <div className="mb-4">
+            <h3 className="mb-2 flex items-center gap-2 text-sm text-ink" style={{ fontWeight: 400 }}>
+              <span className="rounded-full bg-gold px-2 py-0.5 text-xs text-ink">{t("daily")}</span>
+              {t("dailyTitle")}
+            </h3>
+            <div className="flex flex-col gap-2">
+              {daily.length === 0 ? (
+                <p className="text-xs text-ink-soft">{t("noDaily")}</p>
+              ) : (
+                daily.map((m) => (
+                  <MissionCard key={m.id} mission={m} onClaim={onClaim} />
+                ))
+              )}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* 特別任務 */}
+        {tab === "special" && (
+          <div className="mb-2">
+            <h3 className="mb-2 flex items-center gap-2 text-sm text-ink" style={{ fontWeight: 400 }}>
+              <span className="rounded-full bg-chilli px-2 py-0.5 text-xs text-white">{t("special")}</span>
+              {t("specialTitle")}
+            </h3>
+            <div className="flex flex-col gap-2">
+              {special.length === 0 ? (
+                <p className="text-xs text-ink-soft">{t("noSpecial")}</p>
+              ) : (
+                special.map((m) => (
+                  <MissionCard key={m.id} mission={m} onClaim={onClaim} />
+                ))
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
