@@ -764,7 +764,7 @@ export default function MapPage() {
         w.scaler.style.transform = `scale(${(sp * 0.5).toFixed(3)})`;
         w.hit.style.pointerEvents = visible ? "auto" : "none";
       }
-      // 據點圖示固定大小（80px），不跟地圖縮放；定位標記跟地圖縮放（精靈同款比例）
+      // 據點標記固定 60px（badgeScalers 唔寫 transform＝永遠原大小）；定位標記跟地圖縮放（精靈同款比例）
       const ps = playerScalerRef.current;
       if (ps) ps.style.transform = `scale(${(sp * 0.5).toFixed(3)})`;
     };
