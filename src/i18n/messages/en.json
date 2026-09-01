@@ -259,7 +259,14 @@
   "mySpirits": {
     "title": "My Spirits",
     "count": "{count} total",
-    "empty": "No spirits yet — go catch some on the map!"
+    "empty": "No spirits yet — go catch some on the map!",
+    "sort": {
+      "title": "Sort",
+      "level": "Level",
+      "caughtAt": "Time Caught",
+      "rarity": "Rarity",
+      "element": "Element"
+    }
   },
   "evolution": {
     "evolving": "Evolving…",

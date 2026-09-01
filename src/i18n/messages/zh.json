@@ -259,7 +259,14 @@
   "mySpirits": {
     "title": "我的精靈",
     "count": "共 {count} 隻",
-    "empty": "仲未有精靈，去地圖捕捉啦！"
+    "empty": "仲未有精靈，去地圖捕捉啦！",
+    "sort": {
+      "title": "排序",
+      "level": "等級",
+      "caughtAt": "獲得時間",
+      "rarity": "稀有度",
+      "element": "屬性"
+    }
   },
   "evolution": {
     "evolving": "進化中…",
