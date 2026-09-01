@@ -11,6 +11,33 @@ export const ITEMS: GameItem[] = [
     icon: "chopsticks",
   },
   {
+    id: "chopsticks_copper",
+    name: { en: "Copper Chopsticks", zh: "銅筷子" },
+    description: {
+      en: "Refined texture, slightly grand.",
+      zh: "精緻質感，略顯氣派。",
+    },
+    icon: "chopsticks",
+  },
+  {
+    id: "chopsticks_silver",
+    name: { en: "Silver Chopsticks", zh: "銀筷子" },
+    description: {
+      en: "Noble choice, immune to poison.",
+      zh: "名門選用，百毒不侵。",
+    },
+    icon: "chopsticks",
+  },
+  {
+    id: "chopsticks_golden",
+    name: { en: "Golden Chopsticks", zh: "金筷子" },
+    description: {
+      en: "Ultimate luxury, symbol of nobility.",
+      zh: "奢華至極，尊貴象徵。",
+    },
+    icon: "chopsticks",
+  },
+  {
     id: "chicken-oil-essence",
     name: { en: "Chicken Oil Essence", zh: "雞油精華" },
     description: { en: "Fragrant essence from poached chicken.", zh: "白斬雞提煉嘅香濃精華。" },

@@ -5,10 +5,19 @@ import { useTranslations } from "next-intl";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { SPECIES_MAP } from "@/content/species";
-import SpiritModel, { type SpiritAnim } from "@/components/three/SpiritModel";
+import SpiritModel from "@/components/three/SpiritModel";
 import UIIcon from "@/components/UIIcon";
 const SELFIE_SCALE_MIN = 0.55;
 const SELFIE_SCALE_MAX = 1.85;
+
+/** 與圖鑑 3D 檢視（dex/[id]）完全相同的 faceCamera 值：
+ *  0 = 不轉、π/2 = 右轉 90°、true（其他）= -π/2（正面朝鏡頭）。
+ *  SpiritModel 內部會以 faceYaw 覆寫 modelYaw → 自拍影出嚟嘅角度同圖鑑一模一樣。 */
+export function selfieFaceCamera(speciesId: string): boolean | number {
+  if (speciesId === "chilli-baby" || speciesId === "nasi-lemak-scout") return 0;
+  if (speciesId === "nasi-lemak-tot") return Math.PI / 2;
+  return true;
+}
 
 /** 喺 canvas 畫一個白色對話泡泡（自拍影相時連對白影埋入相，跟精靈螢幕位置） */
 function drawSpeechBubble(
@@ -61,8 +70,8 @@ function drawSpeechBubble(
   ctx.fillText(text, x0 + bw / 2, y0 + bh / 2 + 1);
 }
 
-/** 自拍用 3D 精靈：喺你拖嘅錨點附近「活潑咁走來走去」（行走／小停頓／面向移動方向），
- *  並每 frame 將頭頂投影返螢幕座標，俾對話泡泡跟住佢；跟捕捉狀態用 3D 模型。 */
+/** 自拍用 3D 精靈：原地播放 idle（同圖鑑 3D 檢視一致），平滑跟隨拖動錨點，
+ *  並每 frame 將頭頂投影返螢幕座標，俾對話泡泡跟住佢。 */
 function SelfieSpirit3d({
   speciesId,
   posRef,
@@ -84,78 +93,37 @@ function SelfieSpirit3d({
   const shadowMat = useRef<THREE.MeshBasicMaterial>(null);
   const { viewport, camera, size } = useThree();
   const h = species?.modelHeightM ?? 0.5;
-  const [anim, setAnim] = useState<SpiritAnim>("idle");
-  const animRef = useRef<SpiritAnim>("idle");
-  const cur = useRef({ x: 0, y: 0, inited: false });
-  const tgt = useRef({ x: 0, y: 0 });
-  const dwell = useRef(0);
+  const smooth = useRef({ x: 0, y: 0, inited: false });
   const proj = useRef(new THREE.Vector3());
-  useFrame((state, dt) => {
+  useFrame((_, dt) => {
     const g = group.current;
     if (!g) return;
     const userScale = scaleRef.current;
 
+    // 拖動錨點（螢幕比例）→ z=0 世界座標；平滑跟隨（唔再隨機漫步：自拍＝圖鑑式原地 idle）
     const p = posRef.current;
-    // 拖動錨點（螢幕比例）→ z=0 世界座標，作為漫步中心
     const cx = (p.x - 0.5) * viewport.width;
     const cy = (0.5 - p.y) * viewport.height;
-    if (!cur.current.inited) {
-      cur.current = { x: cx, y: cy, inited: true };
-      tgt.current = { x: cx, y: cy };
-    }
-    const halfX = viewport.width * 0.2;
-    const halfY = viewport.height * 0.1;
-    const dx = tgt.current.x - cur.current.x;
-    const dy = tgt.current.y - cur.current.y;
-    const dist = Math.hypot(dx, dy);
-    let lean = 0;
-    if (dist < 0.03) {
-      // 到埗：短暫停頓（活潑＝停得短）再抽下一個目標
-      dwell.current -= dt;
-      if (dwell.current <= 0) {
-        tgt.current = {
-          x: cx + (Math.random() * 2 - 1) * halfX,
-          y: cy + (Math.random() * 2 - 1) * halfY,
-        };
-        dwell.current = 0.5 + Math.random() * 0.9;
-      }
-      if (animRef.current !== "idle") {
-        animRef.current = "idle";
-        setAnim("idle");
-      }
-    } else {
-      const spd = Math.min(dist, viewport.width * 0.22 * dt);
-      cur.current.x += (dx / dist) * spd;
-      cur.current.y += (dy / dist) * spd;
-      lean = -Math.sign(dx) * 0.22; // 面向移動方向輕微傾
-      if (animRef.current !== "walk") {
-        animRef.current = "walk";
-        setAnim("walk");
-      }
-    }
-    // clamp 喺可見框內（唔好行出畫面）
-    const mx = viewport.width * 0.5 - h * 0.4;
-    const my = viewport.height * 0.5 - h * 0.9;
-    cur.current.x = Math.max(-mx, Math.min(mx, cur.current.x));
-    cur.current.y = Math.max(-my, Math.min(my, cur.current.y));
-    const tt = state.clock.elapsedTime;
-    const bobAmp = animRef.current === "walk" ? Math.abs(Math.sin(tt * 6)) * 0.07 : Math.abs(Math.sin(tt * 2)) * 0.04;
+    if (!smooth.current.inited) smooth.current = { x: cx, y: cy, inited: true };
+    const follow = Math.min(1, dt * 10);
+    smooth.current.x += (cx - smooth.current.x) * follow;
+    smooth.current.y += (cy - smooth.current.y) * follow;
+
     const hh = h * userScale;
     g.scale.setScalar(userScale);
-    g.position.set(cur.current.x, cur.current.y - hh / 2 + bobAmp * hh, 0);
-    g.rotation.y += (lean - g.rotation.y) * Math.min(1, dt * 8);
+    g.position.set(smooth.current.x, smooth.current.y - hh / 2, 0);
+    // rotation 唔掂：面向角度全權交由 SpiritModel faceCamera（＝圖鑑 3D 檢視角度）
     // 螢幕錨定係平面疊圖（全部喺 z=0），冇真地面可以投影——用壓扁橢圓做腳下影
     const sm = shadowMesh.current;
     if (sm) {
       sm.visible = true;
       sm.rotation.set(0, 0, 0);
-      sm.position.set(cur.current.x, cur.current.y - hh * 0.54, -0.02);
-      const k = (1 - Math.min(0.4, bobAmp * 3.2)) * userScale;
-      sm.scale.set(k, k * 0.3, 1);
-      if (shadowMat.current) shadowMat.current.opacity = 0.24 * Math.min(1, k);
+      sm.position.set(smooth.current.x, smooth.current.y - hh * 0.54, -0.02);
+      sm.scale.set(userScale, userScale * 0.3, 1);
+      if (shadowMat.current) shadowMat.current.opacity = 0.24 * Math.min(1, userScale);
     }
     // 頭頂投影 → 螢幕 px（泡泡錨點；DOM 泡泡每 frame 跟住郁，唔使 React re-render）
-    proj.current.set(cur.current.x, cur.current.y + hh * 0.55, 0).project(camera);
+    proj.current.set(smooth.current.x, smooth.current.y + hh * 0.55, 0).project(camera);
     const sx = (proj.current.x * 0.5 + 0.5) * size.width;
     const sy = (-proj.current.y * 0.5 + 0.5) * size.height;
     bubbleAnchorRef.current.x = sx;
@@ -168,7 +136,12 @@ function SelfieSpirit3d({
   return (
     <>
       <group ref={group}>
-        <SpiritModel speciesId={speciesId} anim={anim} shadow={false} />
+        <SpiritModel
+          speciesId={speciesId}
+          anim="idle"
+          shadow={false}
+          faceCamera={selfieFaceCamera(speciesId)}
+        />
       </group>
       {/* 位置／朝向／透明度全部喺 useFrame 按分支設定（gyro = 地面圓影，螢幕錨定 = 壓扁橢圓）。
           半徑要闊過模型自己嘅底座（好多精靈自帶碟／飯糰底），唔係個影會被底座蓋到睇唔見 */}

@@ -2650,7 +2650,7 @@ function CaptureInner() {
 
       {/* 捕捉成功 */}
       {phase === "success" && (
-        <div className="absolute inset-0 z-30 flex flex-col items-center gap-4 overflow-y-auto bg-gradient-to-b from-[#2a1a0c] to-[#4a2c14] px-6 py-[max(1.5rem,env(safe-area-inset-top))]">
+        <div className="absolute inset-0 z-30 flex flex-col items-center gap-[clamp(0.6rem,1.6dvh,1.1rem)] overflow-y-auto overflow-x-hidden bg-gradient-to-b from-[#2a1a0c] to-[#4a2c14] px-4 py-[max(1.25rem,env(safe-area-inset-top))] sm:px-6 sm:py-[max(1.5rem,env(safe-area-inset-top))]">
           <Confetti />
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
             {[0, 0.2, 0.4].map((d) => (
@@ -2662,7 +2662,7 @@ function CaptureInner() {
             ))}
           </div>
 
-          <h1 className="mt-auto text-[clamp(28px,8vw,42px)] font-black text-gold-light drop-shadow-[0_0_20px_rgba(232,200,96,0.7)]">
+          <h1 className="mt-auto text-center text-[clamp(28px,8vw,42px)] font-black text-gold-light drop-shadow-[0_0_20px_rgba(232,200,96,0.7)]">
             {t("capture.success")}
           </h1>
           {shiny && (
@@ -2673,7 +2673,7 @@ function CaptureInner() {
 
           {/* 以前 h-72＋0.85m 歸一化，煎蕊仔呢類矮肥寵會頂到標題同資料卡；收細到 h-52＋0.55m */}
           {/* 自適應：以視窗高度為上限，細機唔會擠爆、大機保持最大 208px */}
-          <div className="flex aspect-square w-[min(208px,32dvh)] items-center justify-center">
+          <div className="flex aspect-square w-[min(208px,32dvh)] shrink-0 items-center justify-center">
             {webglOk && species.modelUrl ? (
               <Canvas camera={{ fov: 45, position: [0, 0.35, 1.35] }} gl={{ alpha: true }}>
                 <ambientLight intensity={1.2} />
@@ -2701,7 +2701,7 @@ function CaptureInner() {
             )}
           </div>
 
-          <div className="card-parchment w-full max-w-xs p-4">
+          <div className="card-parchment w-full max-w-xs shrink-0 p-3.5 sm:p-4">
             <div className="mb-2 flex items-center justify-between">
               <span className="text-lg font-black text-ink">
                 {species.name[locale]}{" "}
@@ -2748,21 +2748,21 @@ function CaptureInner() {
           <button
             onClick={() => setSelfieOpen(true)}
             data-testid="selfie-open"
-            className="btn-outline flex items-center gap-1.5 px-6 py-3 text-sm font-bold"
+            className="btn-outline flex w-full max-w-xs items-center justify-center gap-1.5 px-6 py-3 text-sm font-bold sm:w-auto"
           >
             <UIIcon name="camera" size={18} /> {t("capture.photoMode")}
           </button>
 
-          <div className="mb-auto flex gap-3">
+          <div className="mb-auto flex w-full max-w-xs flex-wrap items-center justify-center gap-2 sm:gap-3">
             <button
               onClick={() => router.push(`/dex/${speciesId}`)}
-              className="btn-outline flex items-center gap-1.5 px-6 py-3 text-sm font-bold"
+              className="btn-outline flex min-w-32 flex-1 items-center justify-center gap-1.5 px-4 py-3 text-sm font-bold sm:px-6"
             >
               <UIIcon name="book" size={18} /> {t("nav.dex")}
             </button>
             <button
               onClick={() => router.push("/map")}
-              className="btn-gold px-8 py-3 text-base font-black"
+              className="btn-gold min-w-32 flex-1 px-4 py-3 text-base font-black sm:px-8"
             >
               {t("capture.keepExploring")}
             </button>
