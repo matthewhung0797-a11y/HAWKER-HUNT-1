@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
-import { SPECIES, SPECIES_MAP } from "@/content/species";
+import { SPECIES_MAP } from "@/content/species";
 import { ELEMENT_INFO, ELEMENT_ORDER } from "@/content/elements";
 import type { ElementType } from "@/content/types";
 import { useGameStore } from "@/lib/store";
@@ -27,11 +27,6 @@ const ELEMENT_ORDER_RANK: Record<ElementType, number> = {
   metal: 3,
   earth: 4,
 };
-
-/** 精靈編號（圖鑑順序）：SPECIES 陣列 index */
-const SPECIES_INDEX: Record<string, number> = Object.fromEntries(
-  SPECIES.map((s, i) => [s.id, i])
-);
 
 /** 排序設定（localStorage 記憶） */
 interface SortSettings {
@@ -121,45 +116,46 @@ export default function MySpiritsPage() {
       ELEMENT_ORDER_RANK[SPECIES_MAP[s.speciesId]?.element ?? "earth"] ?? 4;
     const rarRank = (s: typeof list[number]) =>
       RARITY_RANK[SPECIES_MAP[s.speciesId]?.rarity ?? "basic"] ?? 0;
-    const dexNo = (s: typeof list[number]) => SPECIES_INDEX[s.speciesId] ?? 9999;
+    // 相同精靈歸集（Excel 次級 1）：同 speciesId 排埋一齊（組內由後續規則決定）
+    const sameSpecies = (s: typeof list[number]) => s.speciesId;
     const lv = (s: typeof list[number]) => s.level;
     const at = (s: typeof list[number]) => s.caughtAt;
 
     switch (sortKey) {
       case "element":
-        // 屬性(固定順序) → 精靈編號 → 等級(高→低) → 獲取時間(新→舊)
+        // 屬性(固定順序) → 相同精靈 → 等級(高→低) → 獲取時間(新→舊)
         return list.sort(
           (a, b) =>
             elRank(a) - elRank(b) ||
-            dexNo(a) - dexNo(b) ||
+            sameSpecies(a).localeCompare(sameSpecies(b)) ||
             lv(b) - lv(a) ||
             at(b) - at(a)
         );
       case "rarity":
-        // 稀有度 → 精靈編號 → 等級(高→低) → 獲取時間(新→舊)；升序＝稀有度反轉
+        // 稀有度 → 相同精靈 → 等級(高→低) → 獲取時間(新→舊)；升序＝稀有度反轉
         return list.sort(
           (a, b) =>
             (dir === "desc" ? rarRank(b) - rarRank(a) : rarRank(a) - rarRank(b)) ||
-            dexNo(a) - dexNo(b) ||
+            sameSpecies(a).localeCompare(sameSpecies(b)) ||
             lv(b) - lv(a) ||
             at(b) - at(a)
         );
       case "level":
-        // 等級(高→低/低→高) → 精靈編號 → 稀有度(高→低) → 獲取時間(新→舊)
+        // 等級(高→低/低→高) → 相同精靈 → 稀有度(高→低) → 獲取時間(新→舊)
         return list.sort(
           (a, b) =>
             (dir === "desc" ? lv(b) - lv(a) : lv(a) - lv(b)) ||
-            dexNo(a) - dexNo(b) ||
+            sameSpecies(a).localeCompare(sameSpecies(b)) ||
             rarRank(b) - rarRank(a) ||
             at(b) - at(a)
         );
       case "caughtAt":
       default:
-        // 獲取時間(新→舊/舊→新) → 精靈編號 → 等級(高→低) → 稀有度(高→低)
+        // 獲取時間(新→舊/舊→新) → 相同精靈 → 等級(高→低) → 稀有度(高→低)
         return list.sort(
           (a, b) =>
             (dir === "desc" ? at(b) - at(a) : at(a) - at(b)) ||
-            dexNo(a) - dexNo(b) ||
+            sameSpecies(a).localeCompare(sameSpecies(b)) ||
             lv(b) - lv(a) ||
             rarRank(b) - rarRank(a)
         );
