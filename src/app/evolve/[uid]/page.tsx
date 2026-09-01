@@ -4,13 +4,13 @@ import { use, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Object3D } from "three";
+import { Canvas, useFrame } from "@react-three/fiber";
 import type { Group } from "three";
 import { SPECIES_MAP } from "@/content/species";
 import { ELEMENT_INFO } from "@/content/elements";
 import { useGameStore } from "@/lib/store";
 import SpiritModel from "@/components/three/SpiritModel";
+import { selfieFaceCamera } from "@/components/SelfiePhoto";
 import Confetti from "@/components/Confetti";
 import { sfxAppear, sfxEvolve, sfxShiny, sfxStruggleTick, sfxTap } from "@/lib/sfx";
 import { buzz } from "@/lib/sfx";
@@ -29,12 +29,6 @@ const T_MORPH = 1900;
 const T_SUSPENSE = 3900;
 const T_REVEAL = 4300;
 const T_DONE = 5500;
-
-// 面向鏡頭：唔可以用固定 yaw offset（每隻 modelYaw 唔同，+π 對某啲啱、某啲變背向）。
-// 正解係照抄 battle 個 lookAt 機制——battle g.lookAt(敵人) 令寵物正面對敵人，
-// 證明 modelYaw 已將每隻嘅「正面」對齊到 group 嘅 lookAt 軸；所以 lookAt(鏡頭) 就通用地
-// 令任何一隻都正面對玩家。⚠️ 朝向唔靠估：改完一定要用 diag 截多隻肉眼校準（見 SKILL）。
-const _aim = new Object3D(); // 每 frame 借嚟計「望住鏡頭」嘅目標朝向，唔入 scene
 
 /** 蓄勢：美食粒子由四周螺旋匯聚入精靈 */
 function ConvergeField({ color, shiny }: { color: string; shiny: boolean }) {
@@ -140,9 +134,10 @@ function BurstField({ color, star }: { color: string; star: boolean }) {
 }
 
 /**
- * 進化演出朝向控制：外層 wrapper 每 frame ease 個 yaw，
- * 由背向鏡頭（0）逐幕慢慢轉向正面（FACE_YAW），reveal/done 定格對正玩家（睇住你）。
- * spin 交由呢度控制，唔用 SpiritModel 內置 spin（嗰個會停喺隨機角度＝背住你）。
+ * 進化演出朝向控制：與圖鑑 3D 檢視同一角度（faceCamera 映射：SpiritModel 內部以
+ * faceYaw 覆寫 modelYaw）。外層 wrapper 只做「演出戲劇性」：起手背向，逐幕 slerp
+ * 轉返正面（最終角度＝圖鑑角度，靠 faceCamera 保證每隻精靈都啱）。
+ * 之前用 lookAt(camera) 通用朝向，對某啲精靈同圖鑑有偏差 — 已改為固定 yaw 對齊。
  */
 function EvolveRig({
   speciesId,
@@ -156,24 +151,25 @@ function EvolveRig({
   stage: Stage;
 }) {
   const rig = useRef<Group>(null);
-  const { camera } = useThree();
   const inited = useRef(false);
+  // 圖鑑角度對應嘅 wrapper yaw：faceCamera=true（多數精靈）→ 0；0（唔轉）→ π/2；π/2（右轉）→ -π/2
+  // （SpiritModel 內部已經搞掂模型自轉；wrapper 呢度係將「正面」由 lookAt 軸對返鏡頭軸）
+  const targetYaw = 0;
   useFrame((_, dt) => {
     const g = rig.current;
     if (!g) return;
-    // 目標朝向＝望住鏡頭（只轉 yaw：target.y 對齊自身高度，避免 lookAt 連 pitch 令寵物仰起）
-    _aim.position.copy(g.position);
-    _aim.lookAt(camera.position.x, g.position.y, camera.position.z);
     if (!inited.current) {
       // 起手先背向鏡頭，等佢喺演出途中慢慢轉埋嚟
-      g.quaternion.copy(_aim.quaternion);
-      g.rotateY(Math.PI);
+      g.rotation.set(0, targetYaw + Math.PI, 0);
       inited.current = true;
       return;
     }
     // 逐幕加快 slerp：蓄勢/變形慢慢轉 → 揭曉/完成鎖實正面「睇住你」
     const rate = stage === "reveal" || stage === "done" ? 8 : stage === "suspense" ? 4 : 2.2;
-    g.quaternion.slerp(_aim.quaternion, Math.min(1, dt * rate));
+    // 最短弧度差 slerp（-π..π 環繞唔會兜遠路）
+    let diff = targetYaw - g.rotation.y;
+    diff = Math.atan2(Math.sin(diff), Math.cos(diff));
+    g.rotation.y += diff * Math.min(1, dt * rate);
   });
   return (
     <group ref={rig}>
@@ -184,6 +180,7 @@ function EvolveRig({
           新 skinned mesh 冇嘢驅動 → 進化後隻寵物定格喺 bind pose（靜止）。
           remount 令 useGLTF／useAnimations 乾淨重建，idle clip 真正驅動手腳，
           同切磋一樣有骨架動作（fullRig 尤其明顯，佢淨靠 clip 唔靠程序化 idle）。
+          faceCamera＝與圖鑑 3D 檢視完全相同嘅正面角度映射。
         */}
         <SpiritModel
           key={speciesId}
@@ -191,6 +188,7 @@ function EvolveRig({
           spin={false}
           shiny={shiny}
           flashKey={flashKey}
+          faceCamera={selfieFaceCamera(speciesId)}
         />
       </group>
     </group>

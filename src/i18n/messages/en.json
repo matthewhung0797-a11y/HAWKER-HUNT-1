@@ -32,6 +32,7 @@
   "nav": {
     "map": "Map",
     "dex": "Dex",
+    "mySpirits": "Spirits",
     "capture": "Catch",
     "shop": "Shop",
     "leaderboard": "Ranks",
@@ -250,6 +251,11 @@
     "viewEvolvedForm": "View {name}",
     "view3d": "View in 3D 360°",
     "show2d": "Show art"
+  },
+  "mySpirits": {
+    "title": "My Spirits",
+    "count": "{count} total",
+    "empty": "No spirits yet — go catch some on the map!"
   },
   "evolution": {
     "evolving": "Evolving…",

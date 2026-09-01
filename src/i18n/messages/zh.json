@@ -32,6 +32,7 @@
   "nav": {
     "map": "地圖",
     "dex": "圖鑑",
+    "mySpirits": "我的精靈",
     "capture": "捕捉",
     "shop": "商城",
     "leaderboard": "排行榜",
@@ -250,6 +251,11 @@
     "viewEvolvedForm": "查看 {name}",
     "view3d": "360° 立體睇",
     "show2d": "返立繪"
+  },
+  "mySpirits": {
+    "title": "我的精靈",
+    "count": "共 {count} 隻",
+    "empty": "仲未有精靈，去地圖捕捉啦！"
   },
   "evolution": {
     "evolving": "進化中…",
