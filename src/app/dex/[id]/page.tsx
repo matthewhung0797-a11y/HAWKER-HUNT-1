@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useMemo, useState } from "react";
+import { use, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -13,7 +13,6 @@ import { useGameStore, spiritExpToNext, SPIRIT_LEVEL_CAP } from "@/lib/store";
 import { sfxTap } from "@/lib/sfx";
 import { hasWebGL2 } from "@/lib/webgl";
 import BottomNav from "@/components/BottomNav";
-import ElementBadge from "@/components/ElementBadge";
 import SpiritIcon from "@/components/SpiritIcon";
 import SpiritModel from "@/components/three/SpiritModel";
 import UIIcon from "@/components/UIIcon";
@@ -27,16 +26,10 @@ export default function DexDetailPage({ params }: { params: Promise<{ id: string
   const store = useGameStore();
   const [selfieOpen, setSelfieOpen] = useState(false);
   /** 詳情預設 2D full；用戶先開 3D／360（唔一入就載 GLB） */
-  const [view3d, setView3d] = useState(false);
   const webglOk = hasWebGL2();
 
   const species = SPECIES_MAP[id];
   const caught = !!store.captureCounts[id];
-
-  // 換隻精靈返 2D，避免沿用上一隻嘅 WebGL
-  useEffect(() => {
-    setView3d(false);
-  }, [id]);
 
   // 進化鏈（同系列 3 階段）
   const chain = useMemo(
