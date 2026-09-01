@@ -9,7 +9,7 @@ import { FACTION_MAP } from "@/content/centres";
 import { ITEM_MAP } from "@/content/items";
 import { ELEMENT_INFO } from "@/content/elements";
 import { BADGES, type BadgeDef } from "@/content/badges";
-import { useGameStore, spiritExpToNext, SPIRIT_LEVEL_CAP } from "@/lib/store";
+import { useGameStore, spiritExpToNext, stageLevelCap } from "@/lib/store";
 import { validateNickname, nicknameErrorText } from "@/lib/nickname";
 import { sfxTap } from "@/lib/sfx";
 import BottomNav from "@/components/BottomNav";
@@ -135,7 +135,8 @@ export default function ProfilePage() {
               const species = SPECIES_MAP[sp.speciesId];
               if (!species) return null;
               const elem = ELEMENT_INFO[species.element];
-              const canEv = store.canEvolve(sp.speciesId);
+              const canEv = store.canEvolve(sp.speciesId, sp.uid);
+              const levelCap = stageLevelCap(species.stage);
               return (
                 <div
                   key={sp.uid}
@@ -143,11 +144,7 @@ export default function ProfilePage() {
                     sp.shiny ? "ring-2 ring-gold shadow-[0_0_14px_rgba(232,200,96,0.65)]" : ""
                   }`}
                 >
-                  {sp.shiny && (
-                    <span className="shiny-badge absolute -right-1.5 -top-1.5 z-10 flex h-5 w-5 items-center justify-center rounded-full text-[11px] text-ink">
-                      ✦
-                    </span>
-                  )}
+                  {/* 閃光 ✦ 徽章已移除（金框保留） */}
                   {/* 主體：撳入去睢精靈詳情 */}
                   <Link
                     href={`/my-spirits/${sp.uid}`}
@@ -174,7 +171,7 @@ export default function ProfilePage() {
                         className="block h-full rounded-full bg-gradient-to-r from-gold to-gold-light"
                         style={{
                           width: `${
-                            sp.level >= SPIRIT_LEVEL_CAP
+                            sp.level >= levelCap
                               ? 100
                               : Math.min(100, ((sp.exp ?? 0) / spiritExpToNext(sp.level)) * 100)
                           }%`,

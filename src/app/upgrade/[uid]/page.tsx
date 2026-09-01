@@ -11,7 +11,7 @@ import { OrbitControls } from "@react-three/drei";
 import { Suspense } from "react";
 import { SPECIES_MAP } from "@/content/species";
 import { ITEMS, ITEM_MAP } from "@/content/items";
-import { useGameStore, spiritExpToNext, spiritStatMultiplier, SPIRIT_LEVEL_CAP } from "@/lib/store";
+import { useGameStore, spiritExpToNext, spiritStatMultiplier, stageLevelCap } from "@/lib/store";
 import { isUpgradeMaterial, materialExp, totalExp, MATERIAL_SORT } from "@/lib/upgrade";
 import { hasWebGL2 } from "@/lib/webgl";
 import SpiritModel from "@/components/three/SpiritModel";
@@ -19,15 +19,15 @@ import ElementBadge from "@/components/ElementBadge";
 import UIIcon from "@/components/UIIcon";
 import { sfxTap, sfxReward } from "@/lib/sfx";
 
-/** 預覽：加 exp 後會去到邊個等級／剩幾多經驗（純計算唔動 store） */
-function previewLevel(level: number, exp: number, gain: number): { level: number; exp: number } {
+/** 預覽：加 exp 後會去到邊個等級／剩幾多經驗（純計算唔動 store；cap＝該階段上限） */
+function previewLevel(level: number, exp: number, gain: number, cap: number): { level: number; exp: number } {
   let lv = level;
   let e = exp + gain;
-  while (lv < SPIRIT_LEVEL_CAP && e >= spiritExpToNext(lv)) {
+  while (lv < cap && e >= spiritExpToNext(lv)) {
     e -= spiritExpToNext(lv);
     lv += 1;
   }
-  if (lv >= SPIRIT_LEVEL_CAP) e = 0;
+  if (lv >= cap) e = 0;
   return { level: lv, exp: e };
 }
 
@@ -58,10 +58,12 @@ export default function UpgradePage({ params }: { params: Promise<{ uid: string 
   );
 
   const gain = totalExp(selected);
-  const atCap = spirit ? spirit.level >= SPIRIT_LEVEL_CAP : false;
+  // 階段等級上限：一階 10／二階 20／三階 30
+  const levelCap = stageLevelCap(species?.stage ?? 3);
+  const atCap = spirit ? spirit.level >= levelCap : false;
   const next =
     spirit && !atCap
-      ? previewLevel(spirit.level, spirit.exp ?? 0, gain)
+      ? previewLevel(spirit.level, spirit.exp ?? 0, gain, levelCap)
       : { level: spirit?.level ?? 1, exp: spirit?.exp ?? 0 };
 
   if (!spirit || !species) {
@@ -76,7 +78,7 @@ export default function UpgradePage({ params }: { params: Promise<{ uid: string 
 
   const curExp = spirit.exp ?? 0;
   const need = spiritExpToNext(spirit.level);
-  const nextNeed = spirit.level < SPIRIT_LEVEL_CAP ? spiritExpToNext(next.level) : 1;
+  const nextNeed = spirit.level < levelCap ? spiritExpToNext(next.level) : 1;
 
   function add(itemId: string, d: number) {
     sfxTap();

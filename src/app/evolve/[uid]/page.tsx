@@ -8,7 +8,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import type { Group } from "three";
 import { SPECIES_MAP } from "@/content/species";
 import { ELEMENT_INFO } from "@/content/elements";
-import { useGameStore } from "@/lib/store";
+import { useGameStore, stageLevelCap } from "@/lib/store";
 import SpiritModel from "@/components/three/SpiritModel";
 import { selfieFaceCamera } from "@/components/SelfiePhoto";
 import Confetti from "@/components/Confetti";
@@ -213,7 +213,9 @@ export default function EvolvePage({ params }: { params: Promise<{ uid: string }
   useEffect(() => {
     const spirit = useGameStore.getState().ownedSpirits.find((s) => s.uid === uid);
     const to = spirit ? (SPECIES_MAP[spirit.speciesId]?.evolvesTo ?? "") : "";
-    if (!spirit || !to) {
+    // 等級門檻：一階 Lv.10／二階 Lv.20（=階段滿級）先可以進化；未達標直接無效返回
+    const stage = spirit ? SPECIES_MAP[spirit.speciesId]?.stage ?? 3 : 3;
+    if (!spirit || !to || spirit.level < stageLevelCap(stage)) {
       setStage("invalid");
       return;
     }

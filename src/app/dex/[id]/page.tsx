@@ -9,7 +9,7 @@ import { OrbitControls } from "@react-three/drei";
 import { SPECIES, SPECIES_MAP } from "@/content/species";
 import { ELEMENT_INFO } from "@/content/elements";
 import { ITEM_MAP } from "@/content/items";
-import { useGameStore, spiritExpToNext, SPIRIT_LEVEL_CAP } from "@/lib/store";
+import { useGameStore, spiritExpToNext, stageLevelCap } from "@/lib/store";
 import { sfxTap } from "@/lib/sfx";
 import { hasWebGL2 } from "@/lib/webgl";
 import BottomNav from "@/components/BottomNav";
@@ -132,16 +132,16 @@ export default function DexDetailPage({ params }: { params: Promise<{ id: string
 
         {caught && <p className="text-center text-sm text-ink-soft">{species.description[locale]}</p>}
 
-        {/* 已擁有實體：等級＋經驗（切磋升級） */}
+        {/* 已擁有實體：等級＋經驗（切磋／素材餵食升級；階段上限 10/20/30） */}
         {caught && ownedInstance && (
           <section className="card-parchment mx-auto w-full max-w-sm p-3">
             <div className="mb-1.5 flex items-center justify-between text-sm font-black text-ink">
               <span>
                 {t("dex.level")} Lv.{ownedInstance.level}
-                {ownedInstance.level >= SPIRIT_LEVEL_CAP ? ` (${t("dex.levelMax")})` : ""}
+                {ownedInstance.level >= stageLevelCap(species.stage) ? ` (${t("dex.levelMax")})` : ""}
               </span>
               <span className="text-xs font-bold text-ink-soft">
-                {ownedInstance.level >= SPIRIT_LEVEL_CAP
+                {ownedInstance.level >= stageLevelCap(species.stage)
                   ? "MAX"
                   : `${ownedInstance.exp ?? 0}/${spiritExpToNext(ownedInstance.level)}`}
               </span>
@@ -151,7 +151,7 @@ export default function DexDetailPage({ params }: { params: Promise<{ id: string
                 className="h-full rounded-full bg-gradient-to-r from-gold to-gold-light"
                 style={{
                   width: `${
-                    ownedInstance.level >= SPIRIT_LEVEL_CAP
+                    ownedInstance.level >= stageLevelCap(species.stage)
                       ? 100
                       : Math.min(
                           100,
@@ -229,6 +229,21 @@ export default function DexDetailPage({ params }: { params: Promise<{ id: string
           <section className="card-parchment p-4">
             <h2 className="mb-2 text-sm font-black text-ink">{t("dex.evolutionRequirement")}</h2>
             <ul className="space-y-1 text-sm text-ink">
+              <li className="flex items-center justify-between">
+                <span className="flex items-center gap-1">
+                  <UIIcon name="medal" size={16} /> {t("dex.evolveLevel", { level: stageLevelCap(species.stage) })}
+                </span>
+                <span
+                  className={
+                    ownedInstance && ownedInstance.level >= stageLevelCap(species.stage)
+                      ? "font-bold text-pandan"
+                      : "text-ink-soft"
+                  }
+                >
+                  {ownedInstance ? `Lv.${ownedInstance.level}` : "—"}{" "}
+                  {ownedInstance && ownedInstance.level >= stageLevelCap(species.stage) && "✔"}
+                </span>
+              </li>
               {Object.entries(req.items).map(([itemId, qty]) => {
                 const have = store.items[itemId] ?? 0;
                 const ok = have >= qty;

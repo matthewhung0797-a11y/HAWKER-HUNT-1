@@ -21,9 +21,13 @@ export interface OwnedSpirit {
   shiny?: boolean;
 }
 
-/** 精靈升級所需經驗（隨等級遞增）；上限 Lv.30 */
+/** 全域等級上限（三階）；一階 10、二階 20、三階 30 */
 export const SPIRIT_LEVEL_CAP = 30;
 export const spiritExpToNext = (level: number) => 60 + level * 40;
+
+/** 階段等級上限：一階 10 級（滿級可進化二階）、二階 20 級（滿級可進化三階）、三階 30 級 */
+export const stageLevelCap = (stage: number) =>
+  Math.max(1, Math.min(3, Math.floor(stage))) * 10;
 
 /** 等級 → 屬性倍率：每級 +5%，Lv.30 約 2.45 倍（同進化階級拉開差距但唔取代進化） */
 export const spiritStatMultiplier = (level: number) => 1 + 0.05 * (Math.max(1, level) - 1);
@@ -94,7 +98,7 @@ interface GameState {
   ) => OwnedSpirit;
   /** 進化：消耗道具，替換精靈 */
   evolveSpirit: (uid: string) => OwnedSpirit | null;
-  canEvolve: (speciesId: string) => boolean;
+  canEvolve: (speciesId: string, spiritUid?: string) => boolean;
   /** 切磋贏咗：記低戰績（hadAdvantage = 我方屬性剋敵方） */
   recordBattleWin: (hadAdvantage: boolean) => void;
   setLastBattleUid: (uid: string) => void;
@@ -231,13 +235,11 @@ export const useGameStore = create<GameState>()(
       },
 
       captureSpirit: (speciesId, centreId, shiny, level) => {
+        const cap = stageLevelCap(SPECIES_MAP[speciesId]?.stage ?? 3);
         const spirit: OwnedSpirit = {
           uid: uid(),
           speciesId,
-          level: Math.min(
-            SPIRIT_LEVEL_CAP,
-            Math.max(1, Math.floor(level ?? 1))
-          ),
+          level: Math.min(cap, Math.max(1, Math.floor(level ?? 1))),
           caughtAt: Date.now(),
           centreId,
           ...(shiny ? { shiny: true } : {}),
@@ -254,10 +256,16 @@ export const useGameStore = create<GameState>()(
         return spirit;
       },
 
-      canEvolve: (speciesId) => {
+      canEvolve: (speciesId, spiritUid) => {
         const sp = SPECIES_MAP[speciesId];
         if (!sp?.evolutionRequirement || !sp.evolvesTo) return false;
         const s = get();
+        // 等級門檻：一階要 Lv.10、二階要 Lv.20（=該階段滿級）先可以進化
+        const cap = stageLevelCap(sp.stage);
+        const instance = spiritUid
+          ? s.ownedSpirits.find((o) => o.uid === spiritUid)
+          : s.ownedSpirits.find((o) => o.speciesId === speciesId && o.level >= cap);
+        if (!instance || instance.level < cap) return false;
         const req = sp.evolutionRequirement;
         for (const [itemId, qty] of Object.entries(req.items)) {
           if ((s.items[itemId] ?? 0) < qty) return false;
@@ -273,7 +281,9 @@ export const useGameStore = create<GameState>()(
         if (!spirit) return null;
         const species = SPECIES_MAP[spirit.speciesId];
         if (!species?.evolvesTo || !species.evolutionRequirement) return null;
-        if (!s.canEvolve(spirit.speciesId)) return null;
+        // 等級門檻：一階 Lv.10／二階 Lv.20 先可進化（evolveSpirit 冇 uid 版 canEvolve 嘅 instance 檢查）
+        if (spirit.level < stageLevelCap(species.stage)) return null;
+        if (!s.canEvolve(spirit.speciesId, spiritUid)) return null;
 
         const items = { ...s.items };
         for (const [itemId, qty] of Object.entries(species.evolutionRequirement.items)) {
@@ -342,16 +352,18 @@ export const useGameStore = create<GameState>()(
       gainSpiritExp: (spiritUid, amount) => {
         const s = get();
         const spirit = s.ownedSpirits.find((sp) => sp.uid === spiritUid);
-        if (!spirit || spirit.level >= SPIRIT_LEVEL_CAP) return null;
+        if (!spirit) return null;
+        const cap = stageLevelCap(SPECIES_MAP[spirit.speciesId]?.stage ?? 3);
+        if (spirit.level >= cap) return null;
         let level = spirit.level;
         let exp = (spirit.exp ?? 0) + amount;
         let gained = 0;
-        while (level < SPIRIT_LEVEL_CAP && exp >= spiritExpToNext(level)) {
+        while (level < cap && exp >= spiritExpToNext(level)) {
           exp -= spiritExpToNext(level);
           level += 1;
           gained += 1;
         }
-        if (level >= SPIRIT_LEVEL_CAP) exp = 0;
+        if (level >= cap) exp = 0;
         set({
           ownedSpirits: s.ownedSpirits.map((sp) =>
             sp.uid === spiritUid ? { ...sp, level, exp } : sp
@@ -363,7 +375,9 @@ export const useGameStore = create<GameState>()(
       feedSpirit: (spiritUid, items) => {
         const s = get();
         const spirit = s.ownedSpirits.find((sp) => sp.uid === spiritUid);
-        if (!spirit || spirit.level >= SPIRIT_LEVEL_CAP) return null;
+        if (!spirit) return null;
+        const cap = stageLevelCap(SPECIES_MAP[spirit.speciesId]?.stage ?? 3);
+        if (spirit.level >= cap) return null;
         const entries = Object.entries(items).filter(([, qty]) => qty > 0);
         if (entries.length === 0) return null;
         // 先驗後扣：任何一種唔夠就成單拒絕（唔扣一半）

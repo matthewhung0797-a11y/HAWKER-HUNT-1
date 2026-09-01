@@ -21,11 +21,6 @@ export default function DexPage() {
   const t = useTranslations();
   const locale = useLocale() as "zh" | "en";
   const captureCounts = useGameStore((s) => s.captureCounts);
-  const ownedSpirits = useGameStore((s) => s.ownedSpirits);
-  const shinySpecies = useMemo(
-    () => new Set(ownedSpirits.filter((sp) => sp.shiny).map((sp) => sp.speciesId)),
-    [ownedSpirits]
-  );
   const [filter, setFilter] = useState<Filter>("all");
 
   const caughtCount = Object.keys(captureCounts).length;

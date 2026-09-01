@@ -247,6 +247,7 @@
     "speed": "SPD",
     "collectItems": "Collect {count}x {item}",
     "checkinCentres": "Check in at {count} hawker centres",
+    "evolveLevel": "Requires Lv.{level} to evolve",
     "evolvedAwayTitle": "Already evolved into {name}",
     "evolvedAwayDesc": "Catch another to evolve.",
     "viewEvolvedForm": "View {name}",

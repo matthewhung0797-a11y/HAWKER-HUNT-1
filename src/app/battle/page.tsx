@@ -19,7 +19,7 @@ import {
 } from "@/content/skill-fx";
 import { SIGNATURE_FX } from "@/components/three/signature-fx";
 import type { Skill } from "@/content/types";
-import { useGameStore, spiritStatMultiplier, SPIRIT_LEVEL_CAP } from "@/lib/store";
+import { useGameStore, spiritStatMultiplier, stageLevelCap } from "@/lib/store";
 import { hasWebGL2 } from "@/lib/webgl";
 import {
   sfxCast, sfxHit, sfxCrit, sfxHeal, sfxKo, sfxVictory, sfxDefeat, sfxTap,
@@ -1224,7 +1224,7 @@ function BattleInner() {
                   </span>
                   {spiritReward.newLevel !== null && (
                     <span className="reward-pop rounded-full bg-gradient-to-r from-amber-400 to-yellow-300 px-2.5 py-1 text-xs font-black text-ink shadow">
-                      {spiritReward.newLevel >= SPIRIT_LEVEL_CAP
+                      {spiritReward.newLevel >= stageLevelCap(playerSpecies.stage)
                         ? t("levelMax")
                         : t("levelUp", { level: spiritReward.newLevel })}
                     </span>

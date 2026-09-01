@@ -12,7 +12,8 @@ import {
   useGameStore,
   spiritExpToNext,
   spiritStatMultiplier,
-  SPIRIT_LEVEL_CAP,
+  stageLevelCap,
+  SPIRIT_LEVEL_CAP as SPIRIT_FALLBACK_CAP,
 } from "@/lib/store";
 import { hasWebGL2 } from "@/lib/webgl";
 import BottomNav from "@/components/BottomNav";
@@ -35,8 +36,10 @@ export default function MySpiritDetailPage({
 
   const spirit = ownedSpirits.find((sp) => sp.uid === uid);
   const species = spirit ? SPECIES_MAP[spirit.speciesId] : undefined;
-  // 呢隻實體可唔可以進化（有 evolvesTo＋素材／打卡達標）
-  const canEvolveThis = spirit ? Boolean(species?.evolvesTo) && canEvolve(spirit.speciesId) : false;
+  // 階段等級上限：一階 10／二階 20／三階 30
+  const levelCap = species ? stageLevelCap(species.stage) : SPIRIT_FALLBACK_CAP;
+  // 呢隻實體可唔可以進化（有 evolvesTo＋等級滿級＋素材／打卡達標）
+  const canEvolveThis = spirit ? Boolean(species?.evolvesTo) && canEvolve(spirit.speciesId, spirit.uid) : false;
 
   // 能力值（按等級倍率）
   const stats = useMemo(() => {
@@ -164,10 +167,10 @@ export default function MySpiritDetailPage({
               <div className="mb-1.5 flex items-center justify-between text-sm font-black text-ink">
                 <span>
                   {t("dex.level")} Lv.{spirit!.level}
-                  {spirit!.level >= SPIRIT_LEVEL_CAP ? ` (${t("dex.levelMax")})` : ""}
+                  {spirit!.level >= levelCap ? ` (${t("dex.levelMax")})` : ""}
                 </span>
                 <span className="text-xs font-bold text-ink-soft">
-                  {spirit!.level >= SPIRIT_LEVEL_CAP
+                  {spirit!.level >= levelCap
                     ? "MAX"
                     : `${spirit!.exp ?? 0}/${spiritExpToNext(spirit!.level)}`}
                 </span>
@@ -177,7 +180,7 @@ export default function MySpiritDetailPage({
                   className="h-full rounded-full bg-gradient-to-r from-gold to-gold-light"
                   style={{
                     width: `${
-                      spirit!.level >= SPIRIT_LEVEL_CAP
+                      spirit!.level >= levelCap
                         ? 100
                         : Math.min(
                             100,
@@ -185,7 +188,7 @@ export default function MySpiritDetailPage({
                           )
                     }%`,
                   }}
-                            />
+                />
                         </div>
                       </section>
 
