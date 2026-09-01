@@ -255,9 +255,7 @@
   "mySpirits": {
     "title": "My Spirits",
     "count": "{count} total",
-    "empty": "No spirits yet — go catch some on the map!",
-    "levelTable": "XP per level",
-    "levelTableHint": "Lv.N = XP needed to advance from level N"
+    "empty": "No spirits yet — go catch some on the map!"
   },
   "evolution": {
     "evolving": "Evolving…",

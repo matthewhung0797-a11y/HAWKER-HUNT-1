@@ -255,9 +255,7 @@
   "mySpirits": {
     "title": "我的精靈",
     "count": "共 {count} 隻",
-    "empty": "仲未有精靈，去地圖捕捉啦！",
-    "levelTable": "各級經驗值",
-    "levelTableHint": "Lv.N ＝ 由 N 級升上 N+1 級所需經驗"
+    "empty": "仲未有精靈，去地圖捕捉啦！"
   },
   "evolution": {
     "evolving": "進化中…",
