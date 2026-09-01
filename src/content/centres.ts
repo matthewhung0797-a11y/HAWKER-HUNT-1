@@ -60,6 +60,17 @@ export const HAWKER_CENTRES: HawkerCentre[] = [
     dailyCheckinLimit: 3,
     spawnPool: ["satay-skewerling", "little-laksa", "shrimp-hopper", "vermicelli-sprite"],
   },
+  {
+    id: "tiong-bahru-market",
+    name: { en: "Tiong Bahru Market", zh: "中峇魯市場" },
+    district: { en: "Tiong Bahru, Central South", zh: "中南部中峇魯" },
+    lat: 1.284786,
+    lng: 103.832182,
+    element: "metal",
+    featuredSpeciesId: "nasi-lemak-general",
+    dailyCheckinLimit: 3,
+    spawnPool: ["nasi-lemak-tot", "little-laksa", "chilli-baby", "vermicelli-sprite"],
+  },
   // 開發測試據點
   {
     id: "hk-test",

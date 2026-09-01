@@ -9,6 +9,7 @@ const centres = [
   ["old-airport-road", "舊機場路熟食中心", "Old Airport Road Food Centre"],
   ["tekka-centre", "竹腳中心", "Tekka Centre"],
   ["lau-pa-sat", "老巴剎", "Lau Pa Sat"],
+  ["tiong-bahru-market", "中峇魯市場", "Tiong Bahru Market"],
   ["hk-test", "錦田波地遊樂場（測試）", "Kam Tin Po Tei Playground (Dev)"],
   ["hk-yuen-kong", "元崗村", "Yuen Kong Village"],
 ];

@@ -184,7 +184,11 @@ export function SelfiePhoto({
   const posRef = useRef({ x: 0.5, y: 0.7 });
   const [spiritScale, setSpiritScale] = useState(1);
   const scaleRef = useRef(1);
-  const dragRef = useRef<{ id: number } | null>(null);
+  const dragRef = useRef<{ id: number; sx: number; sy: number; px: number; py: number } | null>(null);
+  /** 雙指捏放中（d0 = 起始指距、s0 = 起始縮放） */
+  const pinchRef = useRef<{ d0: number; s0: number } | null>(null);
+  /** 目前活躍觸點（單指拖動／雙指捏放判別用） */
+  const pointersRef = useRef(new Map<number, { x: number; y: number }>());
   const wrapRef = useRef<HTMLDivElement>(null);
   // 自拍對話泡泡：文字 state ＋精靈頭頂螢幕座標（3D 由 SelfieSpirit3d 每 frame 更新）
   const [bubble, setBubble] = useState<string | null>(null);
@@ -247,20 +251,55 @@ export function SelfiePhoto({
   );
 
   const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
-    dragRef.current = { id: e.pointerId };
     e.currentTarget.setPointerCapture?.(e.pointerId);
+    pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pointersRef.current.size === 2) {
+      // 雙指：捏放縮放（取消拖動）
+      dragRef.current = null;
+      const [a, b] = [...pointersRef.current.values()];
+      pinchRef.current = { d0: Math.hypot(a.x - b.x, a.y - b.y), s0: scaleRef.current };
+    } else if (pointersRef.current.size === 1) {
+      // 單指：記低手指起點＋精靈現位（相對拖：精靈唔會彈去手指，跟住手指位移）
+      dragRef.current = {
+        id: e.pointerId,
+        sx: e.clientX,
+        sy: e.clientY,
+        px: posRef.current.x,
+        py: posRef.current.y,
+      };
+    }
   };
   const onPointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
-    if (!dragRef.current || dragRef.current.id !== e.pointerId) return;
+    if (pointersRef.current.has(e.pointerId)) {
+      pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    }
     const rect = wrapRef.current?.getBoundingClientRect();
     if (!rect) return;
-    const x = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
-    const y = Math.min(1, Math.max(0, (e.clientY - rect.top) / rect.height));
+    // 雙指捏放 → 縮放（0.55–1.85，與滑桿同步）
+    if (pinchRef.current && pointersRef.current.size >= 2) {
+      const [a, b] = [...pointersRef.current.values()];
+      const d = Math.hypot(a.x - b.x, a.y - b.y);
+      const v = Math.min(
+        SELFIE_SCALE_MAX,
+        Math.max(SELFIE_SCALE_MIN, pinchRef.current.s0 * (d / pinchRef.current.d0))
+      );
+      scaleRef.current = v;
+      setSpiritScale(v);
+      return;
+    }
+    // 單指拖動：精靈原有位置 ＋ 手指位移
+    const drag = dragRef.current;
+    if (!drag || drag.id !== e.pointerId) return;
+    const x = Math.min(1, Math.max(0, drag.px + (e.clientX - drag.sx) / rect.width));
+    const y = Math.min(1, Math.max(0, drag.py + (e.clientY - drag.sy) / rect.height));
     posRef.current = { x, y };
     setPos({ x, y });
   };
-  const endDrag = () => {
-    dragRef.current = null;
+  const endDrag = (e?: ReactPointerEvent<HTMLDivElement>) => {
+    if (e) pointersRef.current.delete(e.pointerId);
+    else pointersRef.current.clear();
+    if (pointersRef.current.size < 2) pinchRef.current = null;
+    if (pointersRef.current.size === 0) dragRef.current = null;
   };
 
   const takeShot = () => {
