@@ -123,14 +123,7 @@ export default function DexPage() {
                           ✦
                         </span>
                       )}
-                      {count > 1 && (
-                        <span
-                          aria-label={t("dex.captureCount", { count })}
-                          className="absolute -bottom-1 -right-1 rounded-full border-2 border-parchment bg-ink px-1.5 text-[10px] font-black leading-4 text-parchment-light"
-                        >
-                          ×{count}
-                        </span>
-                      )}
+                      {/* 捕捉數量角標已隱藏 */}
                     </span>
                     <span className={`absolute bottom-2 left-0 right-0 text-center text-xs font-bold ${caught ? "text-ink" : "text-ink-soft"}`}>
                       {caught ? sp.name[locale] : t("dex.unknown")}

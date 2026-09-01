@@ -310,9 +310,6 @@ export default function DexDetailPage({ params }: { params: Promise<{ id: string
                 </div>
               ))}
             </div>
-            <p className="mt-2 text-xs text-ink-soft">
-              {t("dex.captureCount", { count: store.captureCounts[id] ?? 0 })}
-            </p>
           </section>
         )}
       </div>
