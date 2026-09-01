@@ -519,20 +519,30 @@ export default function MapPage() {
               });
             }).map((sp) => sp.id)
           : [];
-        const fullPool = [...pool, ...stage2Pool];
-
-        if (fullPool.length === 0) continue;
 
         // 權重：池內重複 weight 次（0 = 唔出；1 = 原本 uniform random）
+        // 二階另用獨立機率：打卡後每隻生成先擲 5% 抽二階（抽唔中先落返一階/基礎池）
+        const STAGE2_SPAWN_CHANCE = 0.05;
         const weighted: string[] = [];
-        for (const id of fullPool) {
+        for (const id of pool) {
           for (let i = 0; i < spiritWeight(id); i++) weighted.push(id);
         }
-        if (weighted.length === 0) continue;
+        const stage2Weighted: string[] = [];
+        for (const id of stage2Pool) {
+          for (let i = 0; i < spiritWeight(id); i++) stage2Weighted.push(id);
+        }
+        if (weighted.length === 0 && stage2Weighted.length === 0) continue;
 
         // 每據點 10 隻
         for (let i = 0; i < 10; i++) {
-          const speciesId = weighted[Math.floor(Math.random() * weighted.length)];
+          let speciesId: string;
+          if (stage2Weighted.length > 0 && Math.random() < STAGE2_SPAWN_CHANCE) {
+            speciesId = stage2Weighted[Math.floor(Math.random() * stage2Weighted.length)];
+          } else if (weighted.length > 0) {
+            speciesId = weighted[Math.floor(Math.random() * weighted.length)];
+          } else {
+            speciesId = stage2Weighted[Math.floor(Math.random() * stage2Weighted.length)];
+          }
           const sp = SPECIES_MAP[speciesId];
           if (!sp) continue;
           const title = `${sp.name[locale]} · ${t("map.catchIt")}`;

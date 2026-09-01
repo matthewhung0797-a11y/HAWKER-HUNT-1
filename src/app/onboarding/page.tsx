@@ -21,9 +21,9 @@ import {
  * 全程有 Skip；實習永遠唔會失敗死局（夾實度有下限），俾新手安全練手。
  */
 
-/** 導師＋練手目標（全部用現成立繪，冇新素材） */
+/** 導師＋練手目標（全部用現成立繪，冇新素材）；練手對象＝辣椒仔 */
 const MENTOR_IMG = "/spirits/full/bkt-grandmaster.webp";
-const TARGET_IMG = "/spirits/full/oily-rice-chick.webp";
+const TARGET_IMG = "/spirits/full/chilli-baby.webp";
 
 /** 縮圈：金圈由 2.2 縮到 0.55，貼住紅圈（=1.0）±呢個容忍就算成功（新手放寬） */
 const RING_MAX = 2.2;
