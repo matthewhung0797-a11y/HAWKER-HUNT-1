@@ -265,7 +265,10 @@
       "level": "等級",
       "caughtAt": "獲得時間",
       "rarity": "稀有度",
-      "element": "屬性"
+      "element": "屬性",
+      "dirToggle": "切換升序／降序",
+      "filterElement": "篩選：屬性",
+      "filterRarity": "篩選：稀有度"
     }
   },
   "evolution": {

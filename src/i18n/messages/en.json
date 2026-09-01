@@ -265,7 +265,10 @@
       "level": "Level",
       "caughtAt": "Time Caught",
       "rarity": "Rarity",
-      "element": "Element"
+      "element": "Element",
+      "dirToggle": "Toggle ascending/descending",
+      "filterElement": "Filter: Element",
+      "filterRarity": "Filter: Rarity"
     }
   },
   "evolution": {
