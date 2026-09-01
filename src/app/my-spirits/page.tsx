@@ -37,12 +37,20 @@ export default function MySpiritsPage() {
     }
     switch (sortKey) {
       case "level":
-        return list.sort((a, b) => b.level - a.level || b.caughtAt - a.caughtAt);
+        // 同等級：同一隻精靈（speciesId）排埋一齊；組內高等級排先
+        return list.sort(
+          (a, b) =>
+            b.level - a.level ||
+            a.speciesId.localeCompare(b.speciesId) ||
+            b.caughtAt - a.caughtAt
+        );
       case "rarity":
+        // 同稀有度：同一隻精靈排埋一齊（組內新捉排先）
         return list.sort(
           (a, b) =>
             (RARITY_RANK[SPECIES_MAP[b.speciesId]?.rarity ?? "basic"] ?? 0) -
               (RARITY_RANK[SPECIES_MAP[a.speciesId]?.rarity ?? "basic"] ?? 0) ||
+            a.speciesId.localeCompare(b.speciesId) ||
             b.caughtAt - a.caughtAt
         );
       case "caughtAt":
