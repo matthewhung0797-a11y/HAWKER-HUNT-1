@@ -228,6 +228,7 @@
       "basic": "基礎原料"
     },
     "unknown": "???",
+    "mystery": "神秘精靈",
     "stage1": "初級形態",
     "stage2": "中級形態",
     "stage3": "最終形態",
@@ -346,6 +347,7 @@
     "guest": "遊客獵人",
     "changeName": "修改名稱",
     "namePlaceholder": "輸入新名稱",
+    "upgrade": "升級",
     "languageSetting": "語言",
     "resetData": "重設遊戲數據"
   },
@@ -362,6 +364,13 @@
     "salty": "鹹",
     "spicy": "辣",
     "sweet": "甜"
+  },
+  "upgrade": {
+    "selectMaterials": "選擇升級素材",
+    "materialExp": "{exp} EXP",
+    "feed": "升級（+{exp} EXP）",
+    "selectFirst": "請先選擇素材",
+    "leveledTo": "升到 Lv.{level}！"
   },
   "gifts": {
     "title": "禮包",

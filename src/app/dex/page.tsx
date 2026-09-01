@@ -14,6 +14,9 @@ import UIIcon from "@/components/UIIcon";
 
 type Filter = "all" | "caught" | "uncaught" | ElementType;
 
+/** 未有資料的神秘精靈欄位：純佔位卡（???），圖鑑總數 = 現有 + 42 = 60 */
+const MYSTERY_SLOTS = 42;
+
 export default function DexPage() {
   const t = useTranslations();
   const locale = useLocale() as "zh" | "en";
@@ -26,7 +29,9 @@ export default function DexPage() {
   const [filter, setFilter] = useState<Filter>("all");
 
   const caughtCount = Object.keys(captureCounts).length;
-  const progress = Math.round((caughtCount / SPECIES.length) * 100);
+  // 圖鑑總數含未有的神秘欄位（60）
+  const totalCount = SPECIES.length + MYSTERY_SLOTS;
+  const progress = Math.round((caughtCount / totalCount) * 100);
 
   // 篩選後按門類分區（正常系列／基礎原料……順序跟 DEX_CATEGORIES）；空區隱藏
   const sections = useMemo(() => {
@@ -67,7 +72,7 @@ export default function DexPage() {
               style={{ width: `${progress}%` }}
             />
             <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-ink">
-              {t("dex.collected", { current: caughtCount, total: SPECIES.length })} ({progress}%)
+              {t("dex.collected", { current: caughtCount, total: totalCount })} ({progress}%)
             </span>
           </div>
         </div>
@@ -135,6 +140,35 @@ export default function DexPage() {
           </div>
         </section>
       ))}
+
+      {/* 神秘精靈：未有資料的佔位卡（???），只喺全部／未捕獲篩選顯示 */}
+      {(filter === "all" || filter === "uncaught") && (
+        <section className="mx-auto w-full max-w-md px-4 pt-4">
+          <div className="mb-2 flex items-center gap-3">
+            <span className="h-px flex-1 bg-ink-soft/30" />
+            <h2 className="text-sm font-black tracking-wide text-ink-soft">{t("dex.mystery")}</h2>
+            <span className="h-px flex-1 bg-ink-soft/30" />
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            {Array.from({ length: MYSTERY_SLOTS }, (_, i) => (
+              <div
+                key={`mystery-${i}`}
+                className="card-parchment relative flex h-[120px] w-full flex-col items-center overflow-hidden p-3 opacity-80"
+                aria-label={t("dex.unknown")}
+              >
+                <span className="absolute left-1/2 top-4 -translate-x-1/2">
+                  <span className="flex h-16 w-16 items-center justify-center rounded-full bg-ink/15">
+                    <span className="text-3xl font-black text-ink-soft/60">？</span>
+                  </span>
+                </span>
+                <span className="absolute bottom-2 left-0 right-0 text-center text-xs font-bold text-ink-soft">
+                  {t("dex.unknown")}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <BottomNav />
     </main>

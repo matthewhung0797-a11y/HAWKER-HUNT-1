@@ -6,6 +6,7 @@ import { SPECIES_MAP } from "@/content/species";
 import { CENTRE_MAP, CHECKIN_COOLDOWN_MS } from "@/content/centres";
 import { ITEMS } from "@/content/items";
 import { todayStr } from "./geo";
+import { totalExp } from "./upgrade";
 
 export interface OwnedSpirit {
   /** 唯一實例 id */
@@ -99,6 +100,8 @@ interface GameState {
   setLastBattleUid: (uid: string) => void;
   /** 精靈贏切磋獲得經驗；回傳升級後等級（冇升 = null） */
   gainSpiritExp: (uid: string, amount: number) => { levelsGained: number; newLevel: number } | null;
+  /** 升級：消耗素材（經 lib/upgrade materialExp 計經驗）＋入經驗；素材唔夠/已滿級回 null */
+  feedSpirit: (uid: string, items: Record<string, number>) => { levelsGained: number; newLevel: number } | null;
   /** 切磋勝利掉落：敵方系列對應嘅進化材料（打邊系爆邊系嘅料） */
   battleLoot: (enemySpeciesId: string, hadAdvantage: boolean) => { itemId: string; qty: number }[];
   /** Dev 測試：一鍵解鎖全部精靈（各階段）＋進化道具 */
@@ -355,6 +358,25 @@ export const useGameStore = create<GameState>()(
           ),
         });
         return gained > 0 ? { levelsGained: gained, newLevel: level } : null;
+      },
+
+      feedSpirit: (spiritUid, items) => {
+        const s = get();
+        const spirit = s.ownedSpirits.find((sp) => sp.uid === spiritUid);
+        if (!spirit || spirit.level >= SPIRIT_LEVEL_CAP) return null;
+        const entries = Object.entries(items).filter(([, qty]) => qty > 0);
+        if (entries.length === 0) return null;
+        // 先驗後扣：任何一種唔夠就成單拒絕（唔扣一半）
+        for (const [itemId, qty] of entries) {
+          if ((s.items[itemId] ?? 0) < qty) return null;
+        }
+        const newItems = { ...s.items };
+        for (const [itemId, qty] of entries) {
+          newItems[itemId] = Math.max(0, (newItems[itemId] ?? 0) - qty);
+        }
+        set({ items: newItems });
+        const amount = totalExp(Object.fromEntries(entries));
+        return get().gainSpiritExp(spiritUid, amount);
       },
 
       devUnlockAll: () =>

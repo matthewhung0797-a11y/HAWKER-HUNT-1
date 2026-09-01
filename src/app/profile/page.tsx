@@ -135,11 +135,11 @@ export default function ProfilePage() {
               const species = SPECIES_MAP[sp.speciesId];
               if (!species) return null;
               const elem = ELEMENT_INFO[species.element];
+              const canEv = store.canEvolve(sp.speciesId);
               return (
-                <Link
+                <div
                   key={sp.uid}
-                  href={`/dex/${sp.speciesId}`}
-                  className={`card-parchment relative flex h-[140px] w-[92px] shrink-0 flex-col items-center gap-1 overflow-hidden p-2.5 pt-3 ${
+                  className={`card-parchment relative flex h-[176px] w-[92px] shrink-0 flex-col items-center gap-1 overflow-hidden p-2.5 pt-3 ${
                     sp.shiny ? "ring-2 ring-gold shadow-[0_0_14px_rgba(232,200,96,0.65)]" : ""
                   }`}
                 >
@@ -148,35 +148,60 @@ export default function ProfilePage() {
                       ✦
                     </span>
                   )}
-                  <SpiritIcon speciesId={sp.speciesId} size={58} />
-                  <span className="w-full truncate text-center text-[11px] font-black leading-tight text-ink">
-                    {species.name[locale]}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <span className="rounded-full bg-ink px-1.5 py-px text-[9px] font-black text-parchment-light">
-                      Lv.{sp.level}
+                  {/* 主體：撳入去睢精靈詳情 */}
+                  <Link
+                    href={`/my-spirits/${sp.uid}`}
+                    className="flex w-full flex-col items-center gap-1"
+                  >
+                    <SpiritIcon speciesId={sp.speciesId} size={54} />
+                    <span className="w-full truncate text-center text-[11px] font-black leading-tight text-ink">
+                      {species.name[locale]}
                     </span>
-                    <span
-                      className="rounded-full px-1.5 py-px text-[9px] font-black text-white"
-                      style={{ backgroundColor: elem.color }}
+                    <span className="flex items-center gap-1">
+                      <span className="rounded-full bg-ink px-1.5 py-px text-[9px] font-black text-parchment-light">
+                        Lv.{sp.level}
+                      </span>
+                      <span
+                        className="rounded-full px-1.5 py-px text-[9px] font-black text-white"
+                        style={{ backgroundColor: elem.color }}
+                      >
+                        {elem.name[locale]}
+                      </span>
+                    </span>
+                    {/* 精靈經驗條（切磋贏取／素材餵食；到頂升級） */}
+                    <span className="h-1 w-full overflow-hidden rounded-full bg-parchment-dark">
+                      <span
+                        className="block h-full rounded-full bg-gradient-to-r from-gold to-gold-light"
+                        style={{
+                          width: `${
+                            sp.level >= SPIRIT_LEVEL_CAP
+                              ? 100
+                              : Math.min(100, ((sp.exp ?? 0) / spiritExpToNext(sp.level)) * 100)
+                          }%`,
+                        }}
+                      />
+                    </span>
+                  </Link>
+                  {/* 操作：升級／進化（進化只喺合資格時出現） */}
+                  <div className="mt-auto flex w-full gap-1">
+                    <Link
+                      href={`/upgrade/${sp.uid}`}
+                      onClick={() => sfxTap()}
+                      className="flex flex-1 items-center justify-center rounded-lg bg-parchment-dark/70 py-1 text-[10px] font-black text-ink active:scale-95"
                     >
-                      {elem.name[locale]}
-                    </span>
-                  </span>
-                  {/* 精靈經驗條（切磋贏取；到頂升級） */}
-                  <span className="h-1 w-full overflow-hidden rounded-full bg-parchment-dark">
-                    <span
-                      className="block h-full rounded-full bg-gradient-to-r from-gold to-gold-light"
-                      style={{
-                        width: `${
-                          sp.level >= SPIRIT_LEVEL_CAP
-                            ? 100
-                            : Math.min(100, ((sp.exp ?? 0) / spiritExpToNext(sp.level)) * 100)
-                        }%`,
-                      }}
-                    />
-                  </span>
-                </Link>
+                      ⬆ {t("profile.upgrade")}
+                    </Link>
+                    {canEv && (
+                      <Link
+                        href={`/evolve/${sp.uid}`}
+                        onClick={() => sfxTap()}
+                        className="flex flex-1 items-center justify-center rounded-lg bg-gold/80 py-1 text-[10px] font-black text-ink active:scale-95"
+                      >
+                        ✨ {t("dex.evolve")}
+                      </Link>
+                    )}
+                  </div>
+                </div>
               );
             })
           )}

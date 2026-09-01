@@ -228,6 +228,7 @@
       "basic": "Basic Ingredients"
     },
     "unknown": "???",
+    "mystery": "Mystery Spirits",
     "stage1": "Juvenile Form",
     "stage2": "Warrior Form",
     "stage3": "Final Form",
@@ -346,6 +347,7 @@
     "guest": "Guest Hunter",
     "changeName": "Change Name",
     "namePlaceholder": "Enter new name",
+    "upgrade": "Level Up",
     "languageSetting": "Language",
     "resetData": "Reset Game Data"
   },
@@ -362,6 +364,13 @@
     "salty": "Salty",
     "spicy": "Spicy",
     "sweet": "Sweet"
+  },
+  "upgrade": {
+    "selectMaterials": "Select Materials",
+    "materialExp": "{exp} EXP",
+    "feed": "Level Up (+{exp} EXP)",
+    "selectFirst": "Select materials first",
+    "leveledTo": "Reached Lv.{level}!"
   },
   "gifts": {
     "title": "Gifts",

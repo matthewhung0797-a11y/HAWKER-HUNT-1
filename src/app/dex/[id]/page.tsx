@@ -55,7 +55,6 @@ export default function DexDetailPage({ params }: { params: Promise<{ id: string
     store.ownedSpirits.find((sp) => sp.speciesId === id && sp.shiny) ??
     store.ownedSpirits.find((sp) => sp.speciesId === id);
   const isShiny = Boolean(ownedInstance?.shiny);
-  const evolvable = caught && !!ownedInstance && store.canEvolve(id);
   const req = species.evolutionRequirement;
   // 進化後 evolveSpirit 會覆蓋 speciesId，令 ownedSpirits 唔再有呢隻：
   // 圖鑑仲顯示（captureCounts 有），但已冇實體可切磋／進化
@@ -261,24 +260,7 @@ export default function DexDetailPage({ params }: { params: Promise<{ id: string
                 </span>
               </li>
             </ul>
-            {caught && ownedInstance && (
-              <button
-                disabled={!evolvable}
-                onClick={() => {
-                  sfxTap();
-                  router.push(`/evolve/${ownedInstance.uid}`);
-                }}
-                className={`mt-3 w-full py-3.5 text-lg font-black ${
-                  evolvable
-                    ? "btn-gold shadow-[0_0_18px_rgba(232,200,96,0.8)]"
-                    : "btn-outline opacity-50"
-                }`}
-              >
-                <span className="inline-flex items-center gap-1.5">
-                  <UIIcon name="sparkles" size={20} /> {t("dex.evolve")}
-                </span>
-              </button>
-            )}
+            {/* 進化入口已移到「我」頁的我的精靈卡（升級旁邊）；呢度只顯示條件 */}
           </section>
         )}
 
