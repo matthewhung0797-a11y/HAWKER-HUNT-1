@@ -1,12 +1,12 @@
 "use client";
 
-import { use, useMemo, useState } from "react";
+import { use, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { SPECIES, SPECIES_MAP } from "@/content/species";
+import { SPECIES_MAP } from "@/content/species";
 import { ELEMENT_INFO } from "@/content/elements";
 import { useGameStore, spiritExpToNext, stageLevelCap } from "@/lib/store";
 import { sfxTap } from "@/lib/sfx";
@@ -31,13 +31,7 @@ export default function DexDetailPage({ params }: { params: Promise<{ id: string
   const caught = !!store.captureCounts[id];
 
   // 進化鏈（同系列 3 階段）
-  const chain = useMemo(
-    () =>
-      species
-        ? SPECIES.filter((s) => s.seriesId === species.seriesId).sort((a, b) => a.stage - b.stage)
-        : [],
-    [species]
-  );
+  // 進化鏈已移到「我的精靈」詳情頁
 
   if (!species) {
     return (
@@ -88,9 +82,7 @@ export default function DexDetailPage({ params }: { params: Promise<{ id: string
                 </group>
                 <OrbitControls enablePan={false} enableZoom={true} minDistance={0.5} maxDistance={2.5} />
               </Canvas>
-              <span className="pointer-events-none absolute bottom-2 left-3 text-xs text-ink-soft">
-                🔄 360°
-              </span>
+              {/* 🔄 360° 提示圖示已移除 */}
             </>
           ) : (
             <div className="flex h-full items-center justify-center">
@@ -195,32 +187,7 @@ export default function DexDetailPage({ params }: { params: Promise<{ id: string
           </div>
         )}
 
-        {/* 進化鏈 */}
-        <section className="card-parchment p-4">
-          <h2 className="mb-2 text-sm font-black text-ink">{t("dex.evolutionChain")}</h2>
-          <div className="flex items-center justify-between">
-            {chain.map((s, i) => {
-              const sCaught = !!store.captureCounts[s.id];
-              const isCurrent = s.id === id;
-              return (
-                <div key={s.id} className="flex items-center">
-                  <Link
-                    href={`/dex/${s.id}`}
-                    className={`flex flex-col items-center gap-1 rounded-xl p-1.5 ${
-                      isCurrent ? "bg-gold/25 ring-2 ring-gold" : ""
-                    }`}
-                  >
-                    <SpiritIcon speciesId={s.id} size={52} silhouette={!sCaught} />
-                    <span className="text-[10px] font-bold text-ink-soft">
-                      {sCaught ? s.name[locale] : t("dex.unknown")}
-                    </span>
-                  </Link>
-                  {i < chain.length - 1 && <span className="px-1 text-gold">➜</span>}
-                </div>
-              );
-            })}
-          </div>
-        </section>
+        {/* 進化鏈已移到「我的精靈」詳情頁（/my-spirits/[uid]） */}
 
         {/* 進化條件已移到「我的精靈」詳情頁（/my-spirits/[uid]） */}
 

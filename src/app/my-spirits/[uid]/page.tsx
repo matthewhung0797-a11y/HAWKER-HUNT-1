@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { SPECIES_MAP } from "@/content/species";
+import { SPECIES, SPECIES_MAP } from "@/content/species";
 import { ELEMENT_INFO } from "@/content/elements";
 import { ITEM_MAP } from "@/content/items";
 import {
@@ -46,6 +46,15 @@ export default function MySpiritDetailPage({
   const levelReached = spirit ? spirit.level >= levelCap : false;
   // 進化條件（由圖鑑移過嚟：素材＋打卡據點數）
   const req = species?.evolutionRequirement;
+  // 進化鏈（同系列 3 階段，按 stage 排序）
+  const chain = useMemo(
+    () =>
+      species
+        ? SPECIES.filter((s) => s.seriesId === species.seriesId).sort((a, b) => a.stage - b.stage)
+        : [],
+    [species]
+  );
+  const captureCounts = useGameStore((s) => s.captureCounts);
 
   // 能力值（按等級倍率）
   const stats = useMemo(() => {
@@ -108,9 +117,7 @@ export default function MySpiritDetailPage({
                   </group>
                   <OrbitControls enablePan={false} enableZoom={true} minDistance={0.5} maxDistance={2.5} />
                 </Canvas>
-                <span className="pointer-events-none absolute bottom-2 left-3 text-xs text-ink-soft">
-                  🔄 360°
-                </span>
+                {/* 🔄 360° 提示圖示已移除 */}
               </>
             ) : (
               <div className="flex h-full items-center justify-center">
@@ -253,6 +260,33 @@ export default function MySpiritDetailPage({
                 </ul>
               </section>
             )}
+
+            {/* 進化鏈（由圖鑑移入）：同系列三階段；未捕獲顯示剪影 */}
+            <section className="card-parchment mx-auto w-full max-w-sm p-3">
+              <h2 className="mb-2 text-sm font-black text-ink">{t("dex.evolutionChain")}</h2>
+              <div className="flex items-center justify-between">
+                {chain.map((s, i) => {
+                  const sCaught = !!captureCounts[s.id];
+                  const isCurrent = s.id === spirit!.speciesId;
+                  return (
+                    <div key={s.id} className="flex items-center">
+                      <Link
+                        href={`/dex/${s.id}`}
+                        className={`flex flex-col items-center gap-1 rounded-xl p-1.5 ${
+                          isCurrent ? "bg-gold/25 ring-2 ring-gold" : ""
+                        }`}
+                      >
+                        <SpiritIcon speciesId={s.id} size={52} silhouette={!sCaught} />
+                        <span className="text-[10px] font-bold text-ink-soft">
+                          {sCaught ? s.name[locale] : t("dex.unknown")}
+                        </span>
+                      </Link>
+                      {i < chain.length - 1 && <span className="px-1 text-gold">➜</span>}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
 
                       {/* 能力值（含等級加成） */}
             <section className="card-parchment p-4">
