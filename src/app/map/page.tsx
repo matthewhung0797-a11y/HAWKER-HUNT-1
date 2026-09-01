@@ -47,13 +47,13 @@ function makeMarkerElement(centre: HawkerCentre): {
   el: HTMLButtonElement;
 } {
   const wrap = document.createElement("div");
-  wrap.style.cssText = "width:80px;height:90px;overflow:visible";
+  wrap.style.cssText = "width:60px;height:67.5px;overflow:visible";
   const scaler = document.createElement("div");
   scaler.style.cssText = "width:100%;height:100%;overflow:visible";
   const el = document.createElement("button");
   el.className = "marker-bob";
   el.style.cssText =
-    "position:relative;width:80px;height:80px;border-radius:9999px;border:3px solid #c9a227;background:#F2E7CF;cursor:pointer;box-shadow:0 4px 10px rgba(74,44,20,.45);padding:0;overflow:visible";
+    "position:relative;width:60px;height:60px;border-radius:9999px;border:3px solid #c9a227;background:#F2E7CF;cursor:pointer;box-shadow:0 4px 10px rgba(74,44,20,.45);padding:0;overflow:visible";
   el.style.animationDelay = `${-(Math.random() * 3).toFixed(2)}s`;
   const img = document.createElement("img");
   img.src = "/ui/hawker-stall-icon.png";
@@ -63,7 +63,7 @@ function makeMarkerElement(centre: HawkerCentre): {
     "width:100%;height:100%;border-radius:9999px;object-fit:cover;pointer-events:none";
   const tip = document.createElement("span");
   tip.style.cssText =
-    "position:absolute;left:50%;bottom:-9px;margin-left:-7px;width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:10px solid #c9a227";
+    "position:absolute;left:50%;bottom:-8px;margin-left:-6px;width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:9px solid #c9a227";
   el.append(img, tip);
   scaler.appendChild(el);
   wrap.appendChild(scaler);
@@ -764,9 +764,9 @@ export default function MapPage() {
         w.scaler.style.transform = `scale(${(sp * 0.5).toFixed(3)})`;
         w.hit.style.pointerEvents = visible ? "auto" : "none";
       }
-      // 據點圖示固定大小（80px），不跟地圖縮放
+      // 據點圖示固定大小（80px），不跟地圖縮放；定位標記跟地圖縮放（精靈同款比例）
       const ps = playerScalerRef.current;
-      if (ps) ps.style.transform = `scale(${worldScale(zoom, 0.25, 2).toFixed(3)})`;
+      if (ps) ps.style.transform = `scale(${(sp * 0.5).toFixed(3)})`;
     };
     map.on("zoomend", syncWorldScale);
     syncWorldScale();
