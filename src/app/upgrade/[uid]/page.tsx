@@ -108,7 +108,7 @@ export default function UpgradePage({ params }: { params: Promise<{ uid: string 
     <main className="paper-texture flex min-h-dvh shrink-0 flex-col pb-[calc(70px_+_env(safe-area-inset-bottom))]">
       <header className="flex items-center justify-between px-4 pt-5">
         <button
-          onClick={() => router.push("/profile")}
+          onClick={() => router.push(`/my-spirits/${uid}`)}
           className="flex h-10 w-10 items-center justify-center rounded-full card-parchment"
           aria-label={t("common.back")}
         >

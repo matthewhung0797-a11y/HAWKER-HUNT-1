@@ -274,7 +274,7 @@ export default function EvolvePage({ params }: { params: Promise<{ uid: string }
 
   // invalid 用 effect 導航（避免 render 期間觸發 router）
   useEffect(() => {
-    if (stage === "invalid") router.replace("/dex");
+    if (stage === "invalid") router.replace("/my-spirits");
   }, [stage, router]);
 
   if (stage === "pending" || stage === "invalid") return null;
@@ -447,7 +447,8 @@ export default function EvolvePage({ params }: { params: Promise<{ uid: string }
             <button
               onClick={() => {
                 sfxTap();
-                router.push(`/dex/${toSpeciesId.current}`);
+                // 進化保留同 uid — 直接返呢隻（已進化）精靈嘅詳情頁
+                router.push(`/my-spirits/${uid}`);
               }}
               className="btn-gold mt-3 px-10 py-3.5 text-lg font-black"
             >

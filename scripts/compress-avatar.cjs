@@ -28,7 +28,7 @@ const sharp = require("sharp");
     console.log(`${name}: ${(bytes.length / 1048576).toFixed(2)}MB → ${(out.length / 1024).toFixed(0)}KB (webp 1024)`);
   }
 
-  io.write("public/models/player-avatar.opt.glb", doc);
+  await io.write("public/models/player-avatar.opt.glb", doc);
   const s = fs.statSync("public/models/player-avatar.opt.glb").size;
   console.log(`output: ${(s / 1048576).toFixed(2)}MB`);
 })();

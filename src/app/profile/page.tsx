@@ -1,15 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import Link from "next/link";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { SPECIES, SPECIES_MAP } from "@/content/species";
 import { FACTION_MAP } from "@/content/centres";
 import { ITEM_MAP } from "@/content/items";
-import { ELEMENT_INFO } from "@/content/elements";
 import { BADGES, type BadgeDef } from "@/content/badges";
-import { useGameStore, spiritExpToNext, stageLevelCap } from "@/lib/store";
+import { useGameStore } from "@/lib/store";
 import { validateNickname, nicknameErrorText } from "@/lib/nickname";
 import { sfxTap } from "@/lib/sfx";
 import BottomNav from "@/components/BottomNav";
@@ -35,18 +33,6 @@ export default function ProfilePage() {
   const dexPercent = Math.round((caughtCount / SPECIES.length) * 100);
   const faction = FACTION_MAP[store.factionId];
   const expNeeded = 100 * store.level;
-
-  // 精靈展示排序：閃光 → 高階 → 高等
-  const sortedSpirits = useMemo(
-    () =>
-      [...store.ownedSpirits].sort(
-        (a, b) =>
-          Number(b.shiny ?? false) - Number(a.shiny ?? false) ||
-          (SPECIES_MAP[b.speciesId]?.stage ?? 0) - (SPECIES_MAP[a.speciesId]?.stage ?? 0) ||
-          b.level - a.level
-      ),
-    [store.ownedSpirits]
-  );
 
   const stats = [
     { label: t("profile.totalCaught"), value: store.ownedSpirits.length, icon: "chopsticks" },
@@ -120,90 +106,7 @@ export default function ProfilePage() {
         ))}
       </section>
 
-      {/* 我的精靈 */}
-      <section className="mx-4 mt-4">
-        <h2 className="mb-2 flex items-center gap-1.5 text-sm font-black text-ink">
-          <UIIcon name="chopsticks" size={18} /> {t("profile.mySpirits")}
-        </h2>
-        <div className="no-scrollbar flex gap-2.5 overflow-x-auto pb-2 pt-1">
-          {sortedSpirits.length === 0 ? (
-            <div className="card-parchment w-full p-6 text-center text-xs text-ink-soft">
-              {t("dex.uncaught")}
-            </div>
-          ) : (
-            sortedSpirits.map((sp) => {
-              const species = SPECIES_MAP[sp.speciesId];
-              if (!species) return null;
-              const elem = ELEMENT_INFO[species.element];
-              const canEv = store.canEvolve(sp.speciesId, sp.uid);
-              const levelCap = stageLevelCap(species.stage);
-              return (
-                <div
-                  key={sp.uid}
-                  className={`card-parchment relative flex h-[176px] w-[92px] shrink-0 flex-col items-center gap-1 overflow-hidden p-2.5 pt-3 ${
-                    sp.shiny ? "ring-2 ring-gold shadow-[0_0_14px_rgba(232,200,96,0.65)]" : ""
-                  }`}
-                >
-                  {/* 閃光 ✦ 徽章已移除（金框保留） */}
-                  {/* 主體：撳入去睢精靈詳情 */}
-                  <Link
-                    href={`/my-spirits/${sp.uid}`}
-                    className="flex w-full flex-col items-center gap-1"
-                  >
-                    <SpiritIcon speciesId={sp.speciesId} size={54} />
-                    <span className="w-full truncate text-center text-[11px] font-black leading-tight text-ink">
-                      {species.name[locale]}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <span className="rounded-full bg-ink px-1.5 py-px text-[9px] font-black text-parchment-light">
-                        Lv.{sp.level}
-                      </span>
-                      <span
-                        className="rounded-full px-1.5 py-px text-[9px] font-black text-white"
-                        style={{ backgroundColor: elem.color }}
-                      >
-                        {elem.name[locale]}
-                      </span>
-                    </span>
-                    {/* 精靈經驗條（切磋贏取／素材餵食；到頂升級） */}
-                    <span className="h-1 w-full overflow-hidden rounded-full bg-parchment-dark">
-                      <span
-                        className="block h-full rounded-full bg-gradient-to-r from-gold to-gold-light"
-                        style={{
-                          width: `${
-                            sp.level >= levelCap
-                              ? 100
-                              : Math.min(100, ((sp.exp ?? 0) / spiritExpToNext(sp.level)) * 100)
-                          }%`,
-                        }}
-                      />
-                    </span>
-                  </Link>
-                  {/* 操作：升級／進化（進化只喺合資格時出現） */}
-                  <div className="mt-auto flex w-full gap-1">
-                    <Link
-                      href={`/upgrade/${sp.uid}`}
-                      onClick={() => sfxTap()}
-                      className="flex flex-1 items-center justify-center rounded-lg border border-pandan/70 bg-pandan py-1 text-[10px] font-black text-white active:scale-95"
-                    >
-                      ⬆ {t("profile.upgrade")}
-                    </Link>
-                    {canEv && (
-                      <Link
-                        href={`/evolve/${sp.uid}`}
-                        onClick={() => sfxTap()}
-                        className="flex flex-1 items-center justify-center rounded-lg bg-gold/80 py-1 text-[10px] font-black text-ink active:scale-95"
-                      >
-                        ✨ {t("dex.evolve")}
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
-      </section>
+      {/* 「我的精靈」區已移除（精靈管理集中在 /my-spirits） */}
 
       {/* 我的道具（進化素材） */}
       <section className="mx-4 mt-4">

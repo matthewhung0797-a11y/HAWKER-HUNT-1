@@ -1,25 +1,15 @@
 "use client";
 
-// 地圖主角 3D avatar（public/models/player-avatar.glb，walk-in-place 骨架動作）。
-// 掛喺既有 marker DOM 結構（scaler 內），canvas 尺寸＝root 方形；
-// 舊 2D player-avatar.png 被取代。輕量原則：單一 Canvas、單一模型、
-// 無 OrbitControls／無陰影，蒙版只開 alpha。
+// 地圖主角 3D avatar（public/models/player-avatar.glb）。
+// 靜態展示（不播骨架動作，bind pose 定格）；掛喺既有 marker DOM 結構（scaler 內），
+// canvas 尺寸＝root 方形。輕量原則：單一 Canvas、單一模型、無 OrbitControls／陰影。
 
-import { Suspense, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
-import { useAnimations, useGLTF } from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
 
 function AvatarModel() {
-  const { scene, animations } = useGLTF("/models/player-avatar.glb");
-  const { actions } = useAnimations(animations, scene);
-  // GLB 自帶唯一動作「骨架動作」：直接全播
-  useEffect(() => {
-    const first = Object.values(actions)[0];
-    first?.reset().fadeIn(0.3).play();
-    return () => {
-      first?.fadeOut(0.3);
-    };
-  }, [actions]);
+  const { scene } = useGLTF("/models/player-avatar.glb");
+  // 不使用 useAnimations：靜態定格
   return <primitive object={scene} />;
 }
 
@@ -44,11 +34,9 @@ export default function Avatar3D({ size = 58 }: { size?: number }) {
       >
         <ambientLight intensity={1.35} />
         <directionalLight position={[2, 4, 2]} intensity={1.2} />
-        <Suspense fallback={null}>
-          <group position={[0, -0.5, 0]}>
-            <AvatarModel />
-          </group>
-        </Suspense>
+        <group position={[0, -0.5, 0]}>
+          <AvatarModel />
+        </group>
       </Canvas>
     </div>
   );
