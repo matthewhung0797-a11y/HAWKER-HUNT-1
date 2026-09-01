@@ -27,16 +27,18 @@ export default function MySpiritsPage() {
 
   const [sortKey, setSortKey] = useState<SortKey>("caughtAt");
   const [elementFilter, setElementFilter] = useState<ElementType | "all">("all");
+  /** 屬性排列開關（火>水>木>金>土 分組；預設關＝純排序） */
+  const [elementGroup, setElementGroup] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
 
-  // 屬性分類（可與任何排序並用）→ 排序（等級/獲得時間/稀有度，互斥）
-  // 屬性揀「全部」時：所有排序以火>水>木>金>土 分組排先（同屬性排埋一齊）
+  // 屬性屬性篩選（單一屬性）→ 排序（等級/獲得時間/稀有度，互斥）
+  // tie-break 鏈：主排序 → 同值時相同精靈排埋一齊（speciesId）→ 開咗屬性排列時按 火>水>木>金>土 分組
   const sorted = useMemo(() => {
     let list = [...ownedSpirits];
     if (elementFilter !== "all") {
       list = list.filter((sp) => SPECIES_MAP[sp.speciesId]?.element === elementFilter);
     }
-    // 屬性組順序：火>水>木>金>土（「全部」時用；揀咗單一屬性時全場同屬性＝無效）
+    // 屬性組順序：火>水>木>金>土（揀咗單一屬性時全場同屬性＝無效）
     const ELEMENT_ORDER_RANK: Record<ElementType, number> = {
       fire: 0,
       water: 1,
@@ -46,37 +48,38 @@ export default function MySpiritsPage() {
     };
     const elRank = (speciesId: string) =>
       ELEMENT_ORDER_RANK[SPECIES_MAP[speciesId]?.element ?? "earth"] ?? 4;
-    const groupFirst = elementFilter === "all";
+    const useEl = elementGroup && elementFilter === "all";
     switch (sortKey) {
       case "level":
-        // 等級高→低；同等級：火>水>木>金>土 → 同屬性同一隻精靈排埋一齊；組內高等級排先
+        // 等級高→低 → 相同精靈排埋一齊 → 屬性排列時 火>水>木>金>土 → 時間
         return list.sort(
           (a, b) =>
             b.level - a.level ||
-            (groupFirst ? elRank(a.speciesId) - elRank(b.speciesId) : 0) ||
             a.speciesId.localeCompare(b.speciesId) ||
+            (useEl ? elRank(a.speciesId) - elRank(b.speciesId) : 0) ||
             b.caughtAt - a.caughtAt
         );
       case "rarity":
-        // 稀有度高→低；同稀有度：火>水>木>金>土 → 同一隻精靈排埋一齊（組內新捉排先）
+        // 稀有度高→低 → 相同精靈排埋一齊 → 屬性排列時 火>水>木>金>土 → 時間
         return list.sort(
           (a, b) =>
             (RARITY_RANK[SPECIES_MAP[b.speciesId]?.rarity ?? "basic"] ?? 0) -
               (RARITY_RANK[SPECIES_MAP[a.speciesId]?.rarity ?? "basic"] ?? 0) ||
-            (groupFirst ? elRank(a.speciesId) - elRank(b.speciesId) : 0) ||
             a.speciesId.localeCompare(b.speciesId) ||
+            (useEl ? elRank(a.speciesId) - elRank(b.speciesId) : 0) ||
             b.caughtAt - a.caughtAt
         );
       case "caughtAt":
       default:
-        // 新捉排先；同屬性排埋一齊（火>水>木>金>土）再按時間
+        // 新捉排先 → 相同精靈排埋一齊 → 屬性排列時 火>水>木>金>土 分組
         return list.sort(
           (a, b) =>
-            (groupFirst ? elRank(a.speciesId) - elRank(b.speciesId) : 0) ||
+            (useEl ? elRank(a.speciesId) - elRank(b.speciesId) : 0) ||
+            a.speciesId.localeCompare(b.speciesId) ||
             b.caughtAt - a.caughtAt
         );
     }
-  }, [ownedSpirits, sortKey, elementFilter]);
+  }, [ownedSpirits, sortKey, elementFilter, elementGroup]);
 
   const sortOptions: { key: SortKey; label: string }[] = [
     { key: "caughtAt", label: t("sort.caughtAt") },
@@ -131,7 +134,7 @@ export default function MySpiritsPage() {
             </div>
             {/* 屬性分類（可與排序並用） */}
             <p className="mb-1.5 text-xs font-black text-ink">{t("sort.element")}</p>
-            <div className="flex flex-wrap gap-1.5">
+            <div className="mb-2 flex flex-wrap gap-1.5">
               <button
                 onClick={() => {
                   sfxTap();
@@ -163,6 +166,21 @@ export default function MySpiritsPage() {
                 </button>
               ))}
             </div>
+            {/* 屬性排列開關（火>水>木>金>土 分組；只喺「全部」時生效） */}
+            <button
+              onClick={() => {
+                sfxTap();
+                setElementGroup((v) => !v);
+              }}
+              className={`flex w-full items-center justify-between rounded-xl border-2 px-3 py-2 text-xs font-bold transition active:scale-[0.98] ${
+                elementGroup
+                  ? "border-ink bg-ink text-parchment-light"
+                  : "border-ink-soft/40 bg-parchment-light text-ink-soft"
+              }`}
+            >
+              <span>{t("sort.elementOrder")}</span>
+              <span>{elementGroup ? "🔥💧🌲⛏⛰" : "—"}</span>
+            </button>
           </div>
         )}
       </header>
