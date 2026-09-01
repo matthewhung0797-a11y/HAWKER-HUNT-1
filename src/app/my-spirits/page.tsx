@@ -132,22 +132,22 @@ export default function MySpiritsPage() {
             at(b) - at(a)
         );
       case "rarity":
-        // 稀有度 → 相同精靈 → 等級(高→低) → 獲取時間(新→舊)；升序＝稀有度反轉
+        // 稀有度 → 相同精靈 → 等級(高→低) → 屬性(固定順序)；升序＝稀有度反轉
         return list.sort(
           (a, b) =>
             (dir === "desc" ? rarRank(b) - rarRank(a) : rarRank(a) - rarRank(b)) ||
             sameSpecies(a).localeCompare(sameSpecies(b)) ||
             lv(b) - lv(a) ||
-            at(b) - at(a)
+            elRank(a) - elRank(b)
         );
       case "level":
-        // 等級(高→低/低→高) → 相同精靈 → 稀有度(高→低) → 獲取時間(新→舊)
+        // 等級(高→低/低→高) → 相同精靈 → 稀有度(高→低) → 屬性(固定順序)
         return list.sort(
           (a, b) =>
             (dir === "desc" ? lv(b) - lv(a) : lv(a) - lv(b)) ||
             sameSpecies(a).localeCompare(sameSpecies(b)) ||
             rarRank(b) - rarRank(a) ||
-            at(b) - at(a)
+            elRank(a) - elRank(b)
         );
       case "caughtAt":
       default:
