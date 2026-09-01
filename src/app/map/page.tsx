@@ -1094,15 +1094,7 @@ export default function MapPage() {
               >
                 <UIIcon name="star" size={18} dimmed={!store.favouriteCentres.includes(selected.id)} />
               </button>
-              <button
-                onClick={() => {
-                  sfxTap();
-                  router.push(`/battle?centre=${selected.id}`);
-                }}
-                className="btn-outline flex items-center justify-center gap-1 px-4 py-3 text-sm font-bold"
-              >
-                <UIIcon name="fire" size={18} /> {t("battle.title")}
-              </button>
+              {/* 切磋入口已隱藏 */}
               {/* 打卡關卡後移：實體 QR 先係「到場」嘅真證據，所以個掣永遠撳得入掃描頁
                   （唔再用 GPS 距離禁用），淨係打卡次數用晒先 disable。距離喺上面資訊列顯示。 */}
               <button

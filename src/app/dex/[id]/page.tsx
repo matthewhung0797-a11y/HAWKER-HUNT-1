@@ -189,18 +189,9 @@ export default function DexDetailPage({ params }: { params: Promise<{ id: string
           </section>
         )}
 
-        {/* 切磋／自拍：已擁有實體先得 */}
+        {/* 自拍：已擁有實體先得（切磋入口已隱藏） */}
         {caught && ownedInstance && (
           <div className="mx-auto flex flex-wrap items-center justify-center gap-2">
-            <button
-              onClick={() => {
-                sfxTap();
-                router.push(`/battle?uid=${ownedInstance.uid}`);
-              }}
-              className="btn-gold flex items-center gap-2 px-8 py-3 text-base font-black"
-            >
-              <UIIcon name="fire" size={20} /> {t("battle.title")}
-            </button>
             <button
               onClick={() => {
                 sfxTap();
@@ -298,22 +289,7 @@ export default function DexDetailPage({ params }: { params: Promise<{ id: string
           </section>
         )}
 
-        {/* 技能 */}
-        {caught && (
-          <section className="card-parchment p-4">
-            <h2 className="mb-2 text-sm font-black text-ink">{t("dex.skills")}</h2>
-            <ul className="space-y-2">
-              {species.skills.map((s) => (
-                <li key={s.id} className="rounded-lg bg-parchment-dark/50 px-3 py-2">
-                  <div className="flex items-center gap-1 text-sm font-bold text-ink">
-                    <UIIcon name="sparkles" size={14} /> {s.name[locale]}
-                  </div>
-                  <div className="text-xs text-ink-soft">{s.description[locale]}</div>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+        {/* 技能區已隱藏 */}
 
         {/* 能力值 + 捕獲資訊 */}
         {caught && (

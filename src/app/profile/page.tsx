@@ -250,11 +250,12 @@ export default function ProfilePage() {
             <UIIcon name="medal" size={18} /> {t("profile.badges")}
           </span>
           <span className="text-xs font-bold text-ink-soft">
-            {BADGES.filter((b) => b.progress(store) >= b.target).length}/{BADGES.length}
+            {BADGES.filter((b) => !b.hidden && b.progress(store) >= b.target).length}/
+            {BADGES.filter((b) => !b.hidden).length}
           </span>
         </h2>
         <div className="card-parchment grid grid-cols-4 gap-3 p-4">
-          {BADGES.map((badge) => {
+          {BADGES.filter((b) => !b.hidden).map((badge) => {
             const cur = badge.progress(store);
             const unlocked = cur >= badge.target;
             return (

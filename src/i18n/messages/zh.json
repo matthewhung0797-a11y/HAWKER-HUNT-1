@@ -45,7 +45,7 @@
     "step3Title": "用筷子夾住精靈！",
     "step3Body": "AR 鏡頭開啟，用虛擬筷子夾擊捕捉美食精靈",
     "step4Title": "收集、進化、稱霸全島",
-    "step4Body": "餵食摸頭氹佢開心，集齊材料進化，仲可以去據點切磋",
+    "step4Body": "餵食摸頭氹佢開心，集齊材料進化",
     "mentorName": "骨茶宗師",
     "tapNext": "撳一下繼續",
     "g1": "後生仔，企定！歡迎嚟到獅城美食獵場。",
@@ -246,7 +246,7 @@
     "collectItems": "收集 {count} 個{item}",
     "checkinCentres": "累積打卡 {count} 個小販中心",
     "evolvedAwayTitle": "已進化為 {name}",
-    "evolvedAwayDesc": "再捕捉一隻先可切磋／進化",
+    "evolvedAwayDesc": "再捕捉一隻先可進化",
     "viewEvolvedForm": "查看 {name}",
     "view3d": "360° 立體睇",
     "show2d": "返立繪"

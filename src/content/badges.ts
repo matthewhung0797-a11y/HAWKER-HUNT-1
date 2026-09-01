@@ -29,6 +29,8 @@ export interface BadgeDef {
   target: number;
   /** 當前進度 */
   progress: (s: BadgeStateSlice) => number;
+  /** 隱藏（切磋相關，入口未開放）；定義保留，徽章牆過濾 */
+  hidden?: boolean;
 }
 
 const totalCaptures = (s: BadgeStateSlice) =>
@@ -104,7 +106,7 @@ export const BADGES: BadgeDef[] = [
     target: HAWKER_CENTRES.length,
     progress: distinctCentres,
   },
-  // ── 五味擂台（切磋） ──
+  // ── 五味擂台（切磋；已隱藏） ──
   {
     id: "first-spar",
     icon: "fire",
@@ -112,6 +114,7 @@ export const BADGES: BadgeDef[] = [
     description: { zh: "切磋贏 5 場", en: "Win 5 sparring battles" },
     target: 5,
     progress: (s) => s.battleWins,
+    hidden: true,
   },
   {
     id: "flavor-sage",
@@ -123,6 +126,7 @@ export const BADGES: BadgeDef[] = [
     },
     target: 10,
     progress: (s) => s.counterWins,
+    hidden: true,
   },
   {
     id: "champion",
@@ -131,6 +135,7 @@ export const BADGES: BadgeDef[] = [
     description: { zh: "切磋贏 25 場", en: "Win 25 sparring battles" },
     target: 25,
     progress: (s) => s.battleWins,
+    hidden: true,
   },
   // ── 進化同閃光 ──
   {

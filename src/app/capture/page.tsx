@@ -2727,11 +2727,6 @@ function CaptureInner() {
               ))}
             </div>
             <div className="mt-2 space-y-0.5 text-[11px] text-ink-soft">
-              {species.skills.map((s) => (
-                <div key={s.id} className="flex items-center gap-1">
-                  <UIIcon name="sparkles" size={13} /> {s.name[locale]}
-                </div>
-              ))}
               <div className="flex items-center gap-1">
                 <UIIcon name="book" size={13} /> {t("capture.capturedOn")}:{" "}
                 {new Date().toLocaleDateString(locale === "zh" ? "zh-TW" : "en-SG")}

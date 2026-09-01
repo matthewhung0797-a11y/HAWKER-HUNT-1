@@ -45,7 +45,7 @@
     "step3Title": "Clamp the spirit with chopsticks!",
     "step3Body": "Open the AR camera and catch food spirits with virtual chopsticks",
     "step4Title": "Collect, evolve, rule the island",
-    "step4Body": "Feed and pet them, gather materials to evolve, and spar at outposts",
+    "step4Body": "Feed and pet them, gather materials to evolve",
     "mentorName": "Bak Kut Grandmaster",
     "tapNext": "Tap to continue",
     "g1": "Stand straight, young one! Welcome to the Lion City food hunting ground.",
@@ -246,7 +246,7 @@
     "collectItems": "Collect {count}x {item}",
     "checkinCentres": "Check in at {count} hawker centres",
     "evolvedAwayTitle": "Already evolved into {name}",
-    "evolvedAwayDesc": "Catch another to spar/evolve.",
+    "evolvedAwayDesc": "Catch another to evolve.",
     "viewEvolvedForm": "View {name}",
     "view3d": "View in 3D 360°",
     "show2d": "Show art"

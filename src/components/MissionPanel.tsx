@@ -161,7 +161,8 @@ export function useMissions() {
     let cancelled = false;
     getActiveMissions().then(
       (ms) => {
-        if (!cancelled) setDbMissions(ms);
+        // battle_win（切磋）任務已隱藏：切磋入口未開放，唔顯示亦唔抽選
+        if (!cancelled) setDbMissions(ms.filter((m) => m.goal !== "battle_win"));
       },
       () => {
         if (!cancelled) setDbMissions([]);
@@ -318,7 +319,7 @@ export function MissionButton({ onClick }: { onClick: () => void }) {
       style={{ width: 52, height: 52, touchAction: "manipulation", position: "fixed", top: "50%", left: "max(0px, calc(50vw - min(50vw, calc(50vh * 9 / 16))))", zIndex: 30, transform: "translateY(-100%)" }}
       aria-label="Missions"
     >
-      <img src="/ui/mission.png" alt="" style={{ width: 52, height: 52 }} draggable={false} />
+      <img src="/ui/mission-new.png" alt="" style={{ width: 52, height: 52, objectFit: "contain" }} draggable={false} />
     </button>
   );
 }
