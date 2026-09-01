@@ -30,32 +30,51 @@ export default function MySpiritsPage() {
   const [sortOpen, setSortOpen] = useState(false);
 
   // 屬性分類（可與任何排序並用）→ 排序（等級/獲得時間/稀有度，互斥）
+  // 屬性揀「全部」時：所有排序以火>水>木>金>土 分組排先（同屬性排埋一齊）
   const sorted = useMemo(() => {
     let list = [...ownedSpirits];
     if (elementFilter !== "all") {
       list = list.filter((sp) => SPECIES_MAP[sp.speciesId]?.element === elementFilter);
     }
+    // 屬性組順序：火>水>木>金>土（「全部」時用；揀咗單一屬性時全場同屬性＝無效）
+    const ELEMENT_ORDER_RANK: Record<ElementType, number> = {
+      fire: 0,
+      water: 1,
+      wood: 2,
+      metal: 3,
+      earth: 4,
+    };
+    const elRank = (speciesId: string) =>
+      ELEMENT_ORDER_RANK[SPECIES_MAP[speciesId]?.element ?? "earth"] ?? 4;
+    const groupFirst = elementFilter === "all";
     switch (sortKey) {
       case "level":
-        // 同等級：同一隻精靈（speciesId）排埋一齊；組內高等級排先
+        // 等級高→低；同等級：火>水>木>金>土 → 同屬性同一隻精靈排埋一齊；組內高等級排先
         return list.sort(
           (a, b) =>
             b.level - a.level ||
+            (groupFirst ? elRank(a.speciesId) - elRank(b.speciesId) : 0) ||
             a.speciesId.localeCompare(b.speciesId) ||
             b.caughtAt - a.caughtAt
         );
       case "rarity":
-        // 同稀有度：同一隻精靈排埋一齊（組內新捉排先）
+        // 稀有度高→低；同稀有度：火>水>木>金>土 → 同一隻精靈排埋一齊（組內新捉排先）
         return list.sort(
           (a, b) =>
             (RARITY_RANK[SPECIES_MAP[b.speciesId]?.rarity ?? "basic"] ?? 0) -
               (RARITY_RANK[SPECIES_MAP[a.speciesId]?.rarity ?? "basic"] ?? 0) ||
+            (groupFirst ? elRank(a.speciesId) - elRank(b.speciesId) : 0) ||
             a.speciesId.localeCompare(b.speciesId) ||
             b.caughtAt - a.caughtAt
         );
       case "caughtAt":
       default:
-        return list.sort((a, b) => b.caughtAt - a.caughtAt);
+        // 新捉排先；同屬性排埋一齊（火>水>木>金>土）再按時間
+        return list.sort(
+          (a, b) =>
+            (groupFirst ? elRank(a.speciesId) - elRank(b.speciesId) : 0) ||
+            b.caughtAt - a.caughtAt
+        );
     }
   }, [ownedSpirits, sortKey, elementFilter]);
 
