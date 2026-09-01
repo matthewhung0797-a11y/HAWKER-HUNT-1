@@ -265,8 +265,7 @@
       "level": "等級",
       "caughtAt": "獲得時間",
       "rarity": "稀有度",
-      "element": "屬性",
-      "elementOrder": "按屬性排列（火>水>木>金>土）"
+      "element": "屬性"
     }
   },
   "evolution": {

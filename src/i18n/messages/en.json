@@ -265,8 +265,7 @@
       "level": "Level",
       "caughtAt": "Time Caught",
       "rarity": "Rarity",
-      "element": "Element",
-      "elementOrder": "Group by element (Fire>Water>Wood>Metal>Earth)"
+      "element": "Element"
     }
   },
   "evolution": {

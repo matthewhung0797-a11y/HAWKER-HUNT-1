@@ -27,12 +27,11 @@ export default function MySpiritsPage() {
 
   const [sortKey, setSortKey] = useState<SortKey>("caughtAt");
   const [elementFilter, setElementFilter] = useState<ElementType | "all">("all");
-  /** 屬性排列開關（火>水>木>金>土 分組；預設關＝純排序） */
-  const [elementGroup, setElementGroup] = useState(false);
+  /** 屬性排列：false＝主排序行先（時間/等級/稀有度>屬性）；true＝屬性行先（屬性>主排序） */
+  const [elementFirst, setElementFirst] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
 
-  // 屬性屬性篩選（單一屬性）→ 排序（等級/獲得時間/稀有度，互斥）
-  // tie-break 鏈：主排序 → 同值時相同精靈排埋一齊（speciesId）→ 開咗屬性排列時按 火>水>木>金>土 分組
+  // 屬性篩選（單一屬性）→ 排序；「屬性」掣有顏色＝屬性分組行先，冇顏色＝主排序行先
   const sorted = useMemo(() => {
     let list = [...ownedSpirits];
     if (elementFilter !== "all") {
@@ -48,38 +47,50 @@ export default function MySpiritsPage() {
     };
     const elRank = (speciesId: string) =>
       ELEMENT_ORDER_RANK[SPECIES_MAP[speciesId]?.element ?? "earth"] ?? 4;
-    const useEl = elementGroup && elementFilter === "all";
+    const useEl = elementFirst && elementFilter === "all";
+    const elFirst = useEl
+      ? (a: typeof ownedSpirits[number], b: typeof ownedSpirits[number]) =>
+          elRank(a.speciesId) - elRank(b.speciesId)
+      : null;
+    const elLast = useEl
+      ? (a: typeof ownedSpirits[number], b: typeof ownedSpirits[number]) =>
+          elRank(a.speciesId) - elRank(b.speciesId)
+      : () => 0;
     switch (sortKey) {
       case "level":
-        // 等級高→低 → 相同精靈排埋一齊 → 屬性排列時 火>水>木>金>土 → 時間
+        // 有色：屬性→等級→同精靈→時間；冇色：等級→同精靈→屬性→時間
         return list.sort(
           (a, b) =>
+            (elFirst ? elFirst(a, b) : 0) ||
             b.level - a.level ||
             a.speciesId.localeCompare(b.speciesId) ||
-            (useEl ? elRank(a.speciesId) - elRank(b.speciesId) : 0) ||
+            (elFirst ? 0 : elLast(a, b)) ||
             b.caughtAt - a.caughtAt
         );
       case "rarity":
-        // 稀有度高→低 → 相同精靈排埋一齊 → 屬性排列時 火>水>木>金>土 → 時間
+        // 有色：屬性→稀有度→同精靈→時間；冇色：稀有度→同精靈→屬性→時間
         return list.sort(
           (a, b) =>
+            (elFirst ? elFirst(a, b) : 0) ||
             (RARITY_RANK[SPECIES_MAP[b.speciesId]?.rarity ?? "basic"] ?? 0) -
               (RARITY_RANK[SPECIES_MAP[a.speciesId]?.rarity ?? "basic"] ?? 0) ||
             a.speciesId.localeCompare(b.speciesId) ||
-            (useEl ? elRank(a.speciesId) - elRank(b.speciesId) : 0) ||
+            (elFirst ? 0 : elLast(a, b)) ||
             b.caughtAt - a.caughtAt
         );
       case "caughtAt":
       default:
-        // 新捉排先 → 相同精靈排埋一齊 → 屬性排列時 火>水>木>金>土 分組
+        // 有色：屬性→時間；冇色：時間→同精靈→屬性
         return list.sort(
           (a, b) =>
-            (useEl ? elRank(a.speciesId) - elRank(b.speciesId) : 0) ||
-            a.speciesId.localeCompare(b.speciesId) ||
+            (elFirst ? elFirst(a, b) : 0) ||
+            (elFirst
+              ? 0
+              : a.speciesId.localeCompare(b.speciesId) || elLast(a, b)) ||
             b.caughtAt - a.caughtAt
         );
     }
-  }, [ownedSpirits, sortKey, elementFilter, elementGroup]);
+  }, [ownedSpirits, sortKey, elementFilter, elementFirst]);
 
   const sortOptions: { key: SortKey; label: string }[] = [
     { key: "caughtAt", label: t("sort.caughtAt") },
@@ -112,7 +123,7 @@ export default function MySpiritsPage() {
         {/* 排序面板 */}
         {sortOpen && (
           <div className="card-parchment mt-2 rounded-2xl p-3">
-            {/* 排序方式（互斥三選一） */}
+            {/* 排序方式（互斥三選一）＋屬性排列（有色＝屬＝屬性行先，冇色＝主排序行先） */}
             <p className="mb-1.5 text-xs font-black text-ink">{t("sort.title")}</p>
             <div className="mb-2 flex flex-wrap gap-1.5">
               {sortOptions.map((o) => (
@@ -131,6 +142,25 @@ export default function MySpiritsPage() {
                   {o.label}
                 </button>
               ))}
+              {/* 屬性：有色（漸層）＝按屬性順序行先；冇色＝不按屬性排列 */}
+              <button
+                onClick={() => {
+                  sfxTap();
+                  setElementFirst((v) => !v);
+                }}
+                className={`rounded-full border-2 px-3 py-1 text-xs font-bold transition active:scale-95 ${
+                  elementFirst
+                    ? "border-transparent text-white"
+                    : "border-ink-soft/40 bg-parchment-light text-ink-soft"
+                }`}
+                style={
+                  elementFirst
+                    ? { background: "linear-gradient(90deg,#d84a2f,#3d7fc1,#4e9a51,#b8a049,#9a6b3f)" }
+                    : undefined
+                }
+              >
+                {t("sort.element")}
+              </button>
             </div>
             {/* 屬性分類（可與排序並用） */}
             <p className="mb-1.5 text-xs font-black text-ink">{t("sort.element")}</p>
@@ -166,21 +196,6 @@ export default function MySpiritsPage() {
                 </button>
               ))}
             </div>
-            {/* 屬性排列開關（火>水>木>金>土 分組；只喺「全部」時生效） */}
-            <button
-              onClick={() => {
-                sfxTap();
-                setElementGroup((v) => !v);
-              }}
-              className={`flex w-full items-center justify-between rounded-xl border-2 px-3 py-2 text-xs font-bold transition active:scale-[0.98] ${
-                elementGroup
-                  ? "border-ink bg-ink text-parchment-light"
-                  : "border-ink-soft/40 bg-parchment-light text-ink-soft"
-              }`}
-            >
-              <span>{t("sort.elementOrder")}</span>
-              <span>{elementGroup ? "🔥💧🌲⛏⛰" : "—"}</span>
-            </button>
           </div>
         )}
       </header>
