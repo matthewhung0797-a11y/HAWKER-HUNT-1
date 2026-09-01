@@ -159,11 +159,42 @@ export default function MySpiritDetailPage({
                           )
                     }%`,
                   }}
-                />
-              </div>
-            </section>
+                      />
+                  </div>
+                </section>
 
-            {/* 能力值（含等級加成） */}
+                {/* 各級經驗值 */}
+                <section className="card-parchment p-4">
+                  <h2 className="mb-1 text-sm font-black text-ink">{t("mySpirits.levelTable")}</h2>
+                  <p className="mb-2 text-[11px] text-ink-soft">{t("mySpirits.levelTableHint")}</p>
+                  <div className="grid grid-cols-5 gap-1.5">
+                    {Array.from({ length: SPIRIT_LEVEL_CAP }, (_, i) => i + 1).map((lv) => {
+                      const isMax = lv === SPIRIT_LEVEL_CAP;
+                      const passed = !isMax && spirit!.level > lv;
+                      const current =
+                        spirit!.level === lv || (isMax && spirit!.level >= SPIRIT_LEVEL_CAP);
+                      return (
+                        <div
+                          key={lv}
+                          className={`rounded-lg py-1 text-center ${
+                            current
+                              ? "bg-gold/30 ring-1 ring-gold"
+                              : passed
+                                ? "bg-parchment-dark/30 opacity-55"
+                                : "bg-parchment-dark/60"
+                          }`}
+                        >
+                          <div className="text-[10px] font-bold text-ink-soft">Lv.{lv}</div>
+                          <div className="text-[11px] font-black text-ink">
+                            {isMax ? "MAX" : spiritExpToNext(lv)}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </section>
+
+                {/* 能力值（含等級加成） */}
             <section className="card-parchment p-4">
               <h2 className="mb-2 text-sm font-black text-ink">{t("dex.stats")}</h2>
               <div className="grid grid-cols-4 gap-2">
