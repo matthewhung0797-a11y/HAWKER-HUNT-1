@@ -27,13 +27,14 @@ export default function DexPage() {
   // 圖鑑總數含未有的神秘欄位（60）
   const totalCount = SPECIES.length + MYSTERY_SLOTS;
   const progress = Math.round((caughtCount / totalCount) * 100);
+  // 神秘精靈卡數 = 未解鎖真實精靈 + 未有資料欄位（???，不可點擊）
+  const mysteryCount = totalCount - caughtCount;
 
-  // 篩選後按門類分區（正常系列／基礎原料……順序跟 DEX_CATEGORIES）；空區隱藏
+  // 篩選後按門類分區（只顯示已解鎖；未解鎖一律歸入神秘精靈區）；空區隱藏
   const sections = useMemo(() => {
     const list = SPECIES.filter((sp) => {
-      const caught = !!captureCounts[sp.id];
-      if (filter === "caught") return caught;
-      if (filter === "uncaught") return !caught;
+      if (!captureCounts[sp.id]) return false; // 未解鎖 → 神秘精靈區
+      if (filter === "uncaught") return false; // 未捕獲篩選只顯示神秘區
       if (filter !== "all") return sp.element === filter;
       return true;
     });
@@ -104,35 +105,29 @@ export default function DexPage() {
             <span className="h-px flex-1 bg-ink-soft/30" />
           </div>
           <div className="grid grid-cols-3 gap-3">
-            {sec.list.map((sp) => {
-              const count = captureCounts[sp.id] ?? 0;
-              const caught = count > 0;
-              return (
-                <DexGridCell key={sp.id}>
-                  <Link
-                    href={`/dex/${sp.id}`}
-                    className={`card-parchment relative flex h-[120px] w-full flex-col items-center overflow-hidden p-3 ${
-                      caught ? "" : "opacity-80"
-                    }`}
-                  >
-                    <span className="absolute left-1/2 top-4 -translate-x-1/2">
-                      {/* 繼續用 640 full；離屏格由 DexGridCell 延遲掛載減首屏解碼 */}
-                      <SpiritIcon speciesId={sp.id} size={64} silhouette={!caught} />
-                      {/* 閃光 ✦ 徽章已移除 */}
-                      {/* 捕捉數量角標已隱藏 */}
-                    </span>
-                    <span className={`absolute bottom-2 left-0 right-0 text-center text-xs font-bold ${caught ? "text-ink" : "text-ink-soft"}`}>
-                      {caught ? sp.name[locale] : t("dex.unknown")}
-                    </span>
-                  </Link>
-                </DexGridCell>
-              );
-            })}
+            {sec.list.map((sp) => (
+              <DexGridCell key={sp.id}>
+                <Link
+                  href={`/dex/${sp.id}`}
+                  className="card-parchment relative flex h-[120px] w-full flex-col items-center overflow-hidden p-3"
+                >
+                  <span className="absolute left-1/2 top-4 -translate-x-1/2">
+                    {/* 繼續用 640 full；離屏格由 DexGridCell 延遲掛載減首屏解碼 */}
+                    <SpiritIcon speciesId={sp.id} size={64} />
+                    {/* 閃光 ✦ 徽章已移除 */}
+                    {/* 捕捉數量角標已隱藏 */}
+                  </span>
+                  <span className="absolute bottom-2 left-0 right-0 text-center text-xs font-bold text-ink">
+                    {sp.name[locale]}
+                  </span>
+                </Link>
+              </DexGridCell>
+            ))}
           </div>
         </section>
       ))}
 
-      {/* 神秘精靈：未有資料的佔位卡（???），只喺全部／未捕獲篩選顯示 */}
+      {/* 神秘精靈：未解鎖精靈＋未有資料欄位全部以 ??? 顯示、不可點擊；只喺全部／未捕獲篩選顯示 */}
       {(filter === "all" || filter === "uncaught") && (
         <section className="mx-auto w-full max-w-md px-4 pt-4">
           <div className="mb-2 flex items-center gap-3">
@@ -141,7 +136,7 @@ export default function DexPage() {
             <span className="h-px flex-1 bg-ink-soft/30" />
           </div>
           <div className="grid grid-cols-3 gap-3">
-            {Array.from({ length: MYSTERY_SLOTS }, (_, i) => (
+            {Array.from({ length: mysteryCount }, (_, i) => (
               <div
                 key={`mystery-${i}`}
                 className="card-parchment relative flex h-[120px] w-full flex-col items-center overflow-hidden p-3 opacity-80"
