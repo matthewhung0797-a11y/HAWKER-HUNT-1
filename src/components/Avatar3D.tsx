@@ -47,9 +47,10 @@ export default function Avatar3D({ size = 58 }: { size?: number }) {
       }}
     >
       <Canvas
-        camera={{ fov: 35, position: [0, 0.1, 2.3] }}
+        camera={{ fov: 30, position: [0, 0.1, 2.65] }}
         gl={{ alpha: true, antialias: true }}
         style={{ pointerEvents: "none" }}
+        dpr={[2, 3]}
       >
         <ambientLight intensity={1.7} />
         <directionalLight position={[2, 4, 2]} intensity={1.5} />
