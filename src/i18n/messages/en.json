@@ -248,6 +248,8 @@
     "collectItems": "Collect {count}x {item}",
     "checkinCentres": "Check in at {count} hawker centres",
     "evolveLevel": "Requires Lv.{level} to evolve",
+    "evolveNeedLevelTitle": "Reach Lv.{level} to evolve",
+    "evolveNeedLevel": "Reach Lv.{level} to evolve (now Lv.{current}) — go level up!",
     "evolvedAwayTitle": "Already evolved into {name}",
     "evolvedAwayDesc": "Catch another to evolve.",
     "viewEvolvedForm": "View {name}",

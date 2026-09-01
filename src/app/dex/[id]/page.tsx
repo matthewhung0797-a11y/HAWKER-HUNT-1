@@ -8,7 +8,6 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { SPECIES, SPECIES_MAP } from "@/content/species";
 import { ELEMENT_INFO } from "@/content/elements";
-import { ITEM_MAP } from "@/content/items";
 import { useGameStore, spiritExpToNext, stageLevelCap } from "@/lib/store";
 import { sfxTap } from "@/lib/sfx";
 import { hasWebGL2 } from "@/lib/webgl";
@@ -55,7 +54,6 @@ export default function DexDetailPage({ params }: { params: Promise<{ id: string
     store.ownedSpirits.find((sp) => sp.speciesId === id && sp.shiny) ??
     store.ownedSpirits.find((sp) => sp.speciesId === id);
   const isShiny = Boolean(ownedInstance?.shiny);
-  const req = species.evolutionRequirement;
   // 進化後 evolveSpirit 會覆蓋 speciesId，令 ownedSpirits 唔再有呢隻：
   // 圖鑑仲顯示（captureCounts 有），但已冇實體可切磋／進化
   const evolvedAway = caught && !ownedInstance;
@@ -224,60 +222,7 @@ export default function DexDetailPage({ params }: { params: Promise<{ id: string
           </div>
         </section>
 
-        {/* 進化條件 */}
-        {req && species.evolvesTo && (
-          <section className="card-parchment p-4">
-            <h2 className="mb-2 text-sm font-black text-ink">{t("dex.evolutionRequirement")}</h2>
-            <ul className="space-y-1 text-sm text-ink">
-              <li className="flex items-center justify-between">
-                <span className="flex items-center gap-1">
-                  <UIIcon name="medal" size={16} /> {t("dex.evolveLevel", { level: stageLevelCap(species.stage) })}
-                </span>
-                <span
-                  className={
-                    ownedInstance && ownedInstance.level >= stageLevelCap(species.stage)
-                      ? "font-bold text-pandan"
-                      : "text-ink-soft"
-                  }
-                >
-                  {ownedInstance ? `Lv.${ownedInstance.level}` : "—"}{" "}
-                  {ownedInstance && ownedInstance.level >= stageLevelCap(species.stage) && "✔"}
-                </span>
-              </li>
-              {Object.entries(req.items).map(([itemId, qty]) => {
-                const have = store.items[itemId] ?? 0;
-                const ok = have >= qty;
-                return (
-                  <li key={itemId} className="flex items-center justify-between">
-                    <span className="flex items-center gap-1">
-                      <UIIcon name={ITEM_MAP[itemId].icon} size={16} />
-                      {t("dex.collectItems", { count: qty, item: ITEM_MAP[itemId].name[locale] })}
-                    </span>
-                    <span className={ok ? "font-bold text-pandan" : "text-ink-soft"}>
-                      {have}/{qty} {ok && "✔"}
-                    </span>
-                  </li>
-                );
-              })}
-              <li className="flex items-center justify-between">
-                <span className="flex items-center gap-1">
-                  <UIIcon name="lantern" size={16} /> {t("dex.checkinCentres", { count: req.checkinCentres })}
-                </span>
-                <span
-                  className={
-                    store.distinctCentresCheckedIn() >= req.checkinCentres
-                      ? "font-bold text-pandan"
-                      : "text-ink-soft"
-                  }
-                >
-                  {store.distinctCentresCheckedIn()}/{req.checkinCentres}{" "}
-                  {store.distinctCentresCheckedIn() >= req.checkinCentres && "✔"}
-                </span>
-              </li>
-            </ul>
-            {/* 進化入口已移到「我」頁的我的精靈卡（升級旁邊）；呢度只顯示條件 */}
-          </section>
-        )}
+        {/* 進化條件已移到「我的精靈」詳情頁（/my-spirits/[uid]） */}
 
         {/* 技能區已隱藏 */}
 

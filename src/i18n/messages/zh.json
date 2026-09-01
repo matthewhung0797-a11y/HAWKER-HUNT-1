@@ -248,6 +248,8 @@
     "collectItems": "收集 {count} 個{item}",
     "checkinCentres": "累積打卡 {count} 個小販中心",
     "evolveLevel": "進化需要等級 Lv.{level}",
+    "evolveNeedLevelTitle": "要到達 Lv.{level} 才能進化",
+    "evolveNeedLevel": "要到達 Lv.{level} 才能進化（現在 Lv.{current}），趕快練級！",
     "evolvedAwayTitle": "已進化為 {name}",
     "evolvedAwayDesc": "再捕捉一隻先可進化",
     "viewEvolvedForm": "查看 {name}",

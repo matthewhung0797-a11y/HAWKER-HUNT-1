@@ -10,6 +10,7 @@ import { SPECIES_MAP } from "@/content/species";
 import { ELEMENT_INFO } from "@/content/elements";
 import { useGameStore, stageLevelCap } from "@/lib/store";
 import SpiritModel from "@/components/three/SpiritModel";
+import SpiritIcon from "@/components/SpiritIcon";
 import { selfieFaceCamera } from "@/components/SelfiePhoto";
 import Confetti from "@/components/Confetti";
 import { sfxAppear, sfxEvolve, sfxShiny, sfxStruggleTick, sfxTap } from "@/lib/sfx";
@@ -23,7 +24,7 @@ import { track } from "@/lib/analytics/track";
 //  reveal(揭曉 1.1s)    → 白金爆閃、新形態彈簧 scale-in、衝擊波環、五行光柱、粒子爆散
 //  done(慶祝)           → 名字彈出、Confetti、金光回落，出「繼續」掣
 // shiny 版全程用虹彩取代五行主色，揭曉補 sfxShiny＋星粒爆散。
-type Stage = "pending" | "charging" | "morphing" | "suspense" | "reveal" | "done" | "invalid";
+type Stage = "pending" | "charging" | "morphing" | "suspense" | "reveal" | "done" | "invalid" | "underleveled";
 
 const T_MORPH = 1900;
 const T_SUSPENSE = 3900;
@@ -213,10 +214,15 @@ export default function EvolvePage({ params }: { params: Promise<{ uid: string }
   useEffect(() => {
     const spirit = useGameStore.getState().ownedSpirits.find((s) => s.uid === uid);
     const to = spirit ? (SPECIES_MAP[spirit.speciesId]?.evolvesTo ?? "") : "";
-    // 等級門檻：一階 Lv.10／二階 Lv.20（=階段滿級）先可以進化；未達標直接無效返回
+    // 等級門檻：一階 Lv.10／二階 Lv.20（=階段滿級）；未達標顯示提示畫面（唔彈走）
     const stage = spirit ? SPECIES_MAP[spirit.speciesId]?.stage ?? 3 : 3;
-    if (!spirit || !to || spirit.level < stageLevelCap(stage)) {
+    if (!spirit || !to) {
       setStage("invalid");
+      return;
+    }
+    if (spirit.level < stageLevelCap(stage)) {
+      fromSpeciesId.current = spirit.speciesId;
+      setStage("underleveled");
       return;
     }
     fromSpeciesId.current = spirit.speciesId;
@@ -278,6 +284,48 @@ export default function EvolvePage({ params }: { params: Promise<{ uid: string }
   }, [stage, router]);
 
   if (stage === "pending" || stage === "invalid") return null;
+
+  // 等級不足：提示畫面（原精靈立繪＋到達等級提示＋返詳情掣）
+  if (stage === "underleveled") {
+    const sp = SPECIES_MAP[fromSpeciesId.current];
+    const needLv = stageLevelCap(sp?.stage ?? 3);
+    const current = useGameStore.getState().ownedSpirits.find((s) => s.uid === uid);
+    return (
+      <main className="paper-texture flex min-h-dvh shrink-0 flex-col pb-[calc(70px_+_env(safe-area-inset-bottom))]">
+        <header className="flex items-center justify-between px-4 pt-5">
+          <button
+            onClick={() => router.replace(`/my-spirits/${uid}`)}
+            className="flex h-10 w-10 items-center justify-center rounded-full card-parchment"
+            aria-label={t("common.back")}
+          >
+            ←
+          </button>
+          <h1 className="text-lg font-black text-ink">{t("dex.evolve")}</h1>
+          <div className="w-10" />
+        </header>
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
+          {sp && (
+            <SpiritIcon speciesId={sp.id} size={120} />
+          )}
+          <h2 className="text-xl font-black text-chilli">
+            {t("dex.evolveNeedLevelTitle", { level: needLv })}
+          </h2>
+          <p className="text-sm font-bold text-ink-soft">
+            {t("dex.evolveNeedLevel", { level: needLv, current: current?.level ?? 1 })}
+          </p>
+          <button
+            onClick={() => {
+              sfxTap();
+              router.push(`/upgrade/${uid}`);
+            }}
+            className="mt-2 rounded-xl border-2 border-pandan/80 bg-pandan px-10 py-3 text-base font-black text-white shadow-[0_2px_8px_rgba(78,154,81,0.45)] transition active:scale-95"
+          >
+            ⬆ {t("profile.upgrade")}
+          </button>
+        </div>
+      </main>
+    );
+  }
 
   const isShiny = shinyRef.current;
   const showSpeciesId =

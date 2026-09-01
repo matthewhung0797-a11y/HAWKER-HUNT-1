@@ -8,6 +8,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { SPECIES_MAP } from "@/content/species";
 import { ELEMENT_INFO } from "@/content/elements";
+import { ITEM_MAP } from "@/content/items";
 import {
   useGameStore,
   spiritExpToNext,
@@ -19,6 +20,7 @@ import { hasWebGL2 } from "@/lib/webgl";
 import BottomNav from "@/components/BottomNav";
 import SpiritIcon from "@/components/SpiritIcon";
 import SpiritModel from "@/components/three/SpiritModel";
+import UIIcon from "@/components/UIIcon";
 
 /** 我的精靈詳情：3D 檢視＋等級/經驗＋能力值（按等級加成）＋稀有度/屬性 */
 export default function MySpiritDetailPage({
@@ -31,15 +33,19 @@ export default function MySpiritDetailPage({
   const locale = useLocale() as "zh" | "en";
   const router = useRouter();
   const ownedSpirits = useGameStore((s) => s.ownedSpirits);
-  const canEvolve = useGameStore((s) => s.canEvolve);
+  const items = useGameStore((s) => s.items);
+  const distinctCentres = useGameStore((s) => s.distinctCentresCheckedIn());
   const webglOk = hasWebGL2();
 
   const spirit = ownedSpirits.find((sp) => sp.uid === uid);
   const species = spirit ? SPECIES_MAP[spirit.speciesId] : undefined;
   // 階段等級上限：一階 10／二階 20／三階 30
   const levelCap = species ? stageLevelCap(species.stage) : SPIRIT_FALLBACK_CAP;
-  // 呢隻實體可唔可以進化（有 evolvesTo＋等級滿級＋素材／打卡達標）
-  const canEvolveThis = spirit ? Boolean(species?.evolvesTo) && canEvolve(spirit.speciesId, spirit.uid) : false;
+  // 有冇得進化（最終形態冇 evolvesTo）；等級未夠照樣撳得，入面會顯示提示
+  const hasEvolveTarget = Boolean(species?.evolvesTo);
+  const levelReached = spirit ? spirit.level >= levelCap : false;
+  // 進化條件（由圖鑑移過嚟：素材＋打卡據點數）
+  const req = species?.evolutionRequirement;
 
   // 能力值（按等級倍率）
   const stats = useMemo(() => {
@@ -122,25 +128,36 @@ export default function MySpiritDetailPage({
           </div>
 
           <div className="mx-auto flex w-full max-w-md flex-col gap-3 px-4">
-            {/* 升級／進化（並列喺 3D 檢視下面） */}
-            <div className="flex items-stretch gap-2">
-              <Link
-                href={`/upgrade/${spirit!.uid}`}
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border-2 border-pandan/80 bg-pandan py-3 text-sm font-black text-white shadow-[0_2px_8px_rgba(78,154,81,0.45)] transition active:scale-95"
-              >
-                ⬆ {t("profile.upgrade")}
-              </Link>
-              {canEvolveThis ? (
+            {/* 升級／進化（並列喺 3D 檢視下面；進化永遠撳得，等級未夠顯示提示） */}
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-stretch gap-2">
                 <Link
-                  href={`/evolve/${spirit!.uid}`}
-                  className="btn-gold flex flex-1 items-center justify-center gap-1.5 py-3 text-sm font-black transition active:scale-95"
+                  href={`/upgrade/${spirit!.uid}`}
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border-2 border-pandan/80 bg-pandan py-3 text-sm font-black text-white shadow-[0_2px_8px_rgba(78,154,81,0.45)] transition active:scale-95"
                 >
-                  ✨ {t("dex.evolve")}
+                  ⬆ {t("profile.upgrade")}
                 </Link>
-              ) : (
-                <div className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border-2 border-ink/10 bg-parchment-dark/30 py-3 text-sm font-black text-ink-soft/50">
-                  ✨ {t("dex.evolve")}
-                </div>
+                {hasEvolveTarget ? (
+                  <Link
+                    href={`/evolve/${spirit!.uid}`}
+                    className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl border-2 py-3 text-sm font-black transition active:scale-95 ${
+                      levelReached
+                        ? "border-gold bg-gradient-to-b from-gold-light to-gold text-ink shadow-[0_2px_8px_rgba(201,162,39,0.45)]"
+                        : "border-gold/50 bg-gold/25 text-ink-soft"
+                    }`}
+                  >
+                    ✨ {t("dex.evolve")}
+                  </Link>
+                ) : (
+                  <div className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border-2 border-ink/10 bg-parchment-dark/30 py-3 text-sm font-black text-ink-soft/50">
+                    ✨ {t("dex.evolve")}
+                  </div>
+                )}
+              </div>
+              {hasEvolveTarget && !levelReached && (
+                <p className="text-center text-[11px] font-bold text-chilli">
+                  {t("dex.evolveNeedLevel", { level: levelCap, current: spirit!.level })}
+                </p>
               )}
             </div>
 
@@ -191,6 +208,51 @@ export default function MySpiritDetailPage({
                 />
                         </div>
                       </section>
+
+            {/* 進化條件（由圖鑑移入）：只喺有下一階時顯示 */}
+            {req && hasEvolveTarget && (
+              <section className="card-parchment mx-auto w-full max-w-sm p-3">
+                <h2 className="mb-2 text-sm font-black text-ink">{t("dex.evolutionRequirement")}</h2>
+                <ul className="space-y-1 text-sm text-ink">
+                  <li className="flex items-center justify-between">
+                    <span className="flex items-center gap-1">
+                      <UIIcon name="medal" size={16} /> {t("dex.evolveLevel", { level: levelCap })}
+                    </span>
+                    <span className={levelReached ? "font-bold text-pandan" : "text-ink-soft"}>
+                      Lv.{spirit!.level} {levelReached && "✔"}
+                    </span>
+                  </li>
+                  {Object.entries(req.items).map(([itemId, qty]) => {
+                    const have = items[itemId] ?? 0;
+                    const ok = have >= qty;
+                    return (
+                      <li key={itemId} className="flex items-center justify-between">
+                        <span className="flex items-center gap-1">
+                          <UIIcon name={ITEM_MAP[itemId].icon} size={16} />
+                          {t("dex.collectItems", { count: qty, item: ITEM_MAP[itemId].name[locale] })}
+                        </span>
+                        <span className={ok ? "font-bold text-pandan" : "text-ink-soft"}>
+                          {have}/{qty} {ok && "✔"}
+                        </span>
+                      </li>
+                    );
+                  })}
+                  <li className="flex items-center justify-between">
+                    <span className="flex items-center gap-1">
+                      <UIIcon name="lantern" size={16} /> {t("dex.checkinCentres", { count: req.checkinCentres })}
+                    </span>
+                    <span
+                      className={
+                        distinctCentres >= req.checkinCentres ? "font-bold text-pandan" : "text-ink-soft"
+                      }
+                    >
+                      {distinctCentres}/{req.checkinCentres}{" "}
+                      {distinctCentres >= req.checkinCentres && "✔"}
+                    </span>
+                  </li>
+                </ul>
+              </section>
+            )}
 
                       {/* 能力值（含等級加成） */}
             <section className="card-parchment p-4">
