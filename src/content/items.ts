@@ -2,6 +2,33 @@ import type { GameItem } from "./types";
 
 export const ITEMS: GameItem[] = [
   {
+    id: "delicious-essence",
+    name: { en: "Delicious Essence", zh: "美味精華" },
+    description: {
+      en: "A beginner essence of aroma and flavor from everyday dishes. Grants 100 EXP.",
+      zh: "從日常美食中散發出的初級香氣與風味凝聚而成，帶著甜美而溫暖的滋味，能給予幼年美食精靈基礎的成長能量。",
+    },
+    icon: "item-essence",
+  },
+  {
+    id: "feast-nectar",
+    name: { en: "Feast Nectar", zh: "盛宴心髓" },
+    description: {
+      en: "A crystal born only from a chef's finest feast. Grants 300 EXP.",
+      zh: "只有在主廚全心投入、製作出頂級盛宴時才會產生的精華結晶。匯聚了酸甜苦辣各類風味的完美平衡，能顯著提升美食精靈的戰鬥力與靈性。",
+    },
+    icon: "item-nectar",
+  },
+  {
+    id: "soul-of-culinary",
+    name: { en: "Soul of Culinary", zh: "美食之魂" },
+    description: {
+      en: "The ultimate spirit of cuisine turned emotion and memory. Grants 500 EXP.",
+      zh: "料理超越了味覺、昇華為情感與記憶後的終極精神體。承載著饕客的幸福感與廚師的匠心，能激發美食精靈最深層的潛能。",
+    },
+    icon: "item-soul",
+  },
+  {
     id: "chopsticks",
     name: { en: "Chopsticks", zh: "筷子" },
     description: {

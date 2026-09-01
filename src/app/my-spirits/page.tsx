@@ -53,11 +53,7 @@ export default function MySpiritsPage() {
                   >
                     <span className="absolute left-1/2 top-4 -translate-x-1/2">
                       <SpiritIcon speciesId={spirit.speciesId} size={64} />
-                      {spirit.shiny && (
-                        <span className="shiny-badge absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full text-[11px] text-ink">
-                          ✦
-                        </span>
-                      )}
+                      {/* 閃光 ✦ 徽章已移除 */}
                       <span
                         className="absolute -bottom-1 -right-1 rounded-full border-2 border-parchment bg-chilli px-1.5 text-[10px] font-black leading-4 text-white"
                         aria-label={`${navT("dex.level")} ${spirit.level}`}

@@ -123,11 +123,7 @@ export default function DexPage() {
                     <span className="absolute left-1/2 top-4 -translate-x-1/2">
                       {/* 繼續用 640 full；離屏格由 DexGridCell 延遲掛載減首屏解碼 */}
                       <SpiritIcon speciesId={sp.id} size={64} silhouette={!caught} />
-                      {shinySpecies.has(sp.id) && (
-                        <span className="shiny-badge absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full text-[11px] text-ink">
-                          ✦
-                        </span>
-                      )}
+                      {/* 閃光 ✦ 徽章已移除 */}
                       {/* 捕捉數量角標已隱藏 */}
                     </span>
                     <span className={`absolute bottom-2 left-0 right-0 text-center text-xs font-bold ${caught ? "text-ink" : "text-ink-soft"}`}>

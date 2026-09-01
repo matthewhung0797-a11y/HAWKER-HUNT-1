@@ -12,7 +12,7 @@ import { Suspense } from "react";
 import { SPECIES_MAP } from "@/content/species";
 import { ITEMS, ITEM_MAP } from "@/content/items";
 import { useGameStore, spiritExpToNext, spiritStatMultiplier, SPIRIT_LEVEL_CAP } from "@/lib/store";
-import { isUpgradeMaterial, materialExp, totalExp } from "@/lib/upgrade";
+import { isUpgradeMaterial, materialExp, totalExp, MATERIAL_SORT } from "@/lib/upgrade";
 import { hasWebGL2 } from "@/lib/webgl";
 import SpiritModel from "@/components/three/SpiritModel";
 import ElementBadge from "@/components/ElementBadge";
@@ -48,10 +48,12 @@ export default function UpgradePage({ params }: { params: Promise<{ uid: string 
 
   const materials = useMemo(
     () =>
-      ITEMS.filter((it) => isUpgradeMaterial(it.id)).map((it) => ({
-        ...it,
-        have: store.items[it.id] ?? 0,
-      })),
+      ITEMS.filter((it) => isUpgradeMaterial(it.id))
+        .sort((a, b) => (MATERIAL_SORT[a.id] ?? 9) - (MATERIAL_SORT[b.id] ?? 9))
+        .map((it) => ({
+          ...it,
+          have: store.items[it.id] ?? 0,
+        })),
     [store.items]
   );
 
@@ -201,24 +203,55 @@ export default function UpgradePage({ params }: { params: Promise<{ uid: string 
         {atCap ? (
           <p className="py-6 text-center text-sm font-bold text-ink-soft">{t("dex.levelMax")}</p>
         ) : (
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 gap-2">
             {materials.map((m) => {
               const sel = selected[m.id] ?? 0;
+              const tier = MATERIAL_SORT[m.id] ?? 9;
+              // 品質邊框：初級＝青銅、中級＝銀藍、高級＝金紫
+              const tierBorder =
+                tier === 1 ? "border-[#b87333]" : tier === 2 ? "border-[#5b8db8]" : "border-[#c9a227]";
+              const tierGlow =
+                tier === 3
+                  ? "shadow-[0_0_10px_rgba(201,162,39,0.5)]"
+                  : tier === 2
+                    ? "shadow-[0_0_8px_rgba(91,141,184,0.35)]"
+                    : "";
               return (
                 <div
                   key={m.id}
-                  className={`flex items-center gap-2 rounded-xl border-2 p-2.5 transition ${
-                    sel > 0 ? "border-gold bg-gold/15" : "border-ink/10 bg-parchment-dark/40"
+                  className={`flex items-center gap-3 rounded-xl border-2 ${tierBorder} ${tierGlow} bg-parchment-dark/40 p-3 transition ${
+                    sel > 0 ? "ring-2 ring-gold bg-gold/10" : ""
                   } ${m.have === 0 ? "opacity-50" : ""}`}
                 >
-                  <UIIcon name={m.icon} size={30} />
+                  <span className="relative shrink-0">
+                    <UIIcon name={m.icon} size={44} />
+                    {sel > 0 && (
+                      <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-chilli px-1 text-[10px] font-black text-white">
+                        {sel}
+                      </span>
+                    )}
+                  </span>
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-xs font-black text-ink">{m.name[locale]}</div>
-                    <div className="text-[10px] font-bold text-ink-soft">
-                      {t("upgrade.materialExp", { exp: materialExp(m.id) })} · ×{m.have}
+                    <div className="flex items-center gap-1.5">
+                      <span className="truncate text-sm font-black text-ink">{m.name[locale]}</span>
+                      <span
+                        className="shrink-0 rounded-full px-1.5 py-px text-[9px] font-black text-white"
+                        style={{
+                          backgroundColor:
+                            tier === 1 ? "#b87333" : tier === 2 ? "#5b8db8" : "#c9a227",
+                        }}
+                      >
+                        {tier === 1 ? "LV1" : tier === 2 ? "LV2" : "LV3"}
+                      </span>
+                    </div>
+                    <div className="mt-0.5 line-clamp-2 text-[10px] leading-snug text-ink-soft">
+                      {m.description[locale]}
+                    </div>
+                    <div className="mt-0.5 text-[10px] font-bold text-gold">
+                      {t("upgrade.materialExp", { exp: materialExp(m.id) })} · 🎒 ×{m.have}
                     </div>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex shrink-0 items-center gap-1">
                     <button
                       onClick={() => add(m.id, -1)}
                       disabled={sel <= 0}
@@ -250,7 +283,7 @@ export default function UpgradePage({ params }: { params: Promise<{ uid: string 
           <button
             onClick={doUpgrade}
             disabled={gain <= 0}
-            className={`w-full py-3.5 text-lg font-black ${gain > 0 ? "btn-gold shadow-[0_0_18px_rgba(232,200,96,0.8)]" : "btn-outline opacity-50"}`}
+            className={`w-full rounded-xl py-3.5 text-lg font-black ${gain > 0 ? "bg-pandan text-white shadow-[0_0_18px_rgba(78,154,81,0.6)] active:scale-[0.98]" : "btn-outline opacity-50"}`}
           >
             {gain > 0 ? t("upgrade.feed", { exp: gain }) : t("upgrade.selectFirst")}
           </button>

@@ -187,7 +187,7 @@ export default function ProfilePage() {
                     <Link
                       href={`/upgrade/${sp.uid}`}
                       onClick={() => sfxTap()}
-                      className="flex flex-1 items-center justify-center rounded-lg bg-parchment-dark/70 py-1 text-[10px] font-black text-ink active:scale-95"
+                      className="flex flex-1 items-center justify-center rounded-lg border border-pandan/70 bg-pandan py-1 text-[10px] font-black text-white active:scale-95"
                     >
                       ⬆ {t("profile.upgrade")}
                     </Link>

@@ -2,6 +2,7 @@
 
 import { use, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
@@ -29,10 +30,13 @@ export default function MySpiritDetailPage({
   const locale = useLocale() as "zh" | "en";
   const router = useRouter();
   const ownedSpirits = useGameStore((s) => s.ownedSpirits);
+  const canEvolve = useGameStore((s) => s.canEvolve);
   const webglOk = hasWebGL2();
 
   const spirit = ownedSpirits.find((sp) => sp.uid === uid);
   const species = spirit ? SPECIES_MAP[spirit.speciesId] : undefined;
+  // 呢隻實體可唔可以進化（有 evolvesTo＋素材／打卡達標）
+  const canEvolveThis = spirit ? Boolean(species?.evolvesTo) && canEvolve(spirit.speciesId) : false;
 
   // 能力值（按等級倍率）
   const stats = useMemo(() => {
@@ -115,6 +119,28 @@ export default function MySpiritDetailPage({
           </div>
 
           <div className="mx-auto flex w-full max-w-md flex-col gap-3 px-4">
+            {/* 升級／進化（並列喺 3D 檢視下面） */}
+            <div className="flex items-stretch gap-2">
+              <Link
+                href={`/upgrade/${spirit!.uid}`}
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border-2 border-pandan/80 bg-pandan py-3 text-sm font-black text-white shadow-[0_2px_8px_rgba(78,154,81,0.45)] transition active:scale-95"
+              >
+                ⬆ {t("profile.upgrade")}
+              </Link>
+              {canEvolveThis ? (
+                <Link
+                  href={`/evolve/${spirit!.uid}`}
+                  className="btn-gold flex flex-1 items-center justify-center gap-1.5 py-3 text-sm font-black transition active:scale-95"
+                >
+                  ✨ {t("dex.evolve")}
+                </Link>
+              ) : (
+                <div className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border-2 border-ink/10 bg-parchment-dark/30 py-3 text-sm font-black text-ink-soft/50">
+                  ✨ {t("dex.evolve")}
+                </div>
+              )}
+            </div>
+
             {/* 稀有度／屬性／閃光 */}
             <div className="flex items-center justify-center gap-2">
               <span className="rounded-full bg-gold px-4 py-1.5 text-xs font-black text-ink min-w-[60px] text-center">
