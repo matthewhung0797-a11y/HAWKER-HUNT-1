@@ -24,9 +24,10 @@ const TIER_STYLE: Record<
   { color: string; metalness: number; roughness: number; emissive: string; emissiveIntensity: number }
 > = {
   wooden: { color: "#9c6a34", metalness: 0.04, roughness: 0.72, emissive: "#000000", emissiveIntensity: 0 },
-  copper: { color: "#c86f3a", metalness: 0.85, roughness: 0.34, emissive: "#3a1608", emissiveIntensity: 0.25 },
-  silver: { color: "#cdd3dc", metalness: 0.95, roughness: 0.18, emissive: "#2a3240", emissiveIntensity: 0.2 },
-  golden: { color: "#f0c14b", metalness: 1.0, roughness: 0.12, emissive: "#8a6410", emissiveIntensity: 0.55 },
+  // 三款金屬筷：高自發光＝筷子自身發光（唔靠場景光），遠睇都搶眼
+  copper: { color: "#d97a3e", metalness: 0.9, roughness: 0.22, emissive: "#c2531e", emissiveIntensity: 1.15 },
+  silver: { color: "#dfe5ee", metalness: 0.98, roughness: 0.1, emissive: "#8fa2c4", emissiveIntensity: 1.05 },
+  golden: { color: "#ffd45e", metalness: 1.0, roughness: 0.08, emissive: "#e8a918", emissiveIntensity: 1.4 },
 };
 
 export default function Chopsticks3d({

@@ -748,7 +748,7 @@ function WanderingSpirit({
           timeScale={finalAnim === "walk" ? walkTs : 1}
           shadow={false}
           shiny={shiny}
-          faceCamera={speciesId === "chilli-baby" || speciesId === "nasi-lemak-tot" ? 0 : true}
+          faceCamera={speciesId === "chilli-baby" || speciesId === "nasi-lemak-scout" ? 0 : speciesId === "nasi-lemak-tot" ? Math.PI / 2 : true}
           onClipEnd={() => {
             if (ai.current.mode === "emote") {
               setEmote(null);
@@ -2408,20 +2408,21 @@ function CaptureInner() {
               wooden:
                 "linear-gradient(105deg,#6b4423 0%,#8a5a2e 22%,#caa063 50%,#9c6a34 78%,#5f3c1f 100%)",
               copper:
-                "linear-gradient(105deg,#8a4a22 0%,#c86f3a 25%,#f2a56b 50%,#b56430 78%,#7a3c1a 100%)",
+                "linear-gradient(105deg,#9a4f22 0%,#e07a3c 25%,#ffc08a 50%,#cc7038 78%,#8a4218 100%)",
               silver:
-                "linear-gradient(105deg,#8f97a5 0%,#cdd3dc 25%,#f5f8fc 50%,#aab3c2 78%,#7d8695 100%)",
+                "linear-gradient(105deg,#98a1b0 0%,#e3e9f2 25%,#ffffff 50%,#c3ccd9 78%,#8690a0 100%)",
               golden:
-                "linear-gradient(105deg,#b8860b 0%,#e6b422 22%,#ffe08a 50%,#f0c14b 78%,#a06f08 100%)",
+                "linear-gradient(105deg,#c8940a 0%,#ffd24a 22%,#fff2ae 50%,#ffd45e 78%,#b07d06 100%)",
             };
             const stickBg = tierGradient[selectedTier] ?? tierGradient.wooden;
+            // 金屬筷：強光暈（自發光感）；木筷只有陰影
             const metalGlow =
               selectedTier === "golden"
-                ? "0 0 14px rgba(240,193,75,.75), 0 3px 10px rgba(0,0,0,.5)"
+                ? "0 0 22px rgba(255,212,94,.95), 0 0 44px rgba(240,193,75,.45), 0 3px 10px rgba(0,0,0,.5)"
                 : selectedTier === "silver"
-                  ? "0 0 10px rgba(205,211,220,.5), 0 3px 10px rgba(0,0,0,.5)"
+                  ? "0 0 18px rgba(223,229,238,.9), 0 0 36px rgba(160,180,215,.4), 0 3px 10px rgba(0,0,0,.5)"
                   : selectedTier === "copper"
-                    ? "0 0 10px rgba(200,111,58,.45), 0 3px 10px rgba(0,0,0,.5)"
+                    ? "0 0 18px rgba(224,122,60,.85), 0 0 34px rgba(193,83,30,.4), 0 3px 10px rgba(0,0,0,.5)"
                     : "0 3px 10px rgba(0,0,0,.5)";
             return (
               <div
@@ -2457,7 +2458,22 @@ function CaptureInner() {
                         borderRadius: "7px 7px 3px 3px",
                         boxShadow: metalGlow,
                       }}
-                    />
+                    >
+                      {/* 金屬筷高光掃過（銅/銀/金）：沿筷身循環流動嘅白色反光帶 */}
+                      {selectedTier !== "wooden" && (
+                        <span
+                          style={{
+                            position: "absolute",
+                            inset: 0,
+                            pointerEvents: "none",
+                            background:
+                              "linear-gradient(115deg, transparent 32%, rgba(255,255,255,.9) 50%, transparent 68%)",
+                            backgroundSize: "260% 100%",
+                            animation: "metal-shimmer 1.8s linear infinite",
+                          }}
+                        />
+                      )}
+                    </div>
                   );
                 })}
               </div>
