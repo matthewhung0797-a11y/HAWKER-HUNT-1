@@ -265,8 +265,8 @@ function WanderingSpirit({
   dash?: { key: number; yawDeg: number; far: boolean } | null;
   /** 閃走到位回調：offScreen = 到位時係咪已經出咗鏡（俾 parent 判逃走窗） */
   onDashArrived?: (offScreen: boolean) => void;
-  /** 3D 筷子（slam/gyro/3d 用；static 保留 CSS 筷子）：show 顯示、closed 鉗攏、frenzy 震顫 */
-  chop?: { show: boolean; closed: boolean; frenzy: boolean } | null;
+  /** 3D 筷子（slam/gyro/3d 用；static 保留 CSS 筷子）：show 顯示、closed 鉗攏、frenzy 震顫、tier 外觀等級 */
+  chop?: { show: boolean; closed: boolean; frenzy: boolean; tier?: string } | null;
 }) {
   const group = useRef<THREE.Group>(null);
   const shadowMesh = useRef<THREE.Mesh>(null);
@@ -775,7 +775,7 @@ function WanderingSpirit({
           <spriteMaterial map={puffTex} color="#e8dfc8" transparent opacity={0} depthWrite={false} />
         </sprite>
       ))}
-      {/* 3D 筷子：跟精靈世界座標（唔繼承 squash scale），billboard 對相機由右上斜插 */}
+      {/* 3D 筷子：跟精靈世界座標（唔繼承 squash scale），billboard 對相機由右上斜插；tier＝所選筷子外觀 */}
       {chop?.show && (
         <group ref={chopGroup}>
           <Chopsticks3d
@@ -783,6 +783,7 @@ function WanderingSpirit({
             closed={chop.closed}
             squeezeKey={flinchKey}
             frenzy={chop.frenzy}
+            tier={(chop.tier as "wooden" | "copper" | "silver" | "golden") ?? "wooden"}
           />
         </group>
       )}
@@ -2023,6 +2024,7 @@ function CaptureInner() {
                   show: inGame && arMode !== "static",
                   closed: pinch === "snap" || phase === "struggle",
                   frenzy,
+                  tier: selectedTier,
                 }}
               />
             )}
@@ -2401,6 +2403,26 @@ function CaptureInner() {
           {(!webglOk || arMode === "static") &&
             (() => {
             const closed = pinch === "snap" || phase === "struggle";
+            // 各級筷子 CSS 漸層（同 3D 材質配色對應）：木＝木紋、銅＝橙銅、銀＝冷銀、金＝足金
+            const tierGradient: Record<string, string> = {
+              wooden:
+                "linear-gradient(105deg,#6b4423 0%,#8a5a2e 22%,#caa063 50%,#9c6a34 78%,#5f3c1f 100%)",
+              copper:
+                "linear-gradient(105deg,#8a4a22 0%,#c86f3a 25%,#f2a56b 50%,#b56430 78%,#7a3c1a 100%)",
+              silver:
+                "linear-gradient(105deg,#8f97a5 0%,#cdd3dc 25%,#f5f8fc 50%,#aab3c2 78%,#7d8695 100%)",
+              golden:
+                "linear-gradient(105deg,#b8860b 0%,#e6b422 22%,#ffe08a 50%,#f0c14b 78%,#a06f08 100%)",
+            };
+            const stickBg = tierGradient[selectedTier] ?? tierGradient.wooden;
+            const metalGlow =
+              selectedTier === "golden"
+                ? "0 0 14px rgba(240,193,75,.75), 0 3px 10px rgba(0,0,0,.5)"
+                : selectedTier === "silver"
+                  ? "0 0 10px rgba(205,211,220,.5), 0 3px 10px rgba(0,0,0,.5)"
+                  : selectedTier === "copper"
+                    ? "0 0 10px rgba(200,111,58,.45), 0 3px 10px rgba(0,0,0,.5)"
+                    : "0 3px 10px rgba(0,0,0,.5)";
             return (
               <div
                 key={phase === "struggle" ? squeezeKey : -1}
@@ -2430,11 +2452,10 @@ function CaptureInner() {
                           : "left .3s ease-out, transform .3s ease-out",
                         // 入畫端粗、去到筷尖細（透視）
                         clipPath: "polygon(16% 0, 84% 0, 58% 100%, 42% 100%)",
-                        // 木色圓柱（側光暗邊），唔用紅金
-                        background:
-                          "linear-gradient(105deg,#6b4423 0%,#8a5a2e 22%,#caa063 50%,#9c6a34 78%,#5f3c1f 100%)",
+                        // 各級材質漸層（木／銅／銀／金）
+                        background: stickBg,
                         borderRadius: "7px 7px 3px 3px",
-                        boxShadow: "0 3px 10px rgba(0,0,0,.5)",
+                        boxShadow: metalGlow,
                       }}
                     />
                   );

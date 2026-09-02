@@ -5,22 +5,36 @@ import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 /**
- * 木色 3D 筷子：掛喺精靈身上（parent group 跟精靈世界座標），
+ * 3D 筷子（四級材質）：掛喺精靈身上（parent group 跟精靈世界座標），
  * pivot billboard 對住相機 → slam/gyro/3d 三模式永遠由畫面右上斜插入嚟、透視正確。
  * 兩支筷由畫面右上一個共同「手」點發出，筷尖收攏鉗住精靈 bbox 左右兩側（converging，
  * 唔係平行）；前筷（+z 近相機）掂左側全露，後筷（−z 遠相機）筷尖被精靈身體遮住。
  * 筷尖間距由 heightM 推算（唔寫死），每隻精靈自動貼合。
  *
- * 動畫（useFrame 內插）：
- * - 瞄準（open）：筷尖微張＋輕浮動蓄勢
- * - 出手／搏鬥（closed）：快速鉗攏＋夾住震顫
- * - squeezeKey 遞增：每下擠壓脈衝（再夾細少少帶回彈）
+ * tier 材質（跟玩家所選筷子）：
+ * - wooden 木：啞色木紋
+ * - copper 銅：橙銅金屬光
+ * - silver 銀：冷銀鏡面
+ * - golden 金：足金閃令令（自轉光斑）
  */
+export type ChopstickTier = "wooden" | "copper" | "silver" | "golden";
+
+const TIER_STYLE: Record<
+  ChopstickTier,
+  { color: string; metalness: number; roughness: number; emissive: string; emissiveIntensity: number }
+> = {
+  wooden: { color: "#9c6a34", metalness: 0.04, roughness: 0.72, emissive: "#000000", emissiveIntensity: 0 },
+  copper: { color: "#c86f3a", metalness: 0.85, roughness: 0.34, emissive: "#3a1608", emissiveIntensity: 0.25 },
+  silver: { color: "#cdd3dc", metalness: 0.95, roughness: 0.18, emissive: "#2a3240", emissiveIntensity: 0.2 },
+  golden: { color: "#f0c14b", metalness: 1.0, roughness: 0.12, emissive: "#8a6410", emissiveIntensity: 0.55 },
+};
+
 export default function Chopsticks3d({
   heightM,
   closed,
   squeezeKey,
   frenzy,
+  tier = "wooden",
 }: {
   heightM: number;
   /** snap／struggle = 鉗攏；瞄準 = 微張 */
@@ -29,6 +43,8 @@ export default function Chopsticks3d({
   squeezeKey: number;
   /** 狂暴：震顫更劇 */
   frenzy: boolean;
+  /** 筷子等級外觀（跟玩家選擇） */
+  tier?: ChopstickTier;
 }) {
   const pivot = useRef<THREE.Group>(null);
   const leftRef = useRef<THREE.Group>(null);
@@ -41,11 +57,17 @@ export default function Chopsticks3d({
     squeeze.current = 1;
   }, [squeezeKey]);
 
-  const woodMat = useMemo(
-    () => new THREE.MeshStandardMaterial({ color: "#9c6a34", roughness: 0.72, metalness: 0.04 }),
-    []
-  );
-  useEffect(() => () => woodMat.dispose(), [woodMat]);
+  const stickMat = useMemo(() => {
+    const s = TIER_STYLE[tier] ?? TIER_STYLE.wooden;
+    return new THREE.MeshStandardMaterial({
+      color: s.color,
+      metalness: s.metalness,
+      roughness: s.roughness,
+      emissive: s.emissive,
+      emissiveIntensity: s.emissiveIntensity,
+    });
+  }, [tier]);
+  useEffect(() => () => stickMat.dispose(), [stickMat]);
 
   // 尺寸全部由 heightM 推算（唔寫死像素）：held 端粗、筷尖細
   const rThick = heightM * 0.05;
@@ -98,12 +120,12 @@ export default function Chopsticks3d({
   return (
     <group ref={pivot} position={[0, heightM * 0.42, 0]}>
       <group ref={leftRef}>
-        <mesh position={[0, 0.5, 0]} material={woodMat}>
+        <mesh position={[0, 0.5, 0]} material={stickMat}>
           <cylinderGeometry args={[rThick, rThin, 1, 12]} />
         </mesh>
       </group>
       <group ref={rightRef}>
-        <mesh position={[0, 0.5, 0]} material={woodMat}>
+        <mesh position={[0, 0.5, 0]} material={stickMat}>
           <cylinderGeometry args={[rThick, rThin, 1, 12]} />
         </mesh>
       </group>
