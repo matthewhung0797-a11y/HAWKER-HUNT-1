@@ -1256,6 +1256,10 @@ function CaptureInner() {
         (calmRef.current ? CALM_DRAIN_MULT : 1) * (1 - PET_DRAIN_CUT * petRef.current);
       const rate = (frenzyRef.current ? drain + frenzyExtra : drain) * drainMul;
       gripRef.current = Math.max(0, gripRef.current - rate * dt);
+      // 金筷必定捕捉：夾實度有下限，點掙扎都掙脫唔到（跌到 0 先會走甩）
+      if (selectedTierRef.current === "golden") {
+        gripRef.current = Math.max(GOLDEN_GRIP_FLOOR, gripRef.current);
+      }
 
       // 每秒補充上限（狂暴打折）；漏桶配額逐 frame 回補
       const capNow = frenzyRef.current ? GRIP_TAP_CAP_PER_SEC * FRENZY_TAP_MULT : GRIP_TAP_CAP_PER_SEC;
@@ -1388,6 +1392,21 @@ function CaptureInner() {
 
   // 筷子層級 → 搏鬥每次撳補充嘅夾實度
   const TIER_GRIP: Record<string, number> = { wooden: 7, copper: 9, silver: 11, golden: 14 };
+
+  /** 金筷必定捕捉：搏鬥中夾實度唔會跌穿呢個下限（掙脫唔到）＋冇最後關頭走甩 */
+  const GOLDEN_GRIP_FLOOR = 20;
+
+  /** 金筷特效：環繞精靈嘅金星偏移（px；--sx/--sy 餵 keyframes） */
+  const GOLDEN_STARS = [
+    { x: -74, y: -62, size: 20, color: "#ffd76e", delay: 0 },
+    { x: 74, y: -62, size: 15, color: "#f6c344", delay: 0.35 },
+    { x: -98, y: 12, size: 13, color: "#fff3c4", delay: 0.7 },
+    { x: 98, y: 12, size: 18, color: "#ffd76e", delay: 0.15 },
+    { x: -58, y: 82, size: 16, color: "#f6c344", delay: 0.5 },
+    { x: 58, y: 82, size: 21, color: "#fff3c4", delay: 0.85 },
+    { x: 0, y: -108, size: 16, color: "#ffd76e", delay: 1.0 },
+    { x: 0, y: 118, size: 13, color: "#f6c344", delay: 0.2 },
+  ];
 
   const startAiming = useCallback(async () => {
     sfxTap();
@@ -1718,6 +1737,8 @@ function CaptureInner() {
   /** 檢查係咪要觸發最後關頭（每回合一次，calm/pet 降低觸發率）。
    *  ?ls=charge|dash|escape 可強制結果（QA／截圖驗證用，玩家唔會撞到）。 */
   function maybeLastStand() {
+    // 金筷必定捕捉：金光鎮住精靈，冇衝屏撞冇閃走冇逃走窗——一定捉到
+    if (selectedTierRef.current === "golden") return;
     const cfg = LAST_STAND_CFG[diff];
     if (!cfg) return;
     if (lastStandActiveRef.current) return;
@@ -2071,6 +2092,28 @@ function CaptureInner() {
               }}
             >
               ♥
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* 金筷特效：搏鬥時金星環繞精靈閃爍浮動 */}
+      {phase === "struggle" && selectedTier === "golden" && (
+        <div className="pointer-events-none absolute z-[26]" style={{ left: ringX, top: ringY }}>
+          {GOLDEN_STARS.map((s, i) => (
+            <span
+              key={i}
+              className="golden-star-float absolute"
+              style={{
+                ["--sx" as never]: `${s.x}px`,
+                ["--sy" as never]: `${s.y}px`,
+                fontSize: s.size,
+                color: s.color,
+                animationDelay: `${s.delay}s`,
+                textShadow: "0 0 10px rgba(255,215,110,.95), 0 1px 4px rgba(0,0,0,.4)",
+              }}
+            >
+              ✦
             </span>
           ))}
         </div>

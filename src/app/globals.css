@@ -401,6 +401,31 @@ a:active,
   animation: heart-float 1.05s ease-out forwards;
 }
 
+/* 金筷星星：圍住精靈原位閃爍浮動（--sx/--sy 控制散開半徑） */
+@keyframes golden-star-float {
+  0% {
+    transform: translate(-50%, -50%) scale(0.35) rotate(0deg);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(calc(-50% + var(--sx, 0px)), calc(-50% + var(--sy, 0px))) scale(1.15)
+      rotate(18deg);
+    opacity: 1;
+  }
+  70% {
+    transform: translate(calc(-50% + var(--sx, 0px)), calc(-50% + var(--sy, 0px) - 8px)) scale(0.95)
+      rotate(-8deg);
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.4) rotate(-16deg);
+    opacity: 0;
+  }
+}
+.golden-star-float {
+  animation: golden-star-float 1.7s ease-in-out infinite;
+}
+
 /* AR 掃描引導：手機左右掃嘅提示動作 */
 @keyframes scan-sweep {
   0%,
