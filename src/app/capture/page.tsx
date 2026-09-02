@@ -2415,15 +2415,6 @@ function CaptureInner() {
                 "linear-gradient(105deg,#c8940a 0%,#ffd24a 22%,#fff2ae 50%,#ffd45e 78%,#b07d06 100%)",
             };
             const stickBg = tierGradient[selectedTier] ?? tierGradient.wooden;
-            // 金屬筷：強光暈（自發光感）；木筷只有陰影
-            const metalGlow =
-              selectedTier === "golden"
-                ? "0 0 22px rgba(255,212,94,.95), 0 0 44px rgba(240,193,75,.45), 0 3px 10px rgba(0,0,0,.5)"
-                : selectedTier === "silver"
-                  ? "0 0 18px rgba(200,204,212,.9), 0 0 36px rgba(154,162,174,.4), 0 3px 10px rgba(0,0,0,.5)"
-                  : selectedTier === "copper"
-                    ? "0 0 18px rgba(139,77,42,.85), 0 0 34px rgba(110,58,28,.4), 0 3px 10px rgba(0,0,0,.5)"
-                    : "0 3px 10px rgba(0,0,0,.5)";
             return (
               <div
                 key={phase === "struggle" ? squeezeKey : -1}
@@ -2456,24 +2447,9 @@ function CaptureInner() {
                         // 各級材質漸層（木／銅／銀／金）
                         background: stickBg,
                         borderRadius: "7px 7px 3px 3px",
-                        boxShadow: metalGlow,
+                        boxShadow: "0 3px 10px rgba(0,0,0,.5)",
                       }}
-                    >
-                      {/* 金屬筷高光掃過（銅/銀/金）：沿筷身循環流動嘅白色反光帶 */}
-                      {selectedTier !== "wooden" && (
-                        <span
-                          style={{
-                            position: "absolute",
-                            inset: 0,
-                            pointerEvents: "none",
-                            background:
-                              "linear-gradient(115deg, transparent 32%, rgba(255,255,255,.9) 50%, transparent 68%)",
-                            backgroundSize: "260% 100%",
-                            animation: "metal-shimmer 1.8s linear infinite",
-                          }}
-                        />
-                      )}
-                    </div>
+                    />
                   );
                 })}
               </div>

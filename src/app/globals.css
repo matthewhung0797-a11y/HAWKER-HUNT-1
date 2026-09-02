@@ -401,16 +401,6 @@ a:active,
   animation: heart-float 1.05s ease-out forwards;
 }
 
-/* 金屬筷子（銅/銀/金）：高光沿筷身循環掃過（background-position 流動） */
-@keyframes metal-shimmer {
-  0% {
-    background-position: 130% 0;
-  }
-  100% {
-    background-position: -130% 0;
-  }
-}
-
 /* 金筷星星：圍住精靈原位閃爍浮動（--sx/--sy 控制散開半徑） */
 @keyframes golden-star-float {
   0% {

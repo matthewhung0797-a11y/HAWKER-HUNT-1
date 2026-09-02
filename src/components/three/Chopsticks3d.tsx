@@ -24,11 +24,10 @@ const TIER_STYLE: Record<
   { color: string; metalness: number; roughness: number; emissive: string; emissiveIntensity: number }
 > = {
   wooden: { color: "#9c6a34", metalness: 0.04, roughness: 0.72, emissive: "#000000", emissiveIntensity: 0 },
-  // 三款金屬筷：高自發光＝筷子自身發光（唔靠場景光），遠睇都搶眼
-  // 銅＝啡銅色（brown-copper）、銀＝正銀色
-  copper: { color: "#8b4d2a", metalness: 0.92, roughness: 0.2, emissive: "#6e3a1c", emissiveIntensity: 1.0 },
-  silver: { color: "#c8ccd4", metalness: 0.98, roughness: 0.1, emissive: "#9aa2ae", emissiveIntensity: 1.05 },
-  golden: { color: "#ffd45e", metalness: 1.0, roughness: 0.08, emissive: "#e8a918", emissiveIntensity: 1.4 },
+  // 三款金屬筷：金屬光澤（metalness/roughness）；低度自發光保持金屬感，無光暈
+  copper: { color: "#8b4d2a", metalness: 0.92, roughness: 0.2, emissive: "#5a2f14", emissiveIntensity: 0.35 },
+  silver: { color: "#c8ccd4", metalness: 0.98, roughness: 0.1, emissive: "#8c939e", emissiveIntensity: 0.3 },
+  golden: { color: "#ffd45e", metalness: 1.0, roughness: 0.08, emissive: "#c9961f", emissiveIntensity: 0.5 },
 };
 
 export default function Chopsticks3d({
@@ -51,9 +50,6 @@ export default function Chopsticks3d({
   const pivot = useRef<THREE.Group>(null);
   const leftRef = useRef<THREE.Group>(null);
   const rightRef = useRef<THREE.Group>(null);
-  /** 光暈套筒 group（跟左右筷同步擺位） */
-  const glowLeft = useRef<THREE.Group>(null);
-  const glowRight = useRef<THREE.Group>(null);
   const { camera } = useThree();
   const squeeze = useRef(0);
   const closeAmt = useRef(closed ? 1 : 0);
@@ -78,7 +74,6 @@ export default function Chopsticks3d({
   const rThick = heightM * 0.05;
   const rThin = heightM * 0.016;
   const depth = heightM * 0.26; // 前／後筷 z 偏移（做前後遮擋）
-  const glowR = 2.4; // 光暈套筒半徑倍數（包住筷身向外發光）
 
   // 每 frame 重算：避免 allocation
   const up = useMemo(() => new THREE.Vector3(0, 1, 0), []);
@@ -121,42 +116,10 @@ export default function Chopsticks3d({
     // 前筷掂左側（+z 近相機，全露）；後筷掂右側（−z 遠相機，筷尖被身體遮）
     place(leftRef.current, -gap + shake, float, depth);
     place(rightRef.current, gap - shake, float, -depth);
-    // 光暈套筒跟住筷子同步擺位（tier 非木時先有 refs）
-    place(glowLeft.current, -gap + shake, float, depth * 1.02);
-    place(glowRight.current, gap - shake, float, -depth * 1.02);
   });
 
   return (
     <group ref={pivot} position={[0, heightM * 0.42, 0]}>
-      {/* 金屬筷光暈：筷子外圍半透明發光套筒（加色混合），木筷冇 */}
-      {tier !== "wooden" && (
-        <>
-          <group ref={glowLeft}>
-            <mesh position={[0, 0.5, 0]}>
-              <cylinderGeometry args={[rThick * glowR, rThin * glowR, 1, 12]} />
-              <meshBasicMaterial
-                color={TIER_STYLE[tier].emissive}
-                transparent
-                opacity={0.32}
-                blending={THREE.AdditiveBlending}
-                depthWrite={false}
-              />
-            </mesh>
-          </group>
-          <group ref={glowRight}>
-            <mesh position={[0, 0.5, 0]}>
-              <cylinderGeometry args={[rThick * glowR, rThin * glowR, 1, 12]} />
-              <meshBasicMaterial
-                color={TIER_STYLE[tier].emissive}
-                transparent
-                opacity={0.32}
-                blending={THREE.AdditiveBlending}
-                depthWrite={false}
-              />
-            </mesh>
-          </group>
-        </>
-      )}
       <group ref={leftRef}>
         <mesh position={[0, 0.5, 0]} material={stickMat}>
           <cylinderGeometry args={[rThick, rThin, 1, 12]} />
