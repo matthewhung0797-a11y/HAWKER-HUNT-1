@@ -61,6 +61,13 @@ export default function UpgradePage({ params }: { params: Promise<{ uid: string 
   // 階段等級上限：一階 10／二階 20／三階 30
   const levelCap = stageLevelCap(species?.stage ?? 3);
   const atCap = spirit ? spirit.level >= levelCap : false;
+  // 升到上限仲差幾多經驗（現有經驗扣抵；滿級＝0）——素材總量唔可以超過呢個數
+  const remainingExp = useMemo(() => {
+    if (!spirit || atCap) return 0;
+    let total = -Math.min(spirit.exp ?? 0, spiritExpToNext(spirit.level));
+    for (let lv = spirit.level; lv < levelCap; lv++) total += spiritExpToNext(lv);
+    return Math.max(0, total);
+  }, [spirit, atCap, levelCap]);
   const next =
     spirit && !atCap
       ? previewLevel(spirit.level, spirit.exp ?? 0, gain, levelCap)
@@ -83,6 +90,11 @@ export default function UpgradePage({ params }: { params: Promise<{ uid: string 
   function add(itemId: string, d: number) {
     sfxTap();
     setSelected((sel) => {
+      // 上限保護：加入呢件素材後總經驗唔可以超過升到上限所需（超出＝一件都加唔入）
+      if (d > 0 && totalExp({ ...sel, [itemId]: (sel[itemId] ?? 0) + 1 }) > remainingExp) {
+        sfxTap();
+        return sel;
+      }
       const cur = sel[itemId] ?? 0;
       const have = store.items[itemId] ?? 0;
       const nv = Math.max(0, Math.min(have, cur + d));
@@ -265,7 +277,7 @@ export default function UpgradePage({ params }: { params: Promise<{ uid: string 
                     <span className="w-5 text-center text-sm font-black text-ink">{sel}</span>
                     <button
                       onClick={() => add(m.id, 1)}
-                      disabled={sel >= m.have}
+                      disabled={sel >= m.have || gain + materialExp(m.id) > remainingExp}
                       className="flex h-7 w-7 items-center justify-center rounded-full bg-gold text-sm font-black text-ink disabled:opacity-30"
                       aria-label="plus"
                     >

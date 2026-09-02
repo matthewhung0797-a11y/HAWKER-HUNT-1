@@ -481,8 +481,13 @@ export default function EvolvePage({ params }: { params: Promise<{ uid: string }
         />
       )}
 
-      {/* 精靈模型：外層管濾鏡＋心跳，內層管揭曉彈簧 pop */}
-      <div className="relative z-10 h-72 w-72" style={{ filter: modelFilter, transition: "filter 0.3s" }}>
+      {/* 精靈模型：外層管濾鏡＋心跳，內層管揭曉彈簧 pop。揭曉/完成：放大至 432px 置中 */}
+      <div
+        className={`relative z-10 ${
+          stage === "reveal" || stage === "done" ? "h-[min(432px,90dvh)] w-[min(432px,90dvh)]" : "h-72 w-72"
+        }`}
+        style={{ filter: modelFilter, transition: "filter 0.3s, height 0.5s ease, width 0.5s ease" }}
+      >
         <div
           className={stage === "charging" ? "h-full w-full" : "h-full w-full"}
           style={{
