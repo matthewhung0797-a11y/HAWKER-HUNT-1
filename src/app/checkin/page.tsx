@@ -90,12 +90,8 @@ function CheckinInner() {
       };
 
       // GPS hard gate：超距／拒定位／逾時／冇 geolocation API 一律拒——防屋企掃 QR 複本。
-      // 淨係 development＋devMode 嘅 Simulate 掣先 skipGps；真掃 QR（含 dev）一律過圍欄。
-      if (
-        opts?.skipGps &&
-        process.env.NODE_ENV === "development" &&
-        store.devMode
-      ) {
+      // devMode 開咗就無視 GPS（遠端測試/開發用）；正常玩家一律過圍欄。
+      if (store.devMode) {
         succeed();
         return;
       }

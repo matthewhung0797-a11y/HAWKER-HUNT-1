@@ -549,7 +549,8 @@ export default function MapPage() {
           const title = `${sp.name[locale]} · ${t("map.catchIt")}`;
           const base = randomNear([centre.lng, centre.lat], SPAWN_RADIUS_M);
           const catchWild = (sid: string, spiritPos: [number, number]) => {
-            if (playerPosRef.current) {
+            // devMode：無視 500 米距離限制（開發測試用）
+            if (!store.devMode && playerPosRef.current) {
               const dist = distanceM(playerPosRef.current[1], playerPosRef.current[0], spiritPos[1], spiritPos[0]);
               if (dist > 500) {
                 sfxTap();
