@@ -2403,14 +2403,14 @@ function CaptureInner() {
           {(!webglOk || arMode === "static") &&
             (() => {
             const closed = pinch === "snap" || phase === "struggle";
-            // 各級筷子 CSS 漸層（同 3D 材質配色對應）：木＝木紋、銅＝橙銅、銀＝冷銀、金＝足金
+            // 各級筷子 CSS 漸層（同 3D 材質配色對應）：木＝木紋、銅＝啡銅、銀＝正銀、金＝足金
             const tierGradient: Record<string, string> = {
               wooden:
                 "linear-gradient(105deg,#6b4423 0%,#8a5a2e 22%,#caa063 50%,#9c6a34 78%,#5f3c1f 100%)",
               copper:
-                "linear-gradient(105deg,#9a4f22 0%,#e07a3c 25%,#ffc08a 50%,#cc7038 78%,#8a4218 100%)",
+                "linear-gradient(105deg,#5f3418 0%,#8b4d2a 25%,#c98a5e 50%,#7d431f 78%,#4e2a12 100%)",
               silver:
-                "linear-gradient(105deg,#98a1b0 0%,#e3e9f2 25%,#ffffff 50%,#c3ccd9 78%,#8690a0 100%)",
+                "linear-gradient(105deg,#8e939c 0%,#c8ccd4 25%,#eceff4 50%,#b4bac4 78%,#7f8590 100%)",
               golden:
                 "linear-gradient(105deg,#c8940a 0%,#ffd24a 22%,#fff2ae 50%,#ffd45e 78%,#b07d06 100%)",
             };
@@ -2420,9 +2420,9 @@ function CaptureInner() {
               selectedTier === "golden"
                 ? "0 0 22px rgba(255,212,94,.95), 0 0 44px rgba(240,193,75,.45), 0 3px 10px rgba(0,0,0,.5)"
                 : selectedTier === "silver"
-                  ? "0 0 18px rgba(223,229,238,.9), 0 0 36px rgba(160,180,215,.4), 0 3px 10px rgba(0,0,0,.5)"
+                  ? "0 0 18px rgba(200,204,212,.9), 0 0 36px rgba(154,162,174,.4), 0 3px 10px rgba(0,0,0,.5)"
                   : selectedTier === "copper"
-                    ? "0 0 18px rgba(224,122,60,.85), 0 0 34px rgba(193,83,30,.4), 0 3px 10px rgba(0,0,0,.5)"
+                    ? "0 0 18px rgba(139,77,42,.85), 0 0 34px rgba(110,58,28,.4), 0 3px 10px rgba(0,0,0,.5)"
                     : "0 3px 10px rgba(0,0,0,.5)";
             return (
               <div

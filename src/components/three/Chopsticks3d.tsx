@@ -25,8 +25,9 @@ const TIER_STYLE: Record<
 > = {
   wooden: { color: "#9c6a34", metalness: 0.04, roughness: 0.72, emissive: "#000000", emissiveIntensity: 0 },
   // 三款金屬筷：高自發光＝筷子自身發光（唔靠場景光），遠睇都搶眼
-  copper: { color: "#d97a3e", metalness: 0.9, roughness: 0.22, emissive: "#c2531e", emissiveIntensity: 1.15 },
-  silver: { color: "#dfe5ee", metalness: 0.98, roughness: 0.1, emissive: "#8fa2c4", emissiveIntensity: 1.05 },
+  // 銅＝啡銅色（brown-copper）、銀＝正銀色
+  copper: { color: "#8b4d2a", metalness: 0.92, roughness: 0.2, emissive: "#6e3a1c", emissiveIntensity: 1.0 },
+  silver: { color: "#c8ccd4", metalness: 0.98, roughness: 0.1, emissive: "#9aa2ae", emissiveIntensity: 1.05 },
   golden: { color: "#ffd45e", metalness: 1.0, roughness: 0.08, emissive: "#e8a918", emissiveIntensity: 1.4 },
 };
 
