@@ -61,7 +61,8 @@ export default function UpgradePage({ params }: { params: Promise<{ uid: string 
   // 階段等級上限：一階 10／二階 20／三階 30
   const levelCap = stageLevelCap(species?.stage ?? 3);
   const atCap = spirit ? spirit.level >= levelCap : false;
-  // 升到上限仲差幾多經驗（現有經驗扣抵；滿級＝0）——素材總量唔可以超過呢個數
+  // 升到上限仲差幾多經驗（現有經驗扣抵；滿級＝0）
+  // 超上限規則：allowOverflow＝已加咗一件超出需求嘅素材（一次過超都准，之後乜都加唔入）
   const remainingExp = useMemo(() => {
     if (!spirit || atCap) return 0;
     let total = -Math.min(spirit.exp ?? 0, spiritExpToNext(spirit.level));
@@ -90,10 +91,19 @@ export default function UpgradePage({ params }: { params: Promise<{ uid: string 
   function add(itemId: string, d: number) {
     sfxTap();
     setSelected((sel) => {
-      // 上限保護：加入呢件素材後總經驗唔可以超過升到上限所需（超出＝一件都加唔入）
-      if (d > 0 && totalExp({ ...sel, [itemId]: (sel[itemId] ?? 0) + 1 }) > remainingExp) {
-        sfxTap();
-        return sel;
+      // 上限規則：總經驗未夠 remainingExp 前自由加；「可以超一次」——
+      // 未超過時（gain ≤ remainingExp）可以加入一件令總經驗超出上限嘅素材（一次過超）；
+      // 超咗之後（gain > remainingExp）乜都加唔入，只可以「−」縮返落需求內
+      if (d > 0) {
+        const nextSel = { ...sel, [itemId]: (sel[itemId] ?? 0) + 1 };
+        const nextGain = totalExp(nextSel);
+        if (gain > remainingExp) return sel; // 已超上限：鎖死
+        if (nextGain > remainingExp && nextGain - materialExp(itemId) > remainingExp) {
+          // 呢件素材令總經驗爆錶，但佢唔係「第一件爆錶」嘅素材（之前已有超）——唔比加
+          return sel;
+        }
+        // 允許：未爆錶嘅正常加（包括啱啱好達標），或第一件爆錶嘅素材
+        return nextSel;
       }
       const cur = sel[itemId] ?? 0;
       const have = store.items[itemId] ?? 0;
@@ -277,7 +287,7 @@ export default function UpgradePage({ params }: { params: Promise<{ uid: string 
                     <span className="w-5 text-center text-sm font-black text-ink">{sel}</span>
                     <button
                       onClick={() => add(m.id, 1)}
-                      disabled={sel >= m.have || gain + materialExp(m.id) > remainingExp}
+                      disabled={sel >= m.have || gain > remainingExp}
                       className="flex h-7 w-7 items-center justify-center rounded-full bg-gold text-sm font-black text-ink disabled:opacity-30"
                       aria-label="plus"
                     >
