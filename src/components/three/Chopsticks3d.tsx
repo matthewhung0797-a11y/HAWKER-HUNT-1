@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 
 /**
  * 3D 筷子（四級材質）：掛喺精靈身上（parent group 跟精靈世界座標），
@@ -12,22 +13,29 @@ import * as THREE from "three";
  * 筷尖間距由 heightM 推算（唔寫死），每隻精靈自動貼合。
  *
  * tier 材質（跟玩家所選筷子）：
- * - wooden 木：啞色木紋
- * - copper 銅：橙銅金屬光
- * - silver 銀：冷銀鏡面
- * - golden 金：足金閃令令（自轉光斑）
+ * - wooden 木：啞色木紋（無反光）
+ * - copper 銅：啡銅金屬（高反光）
+ * - silver 銀：正銀鏡面（最高反光）
+ * - golden 金：足金（高反光＋自發光）
+ * 反光嚟自 RoomEnvironment PMREM 環境貼圖（無需網絡，three 內建）。
  */
 export type ChopstickTier = "wooden" | "copper" | "silver" | "golden";
 
 const TIER_STYLE: Record<
   ChopstickTier,
-  { color: string; metalness: number; roughness: number; emissive: string; emissiveIntensity: number }
+  {
+    color: string;
+    metalness: number;
+    roughness: number;
+    emissive: string;
+    emissiveIntensity: number;
+    envMapIntensity: number;
+  }
 > = {
-  wooden: { color: "#9c6a34", metalness: 0.04, roughness: 0.72, emissive: "#000000", emissiveIntensity: 0 },
-  // 三款金屬筷：金屬光澤（metalness/roughness）；低度自發光保持金屬感，無光暈
-  copper: { color: "#8b4d2a", metalness: 0.92, roughness: 0.2, emissive: "#5a2f14", emissiveIntensity: 0.35 },
-  silver: { color: "#c8ccd4", metalness: 0.98, roughness: 0.1, emissive: "#8c939e", emissiveIntensity: 0.3 },
-  golden: { color: "#ffd45e", metalness: 1.0, roughness: 0.08, emissive: "#c9961f", emissiveIntensity: 0.5 },
+  wooden: { color: "#9c6a34", metalness: 0.04, roughness: 0.72, emissive: "#000000", emissiveIntensity: 0, envMapIntensity: 0.35 },
+  copper: { color: "#8b4d2a", metalness: 0.92, roughness: 0.2, emissive: "#5a2f14", emissiveIntensity: 0.35, envMapIntensity: 1.9 },
+  silver: { color: "#c8ccd4", metalness: 0.98, roughness: 0.1, emissive: "#8c939e", emissiveIntensity: 0.3, envMapIntensity: 2.4 },
+  golden: { color: "#ffd45e", metalness: 1.0, roughness: 0.08, emissive: "#c9961f", emissiveIntensity: 0.5, envMapIntensity: 2.2 },
 };
 
 export default function Chopsticks3d({
@@ -58,6 +66,16 @@ export default function Chopsticks3d({
     squeeze.current = 1;
   }, [squeezeKey]);
 
+  // 金屬反光：RoomEnvironment PMREM 環境貼圖（three 內建 studio 環境，無需網絡）
+  const gl = useThree((s) => s.gl);
+  const envMap = useMemo(() => {
+    const pmrem = new THREE.PMREMGenerator(gl);
+    const rt = pmrem.fromScene(new RoomEnvironment(), 0.04);
+    const tex = rt.texture;
+    pmrem.dispose();
+    return tex;
+  }, [gl]);
+  useEffect(() => () => envMap.dispose(), [envMap]);
   const stickMat = useMemo(() => {
     const s = TIER_STYLE[tier] ?? TIER_STYLE.wooden;
     return new THREE.MeshStandardMaterial({
@@ -66,8 +84,10 @@ export default function Chopsticks3d({
       roughness: s.roughness,
       emissive: s.emissive,
       emissiveIntensity: s.emissiveIntensity,
+      envMap,
+      envMapIntensity: s.envMapIntensity,
     });
-  }, [tier]);
+  }, [tier, envMap]);
   useEffect(() => () => stickMat.dispose(), [stickMat]);
 
   // 尺寸全部由 heightM 推算（唔寫死像素）：held 端粗、筷尖細
