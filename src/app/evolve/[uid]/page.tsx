@@ -527,8 +527,8 @@ export default function EvolvePage({ params }: { params: Promise<{ uid: string }
 
       {stage === "done" && <Confetti count={28} />}
 
-      {/* 文字 + 進度 */}
-      <div className="z-10 mt-6 flex min-h-32 flex-col items-center gap-3 px-8">
+      {/* 文字 + 進度（全部置中） */}
+      <div className="z-10 mt-6 flex min-h-32 flex-col items-center justify-center gap-3 px-8 text-center">
         {stage === "charging" || stage === "morphing" ? (
           <>
             <h1 className="text-3xl font-black tracking-widest text-gold-light">
@@ -550,7 +550,7 @@ export default function EvolvePage({ params }: { params: Promise<{ uid: string }
             >
               {t("evolution.success")}
             </h1>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center gap-2">
               <p className="text-xl font-bold text-white">{toSpecies?.name[locale]}</p>
               {isShiny && (
                 <span className="shiny-badge rounded-full px-2.5 py-0.5 text-xs font-black text-ink">
