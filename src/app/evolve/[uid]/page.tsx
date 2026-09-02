@@ -24,12 +24,24 @@ import { track } from "@/lib/analytics/track";
 //  reveal(揭曉 1.1s)    → 白金爆閃、新形態彈簧 scale-in、衝擊波環、五行光柱、粒子爆散
 //  done(慶祝)           → 名字彈出、Confetti、金光回落，出「繼續」掣
 // shiny 版全程用虹彩取代五行主色，揭曉補 sfxShiny＋星粒爆散。
-type Stage = "pending" | "charging" | "morphing" | "suspense" | "reveal" | "done" | "invalid" | "underleveled";
+type Stage = "pending" | "video" | "charging" | "morphing" | "suspense" | "reveal" | "done" | "invalid" | "underleveled";
 
 const T_MORPH = 1900;
 const T_SUSPENSE = 3900;
 const T_REVEAL = 4300;
 const T_DONE = 5500;
+
+/** 新版進化動畫影片（by fromSpeciesId）：有影片就播片，播完入原有成功版面；冇影片 fallback 舊演出 */
+const EVO_VIDEOS: Record<string, string> = {
+  "satay-skewerling": "/evo/BBQ1EVO.mp4", // 沙嗲仔 → 沙嗲武士
+  "satay-warrior": "/evo/BBQ2EVO.mp4", // 沙嗲武士 → 沙嗲炎帝
+  "little-laksa": "/evo/LAKSA1EVO.mp4", // 叻沙仔 → 叻沙武士
+  "laksa-warrior": "/evo/LAKSA2EVO.mp4", // 叻沙武士 → 叻沙龍
+  "bkt-cub": "/evo/PANDA1EVO.mp4", // 肉骨仔 → 骨茶武士
+  "bkt-warrior": "/evo/PANDA2EVO.mp4", // 骨茶武士 → 骨茶宗師
+  "nasi-lemak-tot": "/evo/RICE1EVO.mp4", // 椰漿飯仔 → 椰漿飯小兵
+  "nasi-lemak-scout": "/evo/RICE2EVO.mp4", // 椰漿飯小兵 → 椰漿飯大將軍
+};
 
 /** 蓄勢：美食粒子由四周螺旋匯聚入精靈 */
 function ConvergeField({ color, shiny }: { color: string; shiny: boolean }) {
@@ -210,6 +222,10 @@ export default function EvolvePage({ params }: { params: Promise<{ uid: string }
   const [altShow, setAltShow] = useState(false); // 變形期交替顯示新形態
   const [flashKey, setFlashKey] = useState(0); // model 內置白閃重播 key
   const executed = useRef(false);
+  /** 新版進化動畫影片 element ref（autoplay retry 用） */
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  /** 新版進化動畫影片 URL（init effect 由 fromSpeciesId 查表寫入） */
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const spirit = useGameStore.getState().ownedSpirits.find((s) => s.uid === uid);
@@ -228,6 +244,13 @@ export default function EvolvePage({ params }: { params: Promise<{ uid: string }
     fromSpeciesId.current = spirit.speciesId;
     toSpeciesId.current = to;
     shinyRef.current = Boolean(spirit.shiny);
+    // 新版進化動畫：有影片就播片（播完 onEnded 先寫 store＋入成功版面）；冇影片 fallback 舊演出
+    const evoVideo = EVO_VIDEOS[spirit.speciesId];
+    if (evoVideo) {
+      setVideoUrl(evoVideo);
+      setStage("video");
+      return;
+    }
     setStage("charging");
 
     const timers: ReturnType<typeof setTimeout>[] = [];
@@ -283,7 +306,46 @@ export default function EvolvePage({ params }: { params: Promise<{ uid: string }
     if (stage === "invalid") router.replace("/my-spirits");
   }, [stage, router]);
 
+  // 進化影片：autoplay（含音效；被瀏覽器拒絕就等用戶手勢再播）
+  useEffect(() => {
+    if (stage !== "video") return;
+    const el = videoRef.current;
+    if (!el) return;
+    void el.play().catch(() => {
+      const retry = () => void el.play().catch(() => {});
+      window.addEventListener("pointerdown", retry, { once: true });
+    });
+  }, [stage]);
+
   if (stage === "pending" || stage === "invalid") return null;
+
+  // 新版進化動畫：全屏播 MP4（含音效），播完寫 store＋入原有成功版面；載入失敗 fallback 舊演出
+  if (stage === "video") {
+    const finishEvolve = () => {
+      if (!executed.current) {
+        executed.current = true;
+        useGameStore.getState().evolveSpirit(uid);
+        track("evolve", {
+          fromSpeciesId: fromSpeciesId.current,
+          toSpeciesId: toSpeciesId.current,
+        });
+      }
+      setStage("done");
+    };
+    return (
+      <main className="fixed inset-0 z-50 flex items-center justify-center bg-black">
+        <video
+          ref={videoRef}
+          src={videoUrl ?? undefined}
+          playsInline
+          preload="auto"
+          onEnded={finishEvolve}
+          onError={() => setStage("charging")}
+          className="h-full w-full object-contain"
+        />
+      </main>
+    );
+  }
 
   // 等級不足：提示畫面（原精靈立繪＋到達等級提示＋返詳情掣）
   if (stage === "underleveled") {
