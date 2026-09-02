@@ -25,13 +25,9 @@ export const HOME_SERIES_MULT = 2;
 /** 野生二階出現率 */
 export const WILD_STAGE2_RATE = 0.08;
 
-/** 野生等級：一階 1–5、二階 8–15（三階唔野生） */
-export function rollWildLevel(
-  sp: { stage: number },
-  rng: () => number = Math.random
-): number {
-  if (sp.stage >= 2) return 8 + Math.floor(rng() * 8); // 8–15
-  return 1 + Math.floor(rng() * 5); // 1–5
+/** 野生等級：一階固定 Lv.1、二階固定 Lv.10（三階唔野生；配合階段等級上限 10/20/30） */
+export function rollWildLevel(sp: { stage: number }): number {
+  return sp.stage >= 2 ? 10 : 1;
 }
 
 /** 加權抽選（weights 同 list 等長） */

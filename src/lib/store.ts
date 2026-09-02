@@ -412,7 +412,11 @@ export const useGameStore = create<GameState>()(
             }
           }
           const items = { ...s.items };
-          for (const it of ITEMS) items[it.id] = Math.max(items[it.id] ?? 0, 10);
+          for (const it of ITEMS) {
+            if (it.id.includes("chopstick")) continue; // 筷子另外處理
+            items[it.id] = Math.max(items[it.id] ?? 0, 100); // 升級素材每種 100 個
+          }
+          items.chopsticks = Math.max(items.chopsticks ?? 0, 100);
           items.chopsticks_copper = Math.max(items.chopsticks_copper ?? 0, 10);
           items.chopsticks_silver = Math.max(items.chopsticks_silver ?? 0, 10);
           items.chopsticks_golden = Math.max(items.chopsticks_golden ?? 0, 10);
