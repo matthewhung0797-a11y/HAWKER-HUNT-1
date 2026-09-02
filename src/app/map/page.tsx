@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { createPortal } from "react-dom";
 import { useLocale, useTranslations } from "next-intl";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -18,7 +17,6 @@ import GameHeader from "@/components/GameHeader";
 import ElementBadge from "@/components/ElementBadge";
 import SpiritIcon, { spiritFullArtUrl } from "@/components/SpiritIcon";
 import UIIcon from "@/components/UIIcon";
-import Avatar3D from "@/components/Avatar3D";
 import { MissionButton, MissionPanel, useMissions } from "@/components/MissionPanel";
 import NotificationBell from "@/components/NotificationBell";
 import { getGameConfig } from "@/lib/admin/actions";
@@ -316,9 +314,8 @@ export default function MapPage() {
   const mapRef = useRef<maplibregl.Map | null>(null);
   const playerMarkerRef = useRef<maplibregl.Marker | null>(null);
   const playerScalerRef = useRef<HTMLDivElement | null>(null);
-  /** 3D avatar 掛載點（React portal 目標）：state 版——地圖重建時 portal 要重新掛新 DOM */
-  const [avatarHost, setAvatarHost] = useState<HTMLDivElement | null>(null);
-  const avatarHostRef = useRef<HTMLDivElement | null>(null);
+  /** 2D avatar <img>：面向翻轉用（style.scale，唔掂 transform） */
+  const playerAvatarImgRef = useRef<HTMLImageElement | null>(null);
   /** avatar 平滑步行動畫狀態 */
   const playerAnim = useRef<{ raf: number; cur: [number, number] }>({ raf: 0, cur: SG_CENTER });
   const playerPosRef = useRef<[number, number] | null>(null);
@@ -568,7 +565,7 @@ export default function MapPage() {
       }
     })();
 
-    // ── 主角 avatar：3D 人物模型（player-avatar.glb 骨架動作，經 Avatar3D portal 掛入）──
+    // ── 主角 avatar：2D 立繪（player-avatar.png；同精靈 marker 同款貼地結構）──
     const avatarRoot = document.createElement("div");
     // 同 wanderer 一樣：唔落 position，留返俾 maplibre .maplibregl-marker{position:absolute} 控制
     avatarRoot.style.cssText = "width:80px;height:80px;pointer-events:none;overflow:visible;z-index:5";
@@ -578,15 +575,16 @@ export default function MapPage() {
     avatarShadow.className = "spirit-shadow";
     avatarShadow.style.cssText =
       "position:absolute;bottom:2px;left:25px;width:30px;height:9px;border-radius:9999px;background:rgba(74,44,20,.45)";
-    // 3D 掛載點（React portal 目標）；取代舊 2D player-avatar.png
-    const avatarHost = document.createElement("div");
-    avatarHost.style.cssText = "position:absolute;inset:0;overflow:visible";
-    avatarScaler.append(avatarShadow, avatarHost);
+    const avatarImg = document.createElement("img");
+    avatarImg.src = "/ui/player-avatar.png";
+    avatarImg.alt = "";
+    avatarImg.draggable = false;
+    avatarImg.style.cssText =
+      "position:absolute;bottom:0;left:50%;width:58px;height:58px;margin-left:-29px;object-fit:contain;object-position:bottom;filter:brightness(1.5) drop-shadow(0 3px 4px rgba(74,44,20,.4))";
+    avatarScaler.append(avatarShadow, avatarImg);
     avatarRoot.appendChild(avatarScaler);
     playerScalerRef.current = avatarScaler;
-    avatarHostRef.current = avatarHost;
-    // setState 移出 effect 同步段（react-hooks/set-state-in-effect）：microtask 觸發 render
-    void Promise.resolve().then(() => setAvatarHost(avatarHost));
+    playerAvatarImgRef.current = avatarImg;
     // 未有 GPS 之前主角先企喺開場目的地（等佢一開始就喺畫面度）
     playerAnim.current.cur = [INTRO_TARGET[0], INTRO_TARGET[1]];
     playerMarkerRef.current = new maplibregl.Marker({ element: avatarRoot, anchor: "bottom" })
@@ -790,7 +788,7 @@ export default function MapPage() {
       mapRef.current = null;
       playerMarkerRef.current = null;
       playerScalerRef.current = null;
-      avatarHostRef.current = null;
+      playerAvatarImgRef.current = null;
       playerPosRef.current = null;
       markerEls.current = {};
     };
@@ -852,10 +850,10 @@ export default function MapPage() {
 
     const from: [number, number] = [playerAnim.current.cur[0], playerAnim.current.cur[1]];
     const to = playerPos;
-    // 面向移動方向（向西行水平鏡像）：寫喺 scaler 上（3D 模型喺 portal 內，翻轉容器最穩）
-    const ps = playerScalerRef.current;
-    if (ps && Math.abs(to[0] - from[0]) > 1e-7) {
-      ps.style.scale = to[0] < from[0] ? "-1 1" : "1 1";
+    // 面向移動方向（向西行水平鏡像）：寫喺 avatar img 嘅 style.scale（同精靈 marker 一致，唔掂 transform）
+    const ai = playerAvatarImgRef.current;
+    if (ai && Math.abs(to[0] - from[0]) > 1e-7) {
+      ai.style.scale = to[0] < from[0] ? "-1 1" : "1 1";
     }
     const start = performance.now();
     const dur = 900;
@@ -891,8 +889,6 @@ export default function MapPage() {
 
   return (
     <main className="relative flex min-h-dvh flex-col">
-      {/* 3D 主角 avatar：portal 掛入地圖 marker DOM（avatarHost 由 init effect 建立；epoch 重建會換新 DOM） */}
-      {avatarHost && createPortal(<Avatar3D key={mapEpoch} />, avatarHost)}
       {/* 頂部導航欄 */}
       <GameHeader />
 
