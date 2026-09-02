@@ -576,11 +576,12 @@ export default function MapPage() {
     avatarShadow.style.cssText =
       "position:absolute;bottom:2px;left:25px;width:30px;height:9px;border-radius:9999px;background:rgba(74,44,20,.45)";
     const avatarImg = document.createElement("img");
-    avatarImg.src = "/ui/player-avatar.png";
+    avatarImg.src = "/ui/player-marker.png";
     avatarImg.alt = "";
     avatarImg.draggable = false;
+    // 圖形長寬比 ≈0.478（直身角色）：高 58px、闊 28px、貼底置中
     avatarImg.style.cssText =
-      "position:absolute;bottom:0;left:50%;width:58px;height:58px;margin-left:-29px;object-fit:contain;object-position:bottom;filter:brightness(1.5) drop-shadow(0 3px 4px rgba(74,44,20,.4))";
+      "position:absolute;bottom:0;left:50%;width:28px;height:58px;margin-left:-14px;object-fit:contain;object-position:bottom;filter:brightness(1.5) drop-shadow(0 3px 4px rgba(74,44,20,.4))";
     avatarScaler.append(avatarShadow, avatarImg);
     avatarRoot.appendChild(avatarScaler);
     playerScalerRef.current = avatarScaler;
