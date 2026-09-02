@@ -371,7 +371,7 @@ export default function MapPage() {
     setMuted(off);
     setMusicMuted(off);
     setSoundOn(!off);
-    playMusic("map");
+    playMusic("bgm-main");
   }, []);
 
   // 初始化地圖（WebGL2 預檢 + try/catch，失敗降級列表模式）
@@ -992,7 +992,7 @@ export default function MapPage() {
             setSoundOn(next);
             if (next) {
               sfxTap();
-              playMusic("map");
+              playMusic("bgm-main");
             }
           }}
           className="absolute left-3 top-3 z-20 flex h-10 w-10 items-center justify-center rounded-full card-parchment"
