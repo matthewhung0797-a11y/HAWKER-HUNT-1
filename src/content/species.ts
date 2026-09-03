@@ -117,7 +117,7 @@ export const SPECIES: Species[] = [
     evolvesTo: "laksa-warrior",
     evolutionRequirement: { items: { "shrimp-shell-shard": 5 }, checkinCentres: 2 },
     modelUrl: "/models/little-laksa.glb",
-    animUrls: { idle: "/models/little-laksa-walk.glb", walk: "/models/little-laksa-walk.glb", hit: "/models/little-laksa-walk.glb" },
+    animUrls: { idle: "/models/little-laksa-idle.glb", walk: "/models/little-laksa-walk.glb", hit: "/models/little-laksa-walk.glb" },
     modelHeightM: 0.3,
     animated: true,
     // verify5：+π/2 仍背敵；改 -π/2

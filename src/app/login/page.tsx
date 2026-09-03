@@ -47,15 +47,20 @@ export default function LoginPage() {
   /** Google 升級：未配置就退回訪客。會 redirect 出去 Google，返嚟 /map 由雲存檔接手。 */
   async function googleLogin() {
     if (busy) return;
-    if (!isAuthConfigured) return guestLogin();
+    if (!isAuthConfigured) {
+      window.alert(locale === "zh" ? "登入功能未配置（缺 Supabase 環境變數），暫以訪客進入。" : "Login not configured (missing Supabase env); entering as guest.");
+      return guestLogin();
+    }
     setBusy(true);
     await loginAndSync(); // 先確保有匿名 session（linkIdentity 保留進度）
     if (!nickname) setNickname(`Hunter${Math.floor(1000 + Math.random() * 9000)}`);
     login();
     const res = await upgradeWithGoogle();
     if (!res.ok) {
-      // 綁定失敗（例如未喺 Supabase 開 Google provider）：照以匿名身分入場
-      router.push("/map");
+      // 綁定失敗：彈出真正原因（例如 Supabase 未開 Google provider），唔好靜靜變訪客
+      setBusy(false);
+      window.alert(locale === "zh" ? `Google 登入失敗：${res.error ?? "未知錯誤"}` : `Google login failed: ${res.error ?? ""}`);
+      return;
     }
     // 成功會 redirect 去 Google，返嚟 /map
   }
@@ -63,15 +68,21 @@ export default function LoginPage() {
   /** Facebook 升級：同 Google 模式 — 先匿名 session 再 linkIdentity，redirect 出 Facebook。 */
   async function facebookLogin() {
     if (busy) return;
-    if (!isAuthConfigured) return guestLogin();
+    if (!isAuthConfigured) {
+      window.alert(locale === "zh" ? "登入功能未配置（缺 Supabase 環境變數），暫以訪客進入。" : "Login not configured (missing Supabase env); entering as guest.");
+      return guestLogin();
+    }
     setBusy(true);
     await loginAndSync();
     if (!nickname) setNickname(`Hunter${Math.floor(1000 + Math.random() * 9000)}`);
     login();
     const res = await upgradeWithFacebook();
     if (!res.ok) {
-      router.push("/map");
+      setBusy(false);
+      window.alert(locale === "zh" ? `Facebook 登入失敗：${res.error ?? "未知錯誤"}` : `Facebook login failed: ${res.error ?? ""}`);
+      return;
     }
+    // 成功會 redirect 去 Facebook，返嚟 /map
   }
 
   /** Email 升級：send magic-link / 確認信；未配置退回訪客。 */

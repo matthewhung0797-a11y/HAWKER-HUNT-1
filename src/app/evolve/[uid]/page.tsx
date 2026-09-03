@@ -34,14 +34,14 @@ const T_DONE = 5500;
 /** 新版進化動畫影片（by fromSpeciesId）：有影片就播片，播完入原有成功版面；冇影片 fallback 舊演出。
  *  全部 1024×576 精確 16:9（直向內容置中、左右黑邊）；換片時檔名加版本號遞增（SW static-video-assets CacheFirst 會鎖同 URL 舊片） */
 const EVO_VIDEOS: Record<string, string> = {
-  "satay-skewerling": "/evo/BBQ1EVO-v2-916-169.mp4", // 沙嗲仔 → 沙嗲武士
-  "satay-warrior": "/evo/BBQ2EVO-v2-916-169.mp4", // 沙嗲武士 → 沙嗲炎帝
-  "little-laksa": "/evo/LAKSA1EVO-916-169.mp4", // 叻沙仔 → 叻沙武士
-  "laksa-warrior": "/evo/LAKSA2EVO-916-169.mp4", // 叻沙武士 → 叻沙龍
-  "bkt-cub": "/evo/PANDA1EVO-916-169.mp4", // 肉骨仔 → 骨茶武士
-  "bkt-warrior": "/evo/PANDA2EVO-916-169.mp4", // 骨茶武士 → 骨茶宗師
-  "nasi-lemak-tot": "/evo/RICE1EVO-916-169.mp4", // 椰漿飯仔 → 椰漿飯小兵
-  "nasi-lemak-scout": "/evo/RICE2EVO-916-169.mp4", // 椰漿飯小兵 → 椰漿飯大將軍
+  "satay-skewerling": "/evo/BBQ1EVO-v3-916-169.mp4", // 沙嗲仔 → 沙嗲武士
+  "satay-warrior": "/evo/BBQ2EVO-v3-916-169.mp4", // 沙嗲武士 → 沙嗲炎帝
+  "little-laksa": "/evo/LAKSA1EVO-v3-916-169.mp4", // 叻沙仔 → 叻沙武士
+  "laksa-warrior": "/evo/LAKSA2EVO-v3-916-169.mp4", // 叻沙武士 → 叻沙龍
+  "bkt-cub": "/evo/PANDA1EVO-v2-916-169.mp4", // 肉骨仔 → 骨茶武士
+  "bkt-warrior": "/evo/PANDA2EVO-v2-916-169.mp4", // 骨茶武士 → 骨茶宗師
+  "nasi-lemak-tot": "/evo/RICE1EVO-v2-916-169.mp4", // 椰漿飯仔 → 椰漿飯小兵
+  "nasi-lemak-scout": "/evo/RICE2EVO-v2-916-169.mp4", // 椰漿飯小兵 → 椰漿飯大將軍
 };
 
 /** 蓄勢：美食粒子由四周螺旋匯聚入精靈 */
@@ -505,13 +505,9 @@ export default function EvolvePage({ params }: { params: Promise<{ uid: string }
         </div>
       ) : null}
 
-      {/* 揭曉/完成：精靈企喺「進化成功」文字正上方（貼齊不重疊，似踩住文字）、水平置中；揭曉時模型置中 */}
+      {/* 揭曉/完成：模型與文字整組置中（水平垂直都置中；模型尺寸不變） */}
       {(stage === "reveal" || stage === "done") && (
-        <div
-          className={`fixed inset-0 z-10 flex flex-col items-center ${
-            stage === "done" ? "justify-end" : "justify-center"
-          }`}
-        >
+        <div className="fixed inset-0 z-10 flex flex-col items-center justify-center">
           <div className="w-[min(432px,88vw)]" style={{ filter: modelFilter, transition: "filter 0.3s" }}>
             <div
               className="aspect-square"
