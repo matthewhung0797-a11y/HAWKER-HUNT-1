@@ -32,16 +32,16 @@ const T_REVEAL = 4300;
 const T_DONE = 5500;
 
 /** 新版進化動畫影片（by fromSpeciesId）：有影片就播片，播完入原有成功版面；冇影片 fallback 舊演出。
- *  換片時檔名加 -v2/-v3 遞增（SW static-video-assets CacheFirst 會鎖同 URL 舊片） */
+ *  全部 486×864 精確 9:16；換片時檔名加版本號遞增（SW static-video-assets CacheFirst 會鎖同 URL 舊片） */
 const EVO_VIDEOS: Record<string, string> = {
-  "satay-skewerling": "/evo/BBQ1EVO-v2.mp4", // 沙嗲仔 → 沙嗲武士
-  "satay-warrior": "/evo/BBQ2EVO-v2.mp4", // 沙嗲武士 → 沙嗲炎帝
-  "little-laksa": "/evo/LAKSA1EVO.mp4", // 叻沙仔 → 叻沙武士
-  "laksa-warrior": "/evo/LAKSA2EVO.mp4", // 叻沙武士 → 叻沙龍
-  "bkt-cub": "/evo/PANDA1EVO.mp4", // 肉骨仔 → 骨茶武士
-  "bkt-warrior": "/evo/PANDA2EVO.mp4", // 骨茶武士 → 骨茶宗師
-  "nasi-lemak-tot": "/evo/RICE1EVO-v2.mp4", // 椰漿飯仔 → 椰漿飯小兵
-  "nasi-lemak-scout": "/evo/RICE2EVO.mp4", // 椰漿飯小兵 → 椰漿飯大將軍
+  "satay-skewerling": "/evo/BBQ1EVO-v2-916.mp4", // 沙嗲仔 → 沙嗲武士
+  "satay-warrior": "/evo/BBQ2EVO-v2-916.mp4", // 沙嗲武士 → 沙嗲炎帝
+  "little-laksa": "/evo/LAKSA1EVO-916.mp4", // 叻沙仔 → 叻沙武士
+  "laksa-warrior": "/evo/LAKSA2EVO-916.mp4", // 叻沙武士 → 叻沙龍
+  "bkt-cub": "/evo/PANDA1EVO-916.mp4", // 肉骨仔 → 骨茶武士
+  "bkt-warrior": "/evo/PANDA2EVO-916.mp4", // 骨茶武士 → 骨茶宗師
+  "nasi-lemak-tot": "/evo/RICE1EVO-916.mp4", // 椰漿飯仔 → 椰漿飯小兵
+  "nasi-lemak-scout": "/evo/RICE2EVO-916.mp4", // 椰漿飯小兵 → 椰漿飯大將軍
 };
 
 /** 蓄勢：美食粒子由四周螺旋匯聚入精靈 */
