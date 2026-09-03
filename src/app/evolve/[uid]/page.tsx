@@ -31,15 +31,16 @@ const T_SUSPENSE = 3900;
 const T_REVEAL = 4300;
 const T_DONE = 5500;
 
-/** 新版進化動畫影片（by fromSpeciesId）：有影片就播片，播完入原有成功版面；冇影片 fallback 舊演出 */
+/** 新版進化動畫影片（by fromSpeciesId）：有影片就播片，播完入原有成功版面；冇影片 fallback 舊演出。
+ *  換片時檔名加 -v2/-v3 遞增（SW static-video-assets CacheFirst 會鎖同 URL 舊片） */
 const EVO_VIDEOS: Record<string, string> = {
-  "satay-skewerling": "/evo/BBQ1EVO.mp4", // 沙嗲仔 → 沙嗲武士
-  "satay-warrior": "/evo/BBQ2EVO.mp4", // 沙嗲武士 → 沙嗲炎帝
+  "satay-skewerling": "/evo/BBQ1EVO-v2.mp4", // 沙嗲仔 → 沙嗲武士
+  "satay-warrior": "/evo/BBQ2EVO-v2.mp4", // 沙嗲武士 → 沙嗲炎帝
   "little-laksa": "/evo/LAKSA1EVO.mp4", // 叻沙仔 → 叻沙武士
   "laksa-warrior": "/evo/LAKSA2EVO.mp4", // 叻沙武士 → 叻沙龍
   "bkt-cub": "/evo/PANDA1EVO.mp4", // 肉骨仔 → 骨茶武士
   "bkt-warrior": "/evo/PANDA2EVO.mp4", // 骨茶武士 → 骨茶宗師
-  "nasi-lemak-tot": "/evo/RICE1EVO.mp4", // 椰漿飯仔 → 椰漿飯小兵
+  "nasi-lemak-tot": "/evo/RICE1EVO-v2.mp4", // 椰漿飯仔 → 椰漿飯小兵
   "nasi-lemak-scout": "/evo/RICE2EVO.mp4", // 椰漿飯小兵 → 椰漿飯大將軍
 };
 
@@ -481,36 +482,79 @@ export default function EvolvePage({ params }: { params: Promise<{ uid: string }
         />
       )}
 
-      {/* 精靈模型：外層管濾鏡＋心跳，內層管揭曉彈簧 pop。揭曉/完成：放大至 432px 置中 */}
-      <div
-        className={`relative z-10 ${
-          stage === "reveal" || stage === "done" ? "h-[min(432px,90dvh)] w-[min(432px,90dvh)]" : "h-72 w-72"
-        }`}
-        style={{ filter: modelFilter, transition: "filter 0.3s, height 0.5s ease, width 0.5s ease" }}
-      >
-        <div
-          className={stage === "charging" ? "h-full w-full" : "h-full w-full"}
-          style={{
-            animation:
-              stage === "reveal" || stage === "done"
-                ? "ev-reveal-pop 0.9s cubic-bezier(0.34,1.56,0.64,1) both"
-                : stage === "charging"
-                  ? "ev-heartbeat 0.7s ease-in-out infinite"
-                  : undefined,
-          }}
-        >
-          <Canvas camera={{ fov: 45, position: [0, 0.45, 1.5] }} gl={{ alpha: true }}>
-            <ambientLight intensity={1.4} />
-            <directionalLight position={[2, 4, 2]} intensity={1.5} />
-            <EvolveRig
-              speciesId={showSpeciesId}
-              shiny={isShiny}
-              flashKey={flashKey}
-              stage={stage}
-            />
-          </Canvas>
+      {/* 蓄勢/變形：模型 normal flow（心跳） */}
+      {stage === "charging" || stage === "morphing" ? (
+        <div className="relative z-10 h-72 w-72" style={{ filter: modelFilter, transition: "filter 0.3s" }}>
+          <div className="h-full w-full" style={{ animation: "ev-heartbeat 0.7s ease-in-out infinite" }}>
+            <Canvas camera={{ fov: 45, position: [0, 0.45, 1.5] }} gl={{ alpha: true }}>
+              <ambientLight intensity={1.4} />
+              <directionalLight position={[2, 4, 2]} intensity={1.5} />
+              <EvolveRig
+                speciesId={showSpeciesId}
+                shiny={isShiny}
+                flashKey={flashKey}
+                stage={stage}
+              />
+            </Canvas>
+          </div>
         </div>
-      </div>
+      ) : null}
+
+      {/* 揭曉/完成：精靈企喺「進化成功」文字正上方（貼齊不重疊，似踩住文字）、水平置中；揭曉時模型置中 */}
+      {(stage === "reveal" || stage === "done") && (
+        <div
+          className={`fixed inset-0 z-10 flex flex-col items-center ${
+            stage === "done" ? "justify-end" : "justify-center"
+          }`}
+        >
+          <div className="w-[min(432px,88vw)]" style={{ filter: modelFilter, transition: "filter 0.3s" }}>
+            <div
+              className="aspect-square"
+              style={{ animation: "ev-reveal-pop 0.9s cubic-bezier(0.34,1.56,0.64,1) both" }}
+            >
+              <Canvas camera={{ fov: 45, position: [0, 0.45, 1.5] }} gl={{ alpha: true }}>
+                <ambientLight intensity={1.4} />
+                <directionalLight position={[2, 4, 2]} intensity={1.5} />
+                <EvolveRig
+                  speciesId={showSpeciesId}
+                  shiny={isShiny}
+                  flashKey={flashKey}
+                  stage={stage}
+                />
+              </Canvas>
+            </div>
+          </div>
+          {stage === "done" && (
+            <div className="flex flex-col items-center gap-2 px-8 pb-[calc(env(safe-area-inset-bottom)+40px)] pt-1 text-center">
+              <h1
+                className="text-4xl font-black text-gold-light drop-shadow-[0_0_20px_rgba(232,200,96,0.8)]"
+                style={{ animation: "ev-reveal-pop 0.7s cubic-bezier(0.34,1.56,0.64,1) both" }}
+              >
+                {t("evolution.success")}
+              </h1>
+              <div className="flex items-center justify-center gap-2">
+                <p className="text-xl font-bold text-white">{toSpecies?.name[locale]}</p>
+                {isShiny && (
+                  <span className="shiny-badge rounded-full px-2.5 py-0.5 text-xs font-black text-ink">
+                    ✦
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-gold-light/70">{t("evolution.newForm")}</p>
+              <button
+                onClick={() => {
+                  sfxTap();
+                  // 進化保留同 uid — 直接返呢隻（已進化）精靈嘅詳情頁
+                  router.push(`/my-spirits/${uid}`);
+                }}
+                className="btn-gold mt-3 px-10 py-3.5 text-lg font-black"
+              >
+                {t("common.continue")}
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* 揭曉一刻全屏白金爆閃（蓋住 model swap） */}
       {stage === "reveal" && (
@@ -527,7 +571,7 @@ export default function EvolvePage({ params }: { params: Promise<{ uid: string }
 
       {stage === "done" && <Confetti count={28} />}
 
-      {/* 文字 + 進度（全部置中） */}
+      {/* 文字 + 進度（蓄勢/變形） */}
       <div className="z-10 mt-6 flex min-h-32 flex-col items-center justify-center gap-3 px-8 text-center">
         {stage === "charging" || stage === "morphing" ? (
           <>
@@ -541,34 +585,6 @@ export default function EvolvePage({ params }: { params: Promise<{ uid: string }
               />
             </div>
             <span className="text-sm font-bold text-gold-light/80">{Math.round(progress)}%</span>
-          </>
-        ) : stage === "done" ? (
-          <>
-            <h1
-              className="text-4xl font-black text-gold-light drop-shadow-[0_0_20px_rgba(232,200,96,0.8)]"
-              style={{ animation: "ev-reveal-pop 0.7s cubic-bezier(0.34,1.56,0.64,1) both" }}
-            >
-              {t("evolution.success")}
-            </h1>
-            <div className="flex items-center justify-center gap-2">
-              <p className="text-xl font-bold text-white">{toSpecies?.name[locale]}</p>
-              {isShiny && (
-                <span className="shiny-badge rounded-full px-2.5 py-0.5 text-xs font-black text-ink">
-                  ✦
-                </span>
-              )}
-            </div>
-            <p className="text-sm text-gold-light/70">{t("evolution.newForm")}</p>
-            <button
-              onClick={() => {
-                sfxTap();
-                // 進化保留同 uid — 直接返呢隻（已進化）精靈嘅詳情頁
-                router.push(`/my-spirits/${uid}`);
-              }}
-              className="btn-gold mt-3 px-10 py-3.5 text-lg font-black"
-            >
-              {t("common.continue")}
-            </button>
           </>
         ) : null}
       </div>

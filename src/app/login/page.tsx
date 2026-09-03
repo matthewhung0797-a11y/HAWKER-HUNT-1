@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useGameStore } from "@/lib/store";
 import { loginAndSync } from "@/lib/cloud-save";
-import { isAuthConfigured, upgradeWithEmail, upgradeWithGoogle } from "@/lib/auth";
+import { isAuthConfigured, upgradeWithEmail, upgradeWithFacebook, upgradeWithGoogle } from "@/lib/auth";
 import UIIcon from "@/components/UIIcon";
 
 /** Google 官方四色 G logo */
@@ -60,6 +60,20 @@ export default function LoginPage() {
     // 成功會 redirect 去 Google，返嚟 /map
   }
 
+  /** Facebook 升級：同 Google 模式 — 先匿名 session 再 linkIdentity，redirect 出 Facebook。 */
+  async function facebookLogin() {
+    if (busy) return;
+    if (!isAuthConfigured) return guestLogin();
+    setBusy(true);
+    await loginAndSync();
+    if (!nickname) setNickname(`Hunter${Math.floor(1000 + Math.random() * 9000)}`);
+    login();
+    const res = await upgradeWithFacebook();
+    if (!res.ok) {
+      router.push("/map");
+    }
+  }
+
   /** Email 升級：send magic-link / 確認信；未配置退回訪客。 */
   async function emailLogin() {
     if (busy) return;
@@ -95,7 +109,7 @@ export default function LoginPage() {
         <button onClick={googleLogin} disabled={busy} className="btn-outline flex items-center justify-center gap-3 px-6 py-3.5 font-bold disabled:opacity-60">
           <GoogleG /> {t("auth.googleLogin")}
         </button>
-        <button onClick={guestLogin} disabled={busy} className="btn-outline flex items-center justify-center gap-3 px-6 py-3.5 font-bold disabled:opacity-60">
+        <button onClick={facebookLogin} disabled={busy} className="btn-outline flex items-center justify-center gap-3 px-6 py-3.5 font-bold disabled:opacity-60">
           <svg width={18} height={18} viewBox="0 0 24 24" aria-hidden>
             <path
               fill="#1877F2"

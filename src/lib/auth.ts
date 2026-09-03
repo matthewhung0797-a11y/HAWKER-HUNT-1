@@ -72,6 +72,24 @@ export async function upgradeWithGoogle(): Promise<{ ok: boolean; error?: string
 }
 
 /**
+ * 升級到 Facebook：同 Google 模式 — 匿名 user 用 linkIdentity 保留進度；
+ * 未登入就直接 signInWithOAuth。需喺 Supabase 開 Facebook provider。
+ */
+export async function upgradeWithFacebook(): Promise<{ ok: boolean; error?: string }> {
+  const sb = getBrowserSupabase();
+  if (!sb) return { ok: false, error: "auth-not-configured" };
+  const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/map` : undefined;
+  const user = await getUser();
+  if (user && isAnonUser(user)) {
+    const { error } = await sb.auth.linkIdentity({ provider: "facebook", options: { redirectTo } });
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  }
+  const { error } = await sb.auth.signInWithOAuth({ provider: "facebook", options: { redirectTo } });
+  return error ? { ok: false, error: error.message } : { ok: true };
+}
+
+/**
  * 升級到 Email：匿名 user 用 updateUser 綁 email（保留 user_id），會寄確認信；
  * 未登入就用 magic-link OTP 登入。
  */
