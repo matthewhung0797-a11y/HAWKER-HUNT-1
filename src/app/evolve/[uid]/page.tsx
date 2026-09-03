@@ -32,16 +32,16 @@ const T_REVEAL = 4300;
 const T_DONE = 5500;
 
 /** 新版進化動畫影片（by fromSpeciesId）：有影片就播片，播完入原有成功版面；冇影片 fallback 舊演出。
- *  全部 486×864 精確 9:16；換片時檔名加版本號遞增（SW static-video-assets CacheFirst 會鎖同 URL 舊片） */
+ *  全部 1024×576 精確 16:9（直向內容置中、左右黑邊）；換片時檔名加版本號遞增（SW static-video-assets CacheFirst 會鎖同 URL 舊片） */
 const EVO_VIDEOS: Record<string, string> = {
-  "satay-skewerling": "/evo/BBQ1EVO-v2-916.mp4", // 沙嗲仔 → 沙嗲武士
-  "satay-warrior": "/evo/BBQ2EVO-v2-916.mp4", // 沙嗲武士 → 沙嗲炎帝
-  "little-laksa": "/evo/LAKSA1EVO-916.mp4", // 叻沙仔 → 叻沙武士
-  "laksa-warrior": "/evo/LAKSA2EVO-916.mp4", // 叻沙武士 → 叻沙龍
-  "bkt-cub": "/evo/PANDA1EVO-916.mp4", // 肉骨仔 → 骨茶武士
-  "bkt-warrior": "/evo/PANDA2EVO-916.mp4", // 骨茶武士 → 骨茶宗師
-  "nasi-lemak-tot": "/evo/RICE1EVO-916.mp4", // 椰漿飯仔 → 椰漿飯小兵
-  "nasi-lemak-scout": "/evo/RICE2EVO-916.mp4", // 椰漿飯小兵 → 椰漿飯大將軍
+  "satay-skewerling": "/evo/BBQ1EVO-v2-916-169.mp4", // 沙嗲仔 → 沙嗲武士
+  "satay-warrior": "/evo/BBQ2EVO-v2-916-169.mp4", // 沙嗲武士 → 沙嗲炎帝
+  "little-laksa": "/evo/LAKSA1EVO-916-169.mp4", // 叻沙仔 → 叻沙武士
+  "laksa-warrior": "/evo/LAKSA2EVO-916-169.mp4", // 叻沙武士 → 叻沙龍
+  "bkt-cub": "/evo/PANDA1EVO-916-169.mp4", // 肉骨仔 → 骨茶武士
+  "bkt-warrior": "/evo/PANDA2EVO-916-169.mp4", // 骨茶武士 → 骨茶宗師
+  "nasi-lemak-tot": "/evo/RICE1EVO-916-169.mp4", // 椰漿飯仔 → 椰漿飯小兵
+  "nasi-lemak-scout": "/evo/RICE2EVO-916-169.mp4", // 椰漿飯小兵 → 椰漿飯大將軍
 };
 
 /** 蓄勢：美食粒子由四周螺旋匯聚入精靈 */
@@ -335,15 +335,20 @@ export default function EvolvePage({ params }: { params: Promise<{ uid: string }
     };
     return (
       <main className="fixed inset-0 z-50 flex items-center justify-center bg-black">
-        <video
-          ref={videoRef}
-          src={videoUrl ?? undefined}
-          playsInline
-          preload="auto"
-          onEnded={finishEvolve}
-          onError={() => setStage("charging")}
-          className="h-full w-full object-cover"
-        />
+        {/* 16:9 播放區：全寬、按 16:9 比例置中（影片 object-contain 完整顯示） */}
+        <div className="relative flex h-full w-full items-center justify-center">
+          <div className="relative aspect-video w-full">
+            <video
+              ref={videoRef}
+              src={videoUrl ?? undefined}
+              playsInline
+              preload="auto"
+              onEnded={finishEvolve}
+              onError={() => setStage("charging")}
+              className="absolute inset-0 h-full w-full object-contain"
+            />
+          </div>
+        </div>
       </main>
     );
   }
