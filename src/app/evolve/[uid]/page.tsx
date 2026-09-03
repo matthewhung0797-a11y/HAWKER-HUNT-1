@@ -342,7 +342,7 @@ export default function EvolvePage({ params }: { params: Promise<{ uid: string }
           preload="auto"
           onEnded={finishEvolve}
           onError={() => setStage("charging")}
-          className="h-full w-full object-contain"
+          className="h-full w-full object-cover"
         />
       </main>
     );
