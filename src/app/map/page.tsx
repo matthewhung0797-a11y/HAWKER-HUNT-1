@@ -21,7 +21,8 @@ import { MissionButton, MissionPanel, useMissions } from "@/components/MissionPa
 import NotificationBell from "@/components/NotificationBell";
 import { getGameConfig } from "@/lib/admin/actions";
 import { sfxTap, isMuted, setMuted } from "@/lib/sfx";
-import { playMusic, isMusicMuted, setMusicMuted } from "@/lib/music";
+import { playMusic, playDefaultMusic, isMusicMuted, setMusicMuted } from "@/lib/music";
+import MusicPlayer from "@/components/MusicPlayer";
 
 const SG_CENTER: [number, number] = [103.8475, 1.29];
 // zoom 下限放到 3：據點跨越 SG↔HK 咁遠嘅範圍要縮得夠細先睇得晒／揀得到。
@@ -368,7 +369,7 @@ export default function MapPage() {
     setMuted(off);
     setMusicMuted(off);
     setSoundOn(!off);
-    playMusic("bgm-main");
+    playDefaultMusic("bgm-main");
   }, []);
 
   // 初始化地圖（WebGL2 預檢 + try/catch，失敗降級列表模式）
@@ -920,6 +921,8 @@ export default function MapPage() {
                 N
               </text>
             </svg>
+            {/* 音樂播放器（羅盤下方） */}
+            <MusicPlayer />
             {geoError && !store.devMode && (
               <div className="absolute left-1/2 top-3 z-20 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full bg-chilli px-4 py-1.5 text-xs font-bold text-white shadow">
                 <UIIcon name="pin" size={14} /> {t("map.tooFar")}
@@ -990,7 +993,7 @@ export default function MapPage() {
             setSoundOn(next);
             if (next) {
               sfxTap();
-              playMusic("bgm-main");
+              playDefaultMusic("bgm-main");
             }
           }}
           className="absolute left-3 top-3 z-20 flex h-10 w-10 items-center justify-center rounded-full card-parchment"

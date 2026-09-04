@@ -262,6 +262,23 @@ export interface NotificationRow {
   created_at: string;
 }
 
+/** 後台上傳嘅 BGM 曲目 */
+export interface BgmTrackRow {
+  id: string;
+  title: { zh: string; en: string };
+  storage_path: string;
+  sort: number;
+  active: boolean;
+  created_at: string;
+}
+
+/** 玩家端曲目（內建 7 首 + 後台上傳，統一 id+url） */
+export interface GameTrack {
+  id: string;
+  title: { zh: string; en: string };
+  url: string;
+}
+
 export interface MyNotification {
   id: string;
   title: string;
@@ -289,6 +306,17 @@ export interface SaveRow {
   level: number;
   coins: number;
   spirit_count: number;
+  updated_at: string;
+}
+
+/** 排行榜列（後台 player_saves 排名） */
+export interface RankRow {
+  user_id: string;
+  player_key: string | null;
+  nickname: string;
+  level: number;
+  spirit_count: number;
+  coins: number;
   updated_at: string;
 }
 

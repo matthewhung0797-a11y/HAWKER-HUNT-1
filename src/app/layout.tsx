@@ -7,6 +7,7 @@ import GlobalPressFx from "@/components/GlobalPressFx";
 import AnalyticsInit from "@/components/AnalyticsInit";
 import CloudSaveInit from "@/components/CloudSaveInit";
 import BootstrapGate from "@/components/BootstrapGate";
+import BanGate from "@/components/BanGate";
 import GameFrame from "@/components/GameFrame";
 import "./globals.css";
 
@@ -95,6 +96,7 @@ export default async function RootLayout({
             <AnalyticsInit />
             <CloudSaveInit />
             <BootstrapGate />
+            <BanGate />
             <DevConsole />
           </GameFrame>
         </NextIntlClientProvider>

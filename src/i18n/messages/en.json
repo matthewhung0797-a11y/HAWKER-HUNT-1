@@ -340,7 +340,10 @@
     "comingSoon": "Friends system coming soon",
     "loading": "Loading leaderboard…",
     "liveData": "Live rankings · all players",
-    "offlineDemo": "Offline demo data (server not connected)"
+    "offlineDemo": "Offline demo data (server not connected)",
+    "level": "Level",
+    "spirits": "Spirits",
+    "empty": "No players on the board yet"
   },
   "profile": {
     "title": "Profile",
@@ -405,11 +408,29 @@
     "maintenanceDefault": "The hawkers are setting up their stalls — please come back soon!",
     "updateTitle": "Update Available",
     "updateBody": "This version is no longer supported. Please update to the latest version to continue.",
-    "updateBtn": "Get the Update"
+    "updateBtn": "Get the Update",
+    "bannedTitle": "Account Suspended",
+    "bannedBody": "This account has been suspended for violating the game rules.",
+    "bannedUntil": "Suspended until",
+    "bannedBack": "Back to Home"
   },
   "notifications": {
     "title": "Notifications",
     "markAllRead": "Mark all as read",
     "empty": "No notifications"
+  },
+  "music": {
+    "title": "Background Music",
+    "main": "Original Theme",
+    "morningLight": "Morning Light",
+    "sugarcane": "Sugarcane Juice",
+    "flavors": "Flavors Everywhere",
+    "hunterGo": "Hunter Sets Off",
+    "coldSoup": "The Cold Soup",
+    "chickenRice": "That Chicken Rice Bowl",
+    "repeat": "Repeat",
+    "next": "Play Next",
+    "stop": "Pause Music",
+    "resume": "Resume Music"
   }
 }

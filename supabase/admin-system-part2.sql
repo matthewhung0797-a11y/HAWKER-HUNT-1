@@ -72,3 +72,20 @@ create index if not exists notifications_created_idx on public.notifications (cr
 alter table public.notifications enable row level security;
 
 -- Done. Tables use service-role only (no anon policies on purpose).
+
+-- 12. bgm_tracks: admin-uploaded background music (Supabase Storage bucket "bgm")
+--     Create a PUBLIC bucket named "bgm" in Dashboard - Storage first.
+create table if not exists public.bgm_tracks (
+  id           uuid primary key default gen_random_uuid(),
+  title        jsonb not null,
+  storage_path text not null,
+  sort         integer not null default 0,
+  active       boolean not null default true,
+  created_by   text,
+  created_at   timestamptz not null default now()
+);
+
+create index if not exists bgm_tracks_active_idx on public.bgm_tracks (active, sort);
+
+alter table public.bgm_tracks enable row level security;
+-- no anon policies on purpose; service role only

@@ -36,12 +36,12 @@ const T_DONE = 5500;
 const EVO_VIDEOS: Record<string, string> = {
   "satay-skewerling": "/evo/BBQ1EVO-v3-916-169.mp4", // 沙嗲仔 → 沙嗲武士
   "satay-warrior": "/evo/BBQ2EVO-v3-916-169.mp4", // 沙嗲武士 → 沙嗲炎帝
-  "little-laksa": "/evo/LAKSA1EVO-v3-916-169.mp4", // 叻沙仔 → 叻沙武士
-  "laksa-warrior": "/evo/LAKSA2EVO-v3-916-169.mp4", // 叻沙武士 → 叻沙龍
+  "little-laksa": "/evo/LAKSA1EVO-v4-916-169.mp4", // 叻沙仔 → 叻沙武士
+  "laksa-warrior": "/evo/LAKSA2EVO-v4-916-169.mp4", // 叻沙武士 → 叻沙龍
   "bkt-cub": "/evo/PANDA1EVO-v2-916-169.mp4", // 肉骨仔 → 骨茶武士
   "bkt-warrior": "/evo/PANDA2EVO-v2-916-169.mp4", // 骨茶武士 → 骨茶宗師
-  "nasi-lemak-tot": "/evo/RICE1EVO-v2-916-169.mp4", // 椰漿飯仔 → 椰漿飯小兵
-  "nasi-lemak-scout": "/evo/RICE2EVO-v2-916-169.mp4", // 椰漿飯小兵 → 椰漿飯大將軍
+  "nasi-lemak-tot": "/evo/RICE1EVO-v3-916-169.mp4", // 椰漿飯仔 → 椰漿飯小兵（RICE1）
+  "nasi-lemak-scout": "/evo/RICE2EVO-v3-916-169.mp4", // 椰漿飯小兵 → 椰漿飯大將軍（RICE2）
 };
 
 /** 蓄勢：美食粒子由四周螺旋匯聚入精靈 */
@@ -347,6 +347,16 @@ export default function EvolvePage({ params }: { params: Promise<{ uid: string }
               onError={() => setStage("charging")}
               className="absolute inset-0 h-full w-full object-contain"
             />
+            {/* 略過：直接跳去成功進化畫面 */}
+            <button
+              onClick={() => {
+                sfxTap();
+                finishEvolve();
+              }}
+              className="absolute bottom-[calc(env(safe-area-inset-bottom)+24px)] right-4 z-10 rounded-full bg-black/55 px-5 py-2 text-xs font-black text-white backdrop-blur-sm transition active:scale-95"
+            >
+              略過 ▶▶
+            </button>
           </div>
         </div>
       </main>

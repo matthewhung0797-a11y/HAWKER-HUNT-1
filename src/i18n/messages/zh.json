@@ -340,7 +340,10 @@
     "comingSoon": "好友系統即將推出",
     "loading": "載入緊排行榜…",
     "liveData": "實時排行 · 全球玩家",
-    "offlineDemo": "離線示範數據（未連接伺服器）"
+    "offlineDemo": "離線示範數據（未連接伺服器）",
+    "level": "等級",
+    "spirits": "精靈",
+    "empty": "仲未有玩家上榜"
   },
   "profile": {
     "title": "個人頁面",
@@ -405,11 +408,29 @@
     "maintenanceDefault": "小販們正在整理攤檔，請稍後再來！",
     "updateTitle": "有新版本",
     "updateBody": "此版本已不再支援，請更新至最新版本後再繼續遊玩。",
-    "updateBtn": "前往更新"
+    "updateBtn": "前往更新",
+    "bannedTitle": "帳號已被封鎖",
+    "bannedBody": "此帳號因違反遊戲規則已被封鎖，無法繼續遊玩。",
+    "bannedUntil": "封鎖至",
+    "bannedBack": "返回首頁"
   },
   "notifications": {
     "title": "通知",
     "markAllRead": "全部標為已讀",
     "empty": "沒有通知"
+  },
+  "music": {
+    "title": "背景音樂",
+    "main": "原版配樂",
+    "morningLight": "晨光正好",
+    "sugarcane": "那杯甘蔗水",
+    "flavors": "八方來味",
+    "hunterGo": "獵人出發",
+    "coldSoup": "涼了的湯",
+    "chickenRice": "那碗雞飯",
+    "repeat": "重複播放",
+    "next": "下一首",
+    "stop": "停止播放",
+    "resume": "繼續播放"
   }
 }

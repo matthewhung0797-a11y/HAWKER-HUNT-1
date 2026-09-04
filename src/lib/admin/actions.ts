@@ -22,6 +22,7 @@ import type {
   AdminUserRow,
   AnnouncementRow,
   AuditRow,
+  BgmTrackRow,
   BootstrapConfig,
   CentreConfigRow,
   EventRow,
@@ -38,6 +39,7 @@ import type {
   NotificationRow,
   PlayerDetail,
   PlayerRow,
+  RankRow,
   RetentionReport,
   SaveRow,
   SpiritConfigRow,
@@ -544,6 +546,28 @@ export async function fetchLeaderboardForAdmin(
 ): Promise<{ source: "live" | "demo"; rows: { nickname: string; faction_id: string | null; score: number }[] }> {
   await requireCap("reports:read");
   return fetchLeaderboardSnapshot(limit);
+}
+
+/** 遊戲端公開排行榜：後台玩家資料（player_saves）排序——等級 → 精靈數 → 更新時間 */
+export async function getRanking(): Promise<RankRow[]> {
+  const sb = getSupabaseAdmin();
+  if (!sb) return [];
+  const { data } = await sb
+    .from("player_saves")
+    .select("user_id,player_key,nickname,level,spirit_count,coins,updated_at")
+    .order("level", { ascending: false })
+    .order("spirit_count", { ascending: false })
+    .order("updated_at", { ascending: false })
+    .limit(100);
+  return (data ?? []).map((r) => ({
+    user_id: r.user_id as string,
+    player_key: (r.player_key ?? null) as string | null,
+    nickname: (r.nickname ?? "Hawker Hunter") as string,
+    level: (r.level ?? 1) as number,
+    spirit_count: (r.spirit_count ?? 0) as number,
+    coins: (r.coins ?? 0) as number,
+    updated_at: r.updated_at as string,
+  }));
 }
 
 export async function fetchRetention(windowDays = 30): Promise<RetentionReport | null> {
@@ -1109,6 +1133,138 @@ export async function getMyNotifications(userId?: string): Promise<MyNotificatio
     link: (r.link ?? null) as string | null,
     createdAt: r.created_at as string,
   }));
+}
+
+// ════════════════════════════════════════════════════════════════════
+// 音樂管理（後台上傳 BGM 到 Supabase Storage bucket "bgm"；玩家端 MusicPlayer 播）
+// ════════════════════════════════════════════════════════════════════
+
+const BGM_BUCKET = "bgm";
+
+export async function listBgmTracks(): Promise<BgmTrackRow[]> {
+  await requireCap("ops:manage");
+  const sb = getSupabaseAdmin();
+  if (!sb) return [];
+  const { data } = await sb
+    .from("bgm_tracks")
+    .select("id,title,storage_path,sort,active,created_at")
+    .order("sort", { ascending: true })
+    .order("created_at", { ascending: false })
+    .limit(100);
+  return (data ?? []).map((r) => ({
+    id: r.id as string,
+    title: (r.title ?? { zh: "", en: "" }) as BgmTrackRow["title"],
+    storage_path: r.storage_path as string,
+    sort: r.sort as number,
+    active: r.active === true,
+    created_at: r.created_at as string,
+  }));
+}
+
+/** 上傳 MP3：存入 Storage bucket bgm + 建立曲目 row（8MB 上限，Next server action 限制內） */
+export async function uploadBgmTrack(input: {
+  titleZh: string;
+  titleEn: string;
+  sort: number;
+  fileBase64: string; // 純 base64（唔帶 data: 前綴）
+}): Promise<{ ok: boolean; error?: string }> {
+  const session = await requireCap("ops:manage");
+  const sb = getSupabaseAdmin();
+  if (!sb) return { ok: false, error: "Supabase 未設定" };
+  if (!input.titleZh.trim()) return { ok: false, error: "名稱（中文）不可空白" };
+  const buf = Buffer.from(input.fileBase64, "base64");
+  if (buf.length === 0) return { ok: false, error: "請選擇 MP3 檔案" };
+  if (buf.length > 8 * 1048576) return { ok: false, error: "檔案超過 8MB 上限" };
+
+  const path = `bgm-${Date.now()}.mp3`;
+  const { error: upErr } = await sb.storage
+    .from(BGM_BUCKET)
+    .upload(path, buf, { contentType: "audio/mpeg", upsert: true });
+  if (upErr) return { ok: false, error: `Storage 上傳失敗：${upErr.message}` };
+
+  const { error } = await sb.from("bgm_tracks").insert({
+    title: { zh: input.titleZh.trim(), en: (input.titleEn || input.titleZh).trim() },
+    storage_path: path,
+    sort: Math.max(0, Math.min(999, Math.floor(input.sort) || 0)),
+    active: true,
+    created_by: session.email,
+  });
+  if (error) return { ok: false, error: error.message };
+  await writeAudit(session.email, "bgm.upload", path, { title: input.titleZh });
+  return { ok: true };
+}
+
+export async function setBgmTrackActive(
+  id: string,
+  active: boolean
+): Promise<{ ok: boolean; error?: string }> {
+  const session = await requireCap("ops:manage");
+  const sb = getSupabaseAdmin();
+  if (!sb) return { ok: false, error: "Supabase 未設定" };
+  const { error } = await sb.from("bgm_tracks").update({ active }).eq("id", id);
+  if (error) return { ok: false, error: error.message };
+  await writeAudit(session.email, active ? "bgm.enable" : "bgm.disable", id);
+  return { ok: true };
+}
+
+export async function deleteBgmTrack(id: string): Promise<{ ok: boolean; error?: string }> {
+  const session = await requireCap("ops:manage");
+  const sb = getSupabaseAdmin();
+  if (!sb) return { ok: false, error: "Supabase 未設定" };
+  const { data: row } = await sb.from("bgm_tracks").select("storage_path").eq("id", id).maybeSingle();
+  if (row?.storage_path) {
+    await sb.storage.from(BGM_BUCKET).remove([row.storage_path as string]);
+  }
+  const { error } = await sb.from("bgm_tracks").delete().eq("id", id);
+  if (error) return { ok: false, error: error.message };
+  await writeAudit(session.email, "bgm.delete", id);
+  return { ok: true };
+}
+
+/** 遊戲端公開：active 曲目（含 Storage 公開 URL）；玩家端 MusicPlayer 用 */
+export async function getMusicTracks(): Promise<{ id: string; title: { zh: string; en: string }; url: string }[]> {
+  const sb = getSupabaseAdmin();
+  if (!sb) return [];
+  const { data } = await sb
+    .from("bgm_tracks")
+    .select("id,title,storage_path,sort")
+    .eq("active", true)
+    .order("sort", { ascending: true })
+    .limit(50);
+  const base = `${opsConfig.supabase.url}/storage/v1/object/public/${BGM_BUCKET}`;
+  return (data ?? []).map((r) => ({
+    id: `bgm-${r.id as string}`,
+    title: (r.title ?? { zh: "", en: "" }) as { zh: string; en: string },
+    url: `${base}/${r.storage_path as string}`,
+  }));
+}
+
+// ════════════════════════════════════════════════════════════════════
+// 封禁攔截（遊戲端公開）
+// ════════════════════════════════════════════════════════════════════
+
+/** 遊戲端登入後查自己有冇被ban（public：唔需 admin session；
+ *  player_flags 有 RLS 擋 anon，所以必須 service role 讀——只讀唔寫安全） */
+export async function getMyBanStatus(
+  userId: string
+): Promise<{ banned: boolean; reason: string | null; bannedUntil: string | null }> {
+  const sb = getSupabaseAdmin();
+  if (!sb || !userId) return { banned: false, reason: null, bannedUntil: null };
+  const { data } = await sb
+    .from("player_flags")
+    .select("banned,reason,banned_until")
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (!data?.banned) return { banned: false, reason: null, bannedUntil: null };
+  // 有限期封禁已過期 → 視為解封
+  if (data.banned_until && new Date(data.banned_until as string) < new Date()) {
+    return { banned: false, reason: null, bannedUntil: null };
+  }
+  return {
+    banned: true,
+    reason: (data.reason as string) ?? null,
+    bannedUntil: (data.banned_until as string) ?? null,
+  };
 }
 
 // ════════════════════════════════════════════════════════════════════

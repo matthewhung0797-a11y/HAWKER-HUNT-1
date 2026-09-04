@@ -20,6 +20,7 @@ import CentresView from "./views/CentresView";
 import MissionsView from "./views/MissionsView";
 import DataView from "./views/DataView";
 import NotificationsView from "./views/NotificationsView";
+import MusicAdminView from "./views/MusicAdminView";
 
 interface NavItem {
   id: string;
@@ -34,6 +35,7 @@ const NAV: readonly NavItem[] = [
   { id: "spirits", label: "精靈管理", cap: "spirits:manage", icon: "🐔" },
   { id: "centres", label: "據點管理", cap: "centres:manage", icon: "📍" },
   { id: "missions", label: "任務管理", cap: "missions:manage", icon: "🎯" },
+  { id: "music", label: "音樂管理", cap: "ops:manage", icon: "🎵" },
   { id: "notifications", label: "推送通知", cap: "notify:send", icon: "🔔" },
   { id: "ops", label: "營運設定", cap: "ops:manage", icon: "🛠️" },
   { id: "reports", label: "數據報表", cap: "reports:read", icon: "📈" },
@@ -165,6 +167,7 @@ export default function AdminApp({
             {active === "ops" && <OpsView />}
             {active === "reports" && <ReportsView />}
             {active === "data" && <DataView />}
+            {active === "music" && <MusicAdminView />}
             {active === "admins" && <AdminsView />}
           </div>
         </main>

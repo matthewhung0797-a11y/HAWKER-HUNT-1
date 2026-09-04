@@ -977,3 +977,16 @@ a:active,
 .chase-pulse {
   animation: chase-pulse 0.5s ease-in-out infinite;
 }
+
+/* 音樂播放器黑膠唱片旋轉 */
+@keyframes vinyl-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.vinyl-spin {
+  animation: vinyl-spin 3s linear infinite;
+}

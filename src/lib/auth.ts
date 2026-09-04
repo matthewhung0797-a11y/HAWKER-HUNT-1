@@ -55,36 +55,29 @@ export function isAnonUser(user: User | null): boolean {
 
 /**
  * 升級到 Google：匿名 user 用 linkIdentity 保留同一個 user_id（進度唔散）；
- * 已登入非匿名就當普通 OAuth。redirect 返嚟由 detectSessionInUrl 收 session。
+ * linkIdentity 被禁（Supabase Manual Linking 未開）→ 自動退回直接 OAuth
+ * （Supabase 自動連結會保留匿名 user_id）。redirect 返嚟由 detectSessionInUrl 收 session。
+ */
+/**
+ * 升級到 Google：直接 OAuth 登入（唔行 linkIdentity — Supabase Manual Linking
+ * 預設關閉會擋「Manual linking is disabled」；匿名 user 經 OAuth 後由 Supabase
+ * 自動連結升級成正式 user）。redirect 返嚟由 detectSessionInUrl 收 session。
  */
 export async function upgradeWithGoogle(): Promise<{ ok: boolean; error?: string }> {
   const sb = getBrowserSupabase();
   if (!sb) return { ok: false, error: "auth-not-configured" };
   const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/map` : undefined;
-  const user = await getUser();
-  if (user && isAnonUser(user)) {
-    const { error } = await sb.auth.linkIdentity({ provider: "google", options: { redirectTo } });
-    if (error) return { ok: false, error: error.message };
-    return { ok: true };
-  }
   const { error } = await sb.auth.signInWithOAuth({ provider: "google", options: { redirectTo } });
   return error ? { ok: false, error: error.message } : { ok: true };
 }
 
 /**
- * 升級到 Facebook：同 Google 模式 — 匿名 user 用 linkIdentity 保留進度；
- * 未登入就直接 signInWithOAuth。需喺 Supabase 開 Facebook provider。
+ * 升級到 Facebook：直接 OAuth 登入（同 Google 模式）。需喺 Supabase 開 Facebook provider。
  */
 export async function upgradeWithFacebook(): Promise<{ ok: boolean; error?: string }> {
   const sb = getBrowserSupabase();
   if (!sb) return { ok: false, error: "auth-not-configured" };
   const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/map` : undefined;
-  const user = await getUser();
-  if (user && isAnonUser(user)) {
-    const { error } = await sb.auth.linkIdentity({ provider: "facebook", options: { redirectTo } });
-    if (error) return { ok: false, error: error.message };
-    return { ok: true };
-  }
   const { error } = await sb.auth.signInWithOAuth({ provider: "facebook", options: { redirectTo } });
   return error ? { ok: false, error: error.message } : { ok: true };
 }
